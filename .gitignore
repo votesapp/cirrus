@@ -1,2 +1,5 @@
 .meteor/local
 .meteor/meteorite
+.sass-cache/
+*.sublime-project
+*.sublime-workspace
