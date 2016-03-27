@@ -21,3 +21,6 @@ insecure                # Allow all DB writes from clients (for prototyping)
 less
 nemo64:bootstrap
 iron:router
+gwendall:body-events
+themeteorchef:bert
+accounts-password
