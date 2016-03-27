@@ -1,8 +1,12 @@
 if (Meteor.isClient) {
+  Meteor.startup(function () {
+    // code to run on client at startup
+  });
   // counter starts at 0
   Session.setDefault('counter', 0);
 
   Template.body.helpers({
+    // Global helpers (is it really global?)
     container: function () {
       return null;
     }
@@ -10,8 +14,7 @@ if (Meteor.isClient) {
 
   Template.body.events({
     'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
+      // Global events to track
     }
   });
 }
