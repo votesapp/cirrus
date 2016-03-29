@@ -1,0 +1,9 @@
+<template name="navButtons">
+  {{#if navAction}}
+    <div class="btn-group btn-group-justified" role="group" aria-label="nav buttons">
+    {{#each navAction}}
+    <a class="btn btn-sm btn-default" href="{{pathFor route=route}}" role="button" >{{name}}</a>
+    {{/each}}
+  </div> 
+  {{/if}}
+</template>

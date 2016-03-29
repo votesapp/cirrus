@@ -1,9 +1,7 @@
 if (Meteor.isClient) {
   Meteor.startup(function () {
-    // code to run on client at startup
+    // Code to run on client at startup
   });
-  // counter starts at 0
-  Session.setDefault('counter', 0);
 
   Template.body.helpers({
     // Global helpers (is it really global?)
@@ -13,14 +11,30 @@ if (Meteor.isClient) {
   });
 
   Template.body.events({
-    'click button': function () {
-      // Global events to track
+    // Global events to track
+    "click .demo" : function (event) {
+      console.log(".demo clicked");
+      console.log(event);
+      // code...
+    },
+
+    // Global event for linking and navigating that
+    // eliminates the need for wrapper anchor tags
+    "click [data-nav]": function (event) {
+      var tar = event.currentTarget.dataset.nav;
+      Router.go(tar);
+    },
+
+    // Global event for logging out the current user
+    "click [data-action='logoutUser']": function (event) {
+      event.preventDefault();
+      Meteor.logout();
     }
   });
-}
+};
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
   });
-}
+};
