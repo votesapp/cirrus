@@ -2,35 +2,19 @@
 
   <h4>List of votes</h4>
   <ul class="media-list">
+    
+    {{#each votesList}}
     <li class="media" data-nav="{{pathFor route='voteInfo'}}">
       <div class="media-left">
           <img class="media-object" src="64x64_placeholder.svg" alt="...">
       </div>
       <div class="media-body">
-        <h4 class="media-heading">Media heading</h4>
-        Here is some excellent teaser info about this...
+        <h4 class="media-heading">{{title}}</h4>
+        {{description}}
       </div>
     </li> {{!-- /.media --}}
+    {{/each}}
 
-    <li class="media">
-      <div class="media-left">
-          <img class="media-object" src="64x64_placeholder.svg" alt="...">
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading">Media heading</h4>
-        Here is some excellent teaser info about this...
-      </div>
-    </li> {{!-- /.media --}}
-
-    <li class="media">
-      <div class="media-left">
-          <img class="media-object" src="64x64_placeholder.svg" alt="...">
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading">Media heading</h4>
-        Here is some excellent teaser info about this...
-      </div>
-    </li> {{!-- /.media --}}
   </ul>
 
 </template>

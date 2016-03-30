@@ -1,11 +1,16 @@
 <template name="voteInfo">
 
-  <i>voteInfo template</i>
+  <h2>Vote Title</h2>
+  <h4>Description</h4>
+  <p>This is a description about what the vote is about, the intended results, or explaining the question posed to voters.</p>
+  <p><blockquote>This is some other info on the vote</blockquote></p>
+  <h4>Vote Choices</h4>
+  <i>Conditionally shown?</i>
   <ul class="list-group">
-    <a href="{{pathFor route='voteInfo'}}" class="list-group-item">item 1</a>
-    <a href="{{pathFor route='voteInfo'}}" class="list-group-item">item 2</a>
-    <a href="{{pathFor route='voteInfo'}}" class="list-group-item">item 3</a>
-    <a href="{{pathFor route='voteInfo'}}" class="list-group-item">item 4</a>
+    <a href="{{pathFor route='voteOptionInfo'}}" class="list-group-item" data-toggle="modal" data-target="#mainModal" role="button">item 1</a>
+    <a href="{{pathFor route='voteOptionInfo'}}" class="list-group-item" data-toggle="modal" data-target="#mainModal" role="button">item 2</a>
+    <a href="{{pathFor route='voteOptionInfo'}}" class="list-group-item" data-toggle="modal" data-target="#mainModal" role="button">item 3</a>
+    <a href="{{pathFor route='voteOptionInfo'}}" class="list-group-item" data-toggle="modal" data-target="#mainModal" role="button">item 4</a>
   </ul>
 
 </template>

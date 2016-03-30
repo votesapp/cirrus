@@ -7,15 +7,36 @@ if (Meteor.isClient) {
     // Global helpers (is it really global?)
     container: function () {
       return null;
+    },
+
+    currentVote: function () {
+      return Session.get("currentVote");
+    },
+
+    currentVoteOption: function () {
+      return Session.get("currentVoteOption");
     }
+
   });
 
   Template.body.events({
     // Global events to track
-    "click .demo" : function (event) {
-      console.log(".demo clicked");
-      console.log(event);
-      // code...
+    "click [data-toggle='modal']" : function (event) {
+      // TODO: this method needs to be refactored
+      console.log("modal clicked");
+      var content = event.currentTarget.dataset.modal;
+      // optionally get the target from the href?
+      if (content) {
+        test = content.replace(/^\//,'');
+        // get the value somehow...
+        Session.set("modalTemplate", test);
+      } else {
+
+        content = event.currentTarget.getAttribute("href");
+        test = content.replace(/^\//,'');
+        Session.set("modalTemplate", test);
+      };
+      console.log(test);
     },
 
     // Global event for linking and navigating that

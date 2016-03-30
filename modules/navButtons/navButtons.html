@@ -1,9 +1,8 @@
 <template name="navButtons">
-  {{#if navAction}}
     <div class="btn-group btn-group-justified" role="group" aria-label="nav buttons">
     {{#each navAction}}
     <a class="btn btn-sm btn-default" href="{{pathFor route=route}}" role="button" >{{name}}</a>
     {{/each}}
+    <a class="btn btn-sm btn-success" href="" data-toggle="modal" data-target="#mainModal" data-modal="{{pathFor route='voteCreate'}}" role="button">New +</a>
   </div> 
-  {{/if}}
 </template>
