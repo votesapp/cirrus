@@ -1,5 +1,8 @@
-<template name="voteOptionInfo">
-  <h2>Vote Option Title</h2>
+<template name="voteOption">
+  {{#with voteOption}}
+  <h2>{{name}}</h2>
+  <i>{{_id}}</i>
   <h4>Description</h4>
   <p>This is a great description about this vote option. You can't wait to vote for this!</p>
+  {{/with}}
 </template>

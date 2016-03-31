@@ -6,7 +6,7 @@ if (Meteor.isClient) {
   Template.votesList.helpers({
 
     votesList: function () {
-      return votesCollection.find({},{sort: {createdAt: -1}}).fetch();
+      return votesCollection.find({},{sort: {createdOn: -1}}).fetch();
     }
 
   });

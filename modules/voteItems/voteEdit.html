@@ -1,5 +1,25 @@
 <template name="voteEdit">
 
-  <h3>voteEdit template</h3>
+  {{#with voteData}}
+  <h2>{{title}}</h2>
+  <h4>Description</h4>
+  <p>{{description}}</p>
+  <p><blockquote>This is some other info on the vote</blockquote></p>
+  {{/with}}
+  <h4>Vote Choices</h4>
+  <i>Conditionally shown?</i>
+  <form class="form-group" id="addVoteItem">
+    <div class="input-group">
+      <input type="text" placeholder="New Item" name="name" class="form-control" autocomplete="off" autofocus>
+      <span class="input-group-btn">
+        <button type="submit" name="submit" class="btn btn-success">+</button>
+      </span>
+    </div>
+  </form>
+  <ul class="list-group">
+    {{#each voteOptions}}
+    <a id="{{_id}}" class="list-group-item" href="">{{name}}<button type="button" class="close deleteVoteOption" name="">&times;</button></a>
+    {{/each}}
+  </ul>
 
 </template>

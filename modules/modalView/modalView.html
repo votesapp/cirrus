@@ -11,7 +11,10 @@
         </div>
         <div class="modal-body">
           {{!-- TODO: Pass some data context to the template --}}
-          {{> UI.dynamic template=modalTemplate}}
+          {{!-- We may want to at least let the template know it's modal context --}}
+          {{#with modalTemplate}}
+          {{> UI.dynamic template=template}}
+          {{/with}}
         </div>
         {{#if modalForm}}
         <div class="modal-footer">
