@@ -2,6 +2,26 @@
 
   {{#with voteData}}
   <h2>{{title}}</h2>
+
+  <div class="btn-group pull-right" role="group">
+    <div class="btn-group" role="group">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Dropdown
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href="#">Save Draft</a></li>
+        <li><a href="#">Publish Vote</a></li>
+        <li><a href="#">Other</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#">Delete Vote</a></li>
+      </ul>
+    </div>
+    <button class="btn btn-default" type="button">OK</button>
+  </div>
+
+
+
   <h4>Description</h4>
   <p>{{description}}</p>
   <p><blockquote>This is some other info on the vote</blockquote><a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a></p>
