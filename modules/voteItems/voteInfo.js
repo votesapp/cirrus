@@ -10,17 +10,10 @@ if (Meteor.isClient) {
       var recordId = Router.current().params._id;
 
       return votesCollection.findOne({ _id:recordId });
-
     },
 
     voteOptions : function () {
       var recordId = Router.current().params._id;
-
-      // There is some kind of bug in this query...
-      // var returnArray = votesCollection.findOne(
-      //   { _id:recordId },
-      //   {fields: {voteItems: 1}}
-      // ).voteItems;
 
       var returnArray = optionsCollection.find(
         {
@@ -29,7 +22,6 @@ if (Meteor.isClient) {
       );
       
       return returnArray;
-
     }
 
   });

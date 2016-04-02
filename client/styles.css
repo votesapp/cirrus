@@ -17,7 +17,7 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 
 /* This is temporary styling */
 [data-nav]:hover {
-  border: 1px solid teal;
+  background-color: #D3E7F1;
 }
 
 .navbar-nav.navbar-right {

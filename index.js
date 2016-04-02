@@ -24,7 +24,7 @@ if (Meteor.isClient) {
 
     "click [data-toggle='myModal']" : function (event) {
       event.preventDefault();
-       var template;
+      var template;
 
       // Function to trigger modals manually via jQuery. This 
       // allows us to wait on load, and better set and 
@@ -55,13 +55,20 @@ if (Meteor.isClient) {
         template = content.split('/')[1];
         // template = content.replace(/^\//,'');
       };
+      var routeId = content.split('/')[2];
 
-      console.log("the url bits: " + template);
+      var modalRoute = {
+        _id: routeId,
+        template: template
+      };
+
+      // console.log("the url bits: ");
+      // console.log(modalRoute);
       // We track the template in a session variable to easily
       // access in the modal helper. This potentially can be 
       // refactored? Esesentially the route is stored here,
       // without having been rendered by a router.
-      Session.set("modalTemplate", template);
+      Session.set("modalRoute", modalRoute);
 
       // after the above, we may need to implement a wait or
       // loading screen while modal content is loaded in 

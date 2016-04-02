@@ -4,15 +4,15 @@
   <h2>{{title}}</h2>
   <h4>Description</h4>
   <p>{{description}}</p>
-  <p><blockquote>This is some other info on the vote</blockquote></p>
+  <p><blockquote>This is some other info on the vote</blockquote>
+    <a href="{{pathFor route='voteEdit'}}" class="btn btn-warning pull-right" role="button">Edit</a></p>
   {{/with}}
   <h4>Vote Choices</h4>
   <i>Conditionally shown?</i>
   <ul class="list-group">
     {{#each voteOptions}}
-    <a class="list-group-item" href="{{pathFor route='voteOption'}}">{{name}}</a>
+    <a class="list-group-item" href="{{pathFor route='voteOption'}}" data-toggle="myModal" data-target="#mainModal" role="button">{{name}}</a>
     {{/each}}
-    <a href="{{pathFor route='voteOptionInfo'}}" class="list-group-item" data-toggle="myModal" data-target="#mainModal" role="button">Example One</a>
   </ul>
 
 

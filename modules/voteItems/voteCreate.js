@@ -10,19 +10,15 @@ if (Meteor.isClient) {
   Template.voteCreate.events({
 
     "submit #createVoteForm" : function (event) {
-      // create the vote
+      // Create the vote and add to collection
       event.preventDefault();
       var title = event.target.title.value;
       var desc = event.target.description.value;
       console.log("clicked submit on voteCreateForm");
 
-      // clear the form
-      $("#createVoteForm input[type='text']").val("");
-      $("#createVoteForm textarea").val("");
-
       if (title) {
         console.log(title);
-        votesCollection.insert(
+        var newDoc = votesCollection.insert(
           {
             title: title,
             createdOn: new Date(),
@@ -31,7 +27,25 @@ if (Meteor.isClient) {
             createdBy: Meteor.userId()
           }
         );
+        console.log("new doc: " + newDoc);
+        // Close the  modal if one is open
+        $("#mainModal").modal("hide");
+        // and clear all input fields for future use.
+        $("#createVoteForm input[type='text']").val("");
+        $("#createVoteForm textarea").val("");
+
+        Router.go("voteEdit", { _id:newDoc });
+      } else {
+        // send up an alert because the form was not valie
+        Bert.alert({
+          title: "Form error",
+          message: "No vote title was entered.",
+          type: "warning"
+        });
       };
+
+
+
     }
   });
 

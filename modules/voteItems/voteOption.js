@@ -5,11 +5,17 @@ if (Meteor.isClient) {
 
   Template.voteOption.helpers({
 
-    voteOption : function () {
+    optionRecord : function () {
+      console.log("logging this from optionRecord helper");
+      console.log(this);
 
       // This will likely break when using modals. Get
       // paramas from the session...
-      var recordId = Router.current().params._id;
+      if (this._id) {
+        var recordId = this._id;
+      } else {
+        var recordId = Router.current().params._id;
+      };
 
       return optionsCollection.findOne({_id:recordId});
 
