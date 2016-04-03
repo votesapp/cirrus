@@ -1,45 +1,4 @@
 <template name="voteEdit">
-
-  {{#with voteData}}
-  <h2>{{title}}</h2>
-
-  <div class="btn-group pull-right" role="group">
-    <div class="btn-group" role="group">
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        Dropdown
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><a href="#">Save Draft</a></li>
-        <li><a href="#">Publish Vote</a></li>
-        <li><a href="#">Other</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="#">Delete Vote</a></li>
-      </ul>
-    </div>
-    <button class="btn btn-default" type="button">OK</button>
-  </div>
-
-
-
-  <h4>Description</h4>
-  <p>{{description}}</p>
-  <p><blockquote>This is some other info on the vote</blockquote><a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a></p>
-  {{/with}}
-  <h4>Vote Choices</h4>
-  <i>Conditionally shown?</i>
-  <form class="form-group" id="addVoteOption">
-    <div class="input-group">
-      <input type="text" placeholder="New Item" name="name" class="form-control" autocomplete="off" autofocus>
-      <span class="input-group-btn">
-        <button type="submit" name="submit" class="btn btn-success">+</button>
-      </span>
-    </div>
-  </form>
-  <ul class="list-group">
-    {{#each voteOptions}}
-    <a id="" class="list-group-item" href="{{pathFor route='voteOption'}}">{{name}}<button id="{{_id}}" type="button" class="close" data-action="deleteVoteOption">&times;</button></a>
-    {{/each}}
-  </ul>
+  <i>voteEdit template</i>
 
 </template>

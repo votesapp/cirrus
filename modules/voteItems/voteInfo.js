@@ -25,4 +25,38 @@ if (Meteor.isClient) {
     }
 
   });
+
+  Template.voteInfo.events({
+
+    "click [data-action='deleteVote']" : function (event) {
+      event.preventDefault();
+      var recordId = Router.current().params._id;
+
+      votesCollection.remove(recordId);
+      // Below has to be done through method since it deletes
+      // multiple records, which can not be dont on the client side.
+      Meteor.call("deleteOptions", recordId);
+
+      Bert.alert({
+        title: "Vote Deleted",
+        message: "The vote <b>" + recordId + "</b> was deleted.",
+        type: "danger"
+      });
+
+      // We will need to redirect after vote deletion
+      Router.go("votesList");
+
+    }
+
+  });
 };
+
+Meteor.methods({
+
+  deleteOptions : function (voteId) {
+
+    optionsCollection.remove({voteId:voteId});
+
+  }
+
+});

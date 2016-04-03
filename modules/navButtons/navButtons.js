@@ -22,4 +22,17 @@ if (Meteor.isClient) {
 
   });
 
+  Template.navButtons.events({
+
+    "click [data-action='previous']" : function (event) {
+      event.preventDefault();
+
+      // Simplest history implementation.
+      // We will develop a more sophisticated history
+      // to allow for more logical navigation in the app.
+      history.go(-1);
+
+    }
+  });
+
 };
