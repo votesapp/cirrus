@@ -1,7 +1,8 @@
 <template name="voteInfo">
   {{#with voteData}}
-  <h2>{{title}}</h2>
+  
   {{#if ../edit}}
+  <h2 contenteditable="true" data-field="title">{{title}}</h2>
   <div class="btn-group pull-right" role="group">
     <div class="btn-group" role="group">
       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -18,9 +19,9 @@
     </div>
     <button class="btn btn-default" type="button">OK</button>
   </div>
-  <p>{{description}}<a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a></p>
+  <p contenteditable="true" data-field="description">{{description}}</p><a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a>
   {{else}}
-
+  <h2>{{title}}</h2>
   <div class="btn-group pull-right">
      <a href="{{pathFor route='voteEdit'}}" class="btn btn-default" role="button">Edit</a>
      <a href="{{pathFor route='doVote'}}" class="btn btn-primary" role="button">Do Vote</a>

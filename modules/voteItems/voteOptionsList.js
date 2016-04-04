@@ -46,9 +46,9 @@ if (Meteor.isClient) {
       var recordId = event.target.name;
       // var voteItem = event.currentTarget.name;
       console.log("trying to delete record: ");
-      console.log(event);
+      console.log(recordId);
+      // console.log(event);
       optionsCollection.remove(recordId);
-      // votesCollection.update();
 
     }
   });

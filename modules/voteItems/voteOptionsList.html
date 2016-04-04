@@ -17,7 +17,14 @@
     {{#if edit}}
 
       {{#each voteOptions}}
-      <a class="list-group-item" href="{{pathFor route='voteOption'}}" {{!-- data-toggle="myModal" data-target="#mainModal"  --}} role="button">{{name}} {{#if ../edit}}<button type="button" class="close" name="{{_id}}" data-action="deleteVoteOption">&times;</button>{{/if}}</a>
+      <a class="list-group-item" href="{{pathFor route='voteOptionEdit'}}" {{!-- data-toggle="myModal" data-target="#mainModal"  --}} role="button">
+        {{name}}
+        {{!-- <span class="glyphicon glyphicon-remove pull-right close" name="{{_id}}" data-action="deleteVoteOption" role="button"></span> --}}
+        <button type="button" class="close" name="{{_id}}" data-action="deleteVoteOption">&times;</button>
+        <button type="button" class="btn btn-text pull-right">
+          <span class="glyphicon glyphicon-cog"></span>
+        </button>
+      </a>
       {{/each}}
 
     {{else}}
