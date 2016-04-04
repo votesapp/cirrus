@@ -5,10 +5,6 @@ if (Meteor.isClient) {
 
   Template.body.helpers({
     // Global helpers (is it really global?)
-    container: function () {
-      return null;
-    },
-
     currentVote: function () {
       return Session.get("currentVote");
     },
@@ -24,7 +20,6 @@ if (Meteor.isClient) {
 
     "click [data-toggle='myModal']" : function (event) {
       event.preventDefault();
-      var template;
 
       // Function to trigger modals manually via jQuery. This 
       // allows us to wait on load, and better set and 
@@ -41,6 +36,7 @@ if (Meteor.isClient) {
       // content in a modal popup, hopefully with the same
       // or a similar data context.
 
+      var template;
       // Get parameter values from DOM properties
       var modalTarget = event.currentTarget.dataset.target;
       var content = event.currentTarget.dataset.template;
@@ -62,17 +58,12 @@ if (Meteor.isClient) {
         template: template
       };
 
-      // console.log("the url bits: ");
-      // console.log(modalRoute);
       // We track the template in a session variable to easily
-      // access in the modal helper. This potentially can be 
-      // refactored? Esesentially the route is stored here,
+      // access in the modal helper. Esesentially the route is stored here,
       // without having been rendered by a router.
+      // TODO: Add full parsing of all route params, data, and other properties
       Session.set("modalRoute", modalRoute);
 
-      // after the above, we may need to implement a wait or
-      // loading screen while modal content is loaded in 
-      // UI.dynamic template in modalView.js
       $(modalTarget).modal("toggle");
 
     },

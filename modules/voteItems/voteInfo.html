@@ -3,7 +3,8 @@
   
   {{#if ../edit}}
   <h2 contenteditable="true" data-field="title">{{title}}</h2>
-  <div class="btn-group pull-right" role="group">
+  <p contenteditable="true" data-field="description">{{description}}</p><a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a>
+  <div class="btn-group" role="group">
     <div class="btn-group" role="group">
       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         Dropdown
@@ -19,7 +20,6 @@
     </div>
     <button class="btn btn-default" type="button">OK</button>
   </div>
-  <p contenteditable="true" data-field="description">{{description}}</p><a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a>
   {{else}}
   <h2>{{title}}</h2>
   <div class="btn-group pull-right">
