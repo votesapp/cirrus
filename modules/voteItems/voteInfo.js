@@ -78,6 +78,10 @@ if (Meteor.isClient) {
         // Maybe we can suppress reactive rendering instead of blanking
         // the element?
         console.log(result);
+
+        // WHATIF: Instead of blaking the content, we set it to the value
+        // that was used to update the collection. Maybe Meteor would
+        // detect no change, and not rerender the element?
         event.currentTarget.innerHTML = "";
 
       } else {
