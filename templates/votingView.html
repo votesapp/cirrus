@@ -1,0 +1,17 @@
+<template name="votingView">
+
+  {{> navBar}}
+   <div class="container">
+
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+        <i>This is the votinView template</i>
+        {{> yield}}
+      </div> {{!-- /.col --}}
+    </div> {{!-- /.row --}}
+  </div> {{!-- /.container --}}
+
+
+  {{> yield region="modalView"}}
+
+</template>

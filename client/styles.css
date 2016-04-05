@@ -3,3 +3,24 @@
 body {
 	padding-top: 62px;
 }
+
+a:focus, button:focus{
+  outline: 0 !important;
+}
+a::-moz-focus-inner, button::-moz-focus-inner {
+  border: 0 !important;
+}
+
+[data-nav] {
+  cursor: pointer;
+}
+
+/* This is temporary styling */
+[data-nav]:hover {
+  background-color: #D3E7F1;
+}
+
+.navbar-nav.navbar-right {
+  text-align: right;
+}
+

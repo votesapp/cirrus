@@ -1,0 +1,29 @@
+<template name="modalView">
+
+  <div id="mainModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Title</h4>
+        </div>
+        <div class="modal-body">
+          {{!-- TODO: Pass some data context to the template --}}
+          {{!-- We may want to at least let the template know it's modal context --}}
+          {{#with modalTemplate}}
+            {{> Template.dynamic template=template}}
+          {{/with}}
+        </div>
+        {{#if modalForm}}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button id="modalFormSubmit" type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
+        </div>
+        {{/if}}
+      </div> {{!-- /.modal-content --}}
+
+    </div>
+  </div>
+</template>

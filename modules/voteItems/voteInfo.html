@@ -1,0 +1,40 @@
+<template name="voteInfo">
+  {{#with voteData}}
+  
+  {{#if ../edit}}
+  <h2 contenteditable="true" data-field="title">{{title}}</h2>
+  <p contenteditable="true" data-field="description">{{description}}</p><a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a>
+  <div class="btn-group" role="group">
+    <div class="btn-group" role="group">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Dropdown
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href="#">Save Draft</a></li>
+        <li><a href="#">Publish Vote</a></li>
+        <li class="active"><a href="#">otherr</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#">Delete Vote</a></li>
+      </ul>
+    </div>
+    <button class="btn btn-default" type="button">OK</button>
+  </div>
+  {{else}}
+  <h2>{{title}}</h2>
+  <div class="btn-group pull-right">
+     <a href="{{pathFor route='voteEdit'}}" class="btn btn-default" role="button">Edit</a>
+     <a href="{{pathFor route='doVote'}}" class="btn btn-primary" role="button">Do Vote</a>
+   </div>
+  <p>{{description}}</p>
+  <p><blockquote>This is some other info on the vote</blockquote></p>
+
+  {{/if}}
+
+  {{/with}}
+
+  <h4>Vote Choices</h4>
+  
+  {{> voteOptionsList edit=edit}}
+
+</template>
