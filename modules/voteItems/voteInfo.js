@@ -132,16 +132,14 @@ if (Meteor.isClient) {
         {voteId : voteId}
         );
 
-
-      console.log("voter's vote:");
-      console.log(voteStatus);
-
       if (profileVoted) {
         // This user has started this vote already.
         // We will eventually change this to be if(status==="completed")
         // But also we must account for initialization conditions
         console.log("This vote: " + voteId + " already initialized for user: " + Meteor.userId());
         var voteStatus = profileVoted.status;
+        console.log("voter's vote:");
+        console.log(voteStatus);
 
         if (voteStatus === "incomplete") {
           console.log("the user has not completed this vote. Redirect to voting");
