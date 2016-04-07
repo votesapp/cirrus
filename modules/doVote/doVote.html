@@ -1,3 +1,32 @@
 <template name="doVote">
-  <h3>Do the vote!</h3>
+  {{#with currentVote}}
+  {{!-- <h3>{{title}}</h3> --}}
+  {{!-- <i>id: {{_id}}</i> --}}
+  {{/with}}
+
+  {{#with optionPair}}
+
+  <div class="thumbnail VA-option-thumb" style="background-image: url('/242x200_placeholder.svg');">
+    <div class="caption">
+      <h3>{{this.[0].optionName}}</h3>
+      {{!-- <p>{{this.[0].optionDesc}}</p> --}}
+      {{!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> --}}
+    </div>
+  </div>
+
+  <div class="btn-group btn-group-justified" role="group" aria-label="nav buttons">
+    <a class="btn btn-default" href="#" role="button">Back</a>
+    <a class="btn btn-default" href="#" role="button">Option</a>
+    <a class="btn btn-default" href="#" role="button">Confirm</a>
+  </div>
+
+  <div class="thumbnail VA-option-thumb" style="background-image: url('/242x200_placeholder.svg');">
+    <div class="caption">
+      <h3>{{this.[1].optionName}}</h3>
+      {{!-- <p>{{this.[1].optionDesc}}</p> --}}
+      {{!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> --}}
+    </div>
+  </div>
+
+  {{/with}}
 </template>

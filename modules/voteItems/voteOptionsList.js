@@ -4,6 +4,7 @@ if (Meteor.isClient) {
     voteOptions : function () {
       var recordId = Router.current().params._id;
 
+      // how is this possible without subscription above?
       var returnArray = optionsCollection.find(
         {
           voteId: recordId
