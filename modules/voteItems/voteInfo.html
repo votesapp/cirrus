@@ -24,13 +24,13 @@
   <h2>{{title}}</h2>
   <div class="btn-group pull-right">
      <a href="{{pathFor route='voteEdit'}}" class="btn btn-default" role="button">Edit</a>
-     {{!-- {{#with voteStatus}} --}}
-      {{!-- {{#unless completed}} --}}
-        <a href="#" class="btn btn-primary" data-action="doVote" role="button">{{../../voteStatus}}</a>
-      {{!-- {{else}} --}}
-        {{!-- <a href="#" class="btn btn-primary" role="button">Completed</a> --}}
-      {{!-- {{/unless}} --}}
-     {{!-- {{/with}} --}}
+     {{#with voteStatus}}
+      {{#unless completed}}
+        <a href="" class="btn btn-primary" data-action="doVote" role="button">Do Vote</a>
+      {{else}}
+        <a href="#" class="btn btn-primary" role="button">Completed</a>
+      {{/unless}}
+     {{/with}}
    </div>
   <p>{{description}}</p>
   <p><blockquote>This is some other info on the vote</blockquote></p>

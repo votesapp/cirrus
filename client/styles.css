@@ -49,3 +49,19 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   text-align: center;
 }
 
+.VA-option-selector {
+  visibility: hidden;
+  position: absolute;
+  left: 50%;
+  margin-left: -40px;
+  font-size: 100px;
+  top: 50%;
+  margin-top: -64px;
+  color: rgba(1, 194, 1, 0.59);
+
+}
+
+.selected .VA-option-selector {
+  visibility: visible;
+}
+

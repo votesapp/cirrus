@@ -15,20 +15,27 @@ if (Meteor.isClient) {
       return votesCollection.findOne({ _id:recordId });
     },
 
-    voteStatus : function () {
+    voteStatus: function () {
 
-      var profileVoted =  resultsCollection.findOne(
-        {voteId : voteId}
-        );
+      var recordId = Router.current().params._id;
+      // Add check for ownership of vote in addition to below
+      // also what happens when there is no status set?
+      var profileVoted =  resultsCollection.findOne({voteId : recordId});
 
-      var status = "status";
-      // var status = profileVoted.status;
+      // if (profileVoted.status) {
+      //   var status = {};
+      //   status[profileVoted.status] = true;
+      // } else {
+      //   var status = "new";
+      // };
 
-      // var voteStatus = {};
-      // voteStatus[status] = true;
+      var status = "new";
+
+      console.log("This is the status of this vote");
+      console.log(status);
+
       return status;
     }
-
   });
 
   Template.voteInfo.events({
@@ -115,7 +122,9 @@ if (Meteor.isClient) {
       console.log(this);
 
       // Get the vode ID. This is not the best way?
-      var voteId = this._id;
+      // var voteId = this._id;
+
+      var voteId = Router.current().params._id;
 
       // Let's add a check against this user having done the
       // vote already. The UI will block this, but routing makes
@@ -201,7 +210,9 @@ if (Meteor.isClient) {
             voteId : voteId,
             choicesInit : voteShuffle,
             createdOn: new Date(),
-            status: "incomplete"
+            createdBy: Meteor.userId(),
+            status: "incomplete",
+            step: 0
           }
         );
         console.log("initialized new vote");
