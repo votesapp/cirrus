@@ -4,7 +4,7 @@ if (Meteor.isClient) {
   Meteor.subscribe("votesList");
   Meteor.subscribe("voteOptions");
   // this is for initializing votes
-  Meteor.subscribe("voteResults");
+  Meteor.subscribe("myBallots");
 
   Template.voteInfo.helpers({
 
@@ -35,7 +35,7 @@ if (Meteor.isClient) {
       // Add check for ownership of vote in
       // addition to below
       // TODO: what happens when there is no status set?
-      var profileVoted = resultsCollection.findOne({voteId:recordId, createdBy:Meteor.userId()});
+      var profileVoted = ballotsCollection.findOne({voteId:recordId, createdBy:Meteor.userId()});
 
       // var ballotStatus = profileVoted.ballotStatus;
       console.log(profileVoted);
@@ -166,7 +166,7 @@ if (Meteor.isClient) {
       // The below MUST include filter for user
       // so that multiple ballots from other users
       // aren't returned for the same vote.
-      var existingBallot =  resultsCollection.findOne(
+      var existingBallot =  ballotsCollection.findOne(
         {voteId : voteId, createdBy: Meteor.userId()}
         );
 
@@ -175,7 +175,7 @@ if (Meteor.isClient) {
         // We will eventually change this to be if(status==="completed")
         // But also we must account for initialization conditions
         console.log("This vote: " + voteId + " already initialized for user: " + Meteor.userId());
-        var voteStatus = existingBallot.status;
+        var voteStatus = existingBallot.ballotStatus;
         console.log("voter's vote:");
         console.log(voteStatus);
 
@@ -192,12 +192,17 @@ if (Meteor.isClient) {
         // since profileVote != truthy, we will initialize the new vote for the user
         console.log("This is a new vote to initialize");
         // Get all of the vote choices for the vote
-        var voteChoices = optionsCollection.find({voteId:voteId}).fetch();
+        // To initialize the ballot.
+        var voteChoices = optionsCollection.find({voteId:voteId}).map(function(item){ 
+          var obj = {_id:item._id};
+          return obj;
+        });
 
         console.log("the vote choices");
         console.log(voteChoices);
 
-        // We now put these options in a random order to start the vote unbaised. 
+        // We now put these options in a random order to 
+        // start the vote unbaised. 
         // We are using Fischer-Yates shuffle algorithm here.
         var voteShuffle = voteChoices, i = 0, j = 0, temp = null;
 
@@ -211,11 +216,7 @@ if (Meteor.isClient) {
         console.log("shuffled choices: ");
         console.log(voteShuffle);
 
-        // We add this to the users profile.
-        // No we added it directly to the resultsCollection, since
-        // this is where it will end up in some form anyway, and it
-        // makes it easier to query.
-        // using: Meteor.users.profile.votesData{}
+        // No we added it directly to the ballotsCollection, since
         // @params: 
         //   voteId - the _id of the vote being voted on.
         //   orderInit(array) - an array of the initial items shuffle.
@@ -241,15 +242,18 @@ if (Meteor.isClient) {
         // Initialize the vote in the user's profile field in users collection.
         // var result = Meteor.users.update(Meteor.userId(), {$push: {'profile.votes': voteObj}});
 
-        // Initialize the vote in the resultsCollection.
-        var result = resultsCollection.insert(
+        var theStep = voteShuffle.length - 1;
+
+        // Initialize the ballot in the ballotsCollection.
+        var result = ballotsCollection.insert(
           {
             voteId : voteId,
             choicesInit : voteShuffle,
+            choicesCurr : voteShuffle,
             createdOn: new Date(),
             createdBy: Meteor.userId(),
             ballotStatus: "incomplete",
-            step: 0
+            step: theStep
           }
         );
         console.log("initialized new vote");
@@ -272,8 +276,8 @@ Meteor.methods({
 
   deleteOptions : function (voteId) {
 
-    // Delete the options associated with a vote.
-    // Usually because a vote was deleted elsewhere.
+    // Delete all of the options associated with a vote.
+    // Usually because the vote was deleted elsewhere.
     optionsCollection.remove({voteId:voteId});
 
   }

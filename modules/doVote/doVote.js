@@ -49,28 +49,57 @@ if (Meteor.isClient) {
       var currId = Router.current().params._id;
       console.log("currId in optionPair helper:")
       console.log(currId);
-      var voterOptions = resultsCollection.findOne({voteId : currId, createdBy: Meteor.userId()});
-      var optionsArray = voterOptions.choicesInit;
+      // below can be refactored
+      var voterOptions = ballotsCollection.findOne({voteId : currId, createdBy: Meteor.userId()});
+      var optionsArray = voterOptions.choicesCurr.map(function(obj) {
+        return obj._id;
+      });
       console.log(optionsArray);
       Session.set("currentVoteBallot", voterOptions._id);
       console.log("Current ballot: " + voterOptions._id);
-      // resultsCollection.findOne({voteId:"zJwaHPAZYzNkcdGTg"}).choicesInit;
+      // We need to select now from the optionsCollection
+      // so that vote data is reactive and dynamic.
+      // we may have to make this based on the ballot rather
+      // than the vote? Since further features allow for
+      // suggested options? It has to be this way, as the
+      // vote must be associated with the ballot to provent
+      // incorrect ballot state if there is drift between the
+      // ballot and the vote data (possible?).
+      // But we will refer to current option data so that
+      // the options info will be up to date.
+      var optionsData = optionsCollection.find({_id: {$in: optionsArray}}).fetch();
 
-      // Need to include some kind of iteration through pairs...
-      // We are using the "step" value stored with the "ballot"
+      console.log("getting the options via $in (array)");
+      console.log(optionsData);
+
+      // To allow iteration through pairs, we are using
+      // the "step" value stored with the ballot.
+      // This, combined with the comparedPairs array, will
+      // allow us to save the state of the ballot & process.
       var s = voterOptions.step;
       var votePair = [
         {
-          optionId: optionsArray[s]._id,
-          optionName: optionsArray[s].name,
-          optionDesc: optionsArray[s].description
+          optionId: optionsArray[s],
+          optionName: optionsCollection.findOne(
+            {_id: optionsArray[s]},
+            {name:1, _id:0}
+          ).name
+          // optionDesc: optionsData[s].description
         },
         {
-          optionId: optionsArray[s+1]._id,
-          optionName: optionsArray[s+1].name,
-          optionDesc: optionsArray[s+1].description
+          optionId: optionsArray[s-1],
+          optionName: optionsCollection.findOne(
+            {_id: optionsArray[s-1]},
+            {name:1, _id:0}
+          ).name
         }
       ];
+
+      console.log("voterPair[]: ");
+      console.log(votePair);
+          // optionId: optionsData[s-1]._id,
+          // optionName: optionsData[s-1].name,
+          // optionDesc: optionsData[s-1].description
 
       // Random order the pair.
       // Since it's binary for now we could just do a "coin flip".
@@ -113,17 +142,87 @@ if (Meteor.isClient) {
 
       // This is where we process the vote choice selection
       // We will get UI info on what the user has selected (or use session?)
+      // QUESTION: Can this be more load than wanted? Should
+      // Session..() be used instead? Can cause lost ballot
+      // state.
       var ballotId = Session.get("currentVoteBallot");
-      var ballotRecord = resultsCollection.findOne(ballotId);
-      var nextStep = ballotRecord.step + 1;
-      var numOptions = ballotRecord.choicesInit.length - 1;
+      var ballotRecord = ballotsCollection.findOne({_id:ballotId});
+      var s = ballotRecord.step;
 
-      if (nextStep >= numOptions) {
-        nextStep = 0;
+      // Get the choice pair as the user selected
+      // This will be as in the order in choicesCurr
+      // This pair sorting iterates "downward" through the 
+      // Array starting with the last element.
+      // var activeOptions = [ballotRecord.choicesCurr[nextStep],ballotRecord.choicesCurr[nextStep + 1]];
+      var activeOptions = ballotRecord.choicesCurr.map(function(obj){
+        return obj._id
+      });
+
+      console.log("getting active options");
+      console.log(activeOptions);
+
+      // We only need to update the array if the user 
+      // selected the lower choice.
+
+      if (activeOptions[s] === theSelection) {
+        // The user selected the lower option, so swap them.
+        var swapper = ballotRecord.choicesCurr[s];
+        ballotRecord.choicesCurr[s] = ballotRecord.choicesCurr[s - 1];
+        ballotRecord.choicesCurr[s - 1] = swapper;
+        console.log("We had to swap the items: ");
+        console.log(activeOptions);
+
+        // now we must also update the document
+        ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}})
       };
-      console.log("nextStep: " + nextStep);
-      // add conditional to flip back to 0? if it's > max.length of options array.
-      resultsCollection.update(ballotId, {$set: {step: nextStep}});
+
+      // below needs to be modified to get the number of
+      // only those choices not sorted.
+      var filteredOptions = [];
+      var numOptions = ballotRecord.choicesCurr;
+      var count = 0;
+      for (var i = numOptions.length - 1; i >= 0; i--) {
+        console.log("is it filtered?");
+        console.log(filteredOptions);
+        if (numOptions[i].sortStatus != "sorted") {
+          count++;
+          filteredOptions.push(numOptions[i]);
+        };
+         
+      }; 
+
+
+      console.log("numOptions: " + count);
+      // get the number of elements without .sortStatus="sorted";
+      var initNumOptions = ballotRecord.choicesInit.length - 1;
+      var numOffset = initNumOptions - count;
+      var nextStep = s - 1;
+
+      if (nextStep === 0) {
+        // then we are at the end of the list
+        // here we will flag the last item...
+        ballotRecord.choicesCurr[0].sortStatus = "sorted";
+        // maybe we can just decrement here to advance
+        // through the array? It's a hack though...
+        console.log("active ballotRecord.choicesCurr: ");
+        console.log(ballotRecord.choicesCurr);
+
+        // this is duplicat of above, but how to update only
+        // if necessary without duplication?
+        ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}})
+
+        // reset nextStep
+        // perhaps best is to do the same .count() with
+        // query from helper that gets limited options.
+        nextStep = ballotRecord.choicesCurr.length - 1;
+
+      };
+      console.log("this nextStep: " + nextStep);
+      // Update the ballot state "step"
+      ballotsCollection.update(ballotId, {$set: {step: nextStep}});
+
+      // Clear the selection indicator
+      $(".VA-option-thumb").removeClass( "selected" );
 
     }
 
