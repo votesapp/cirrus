@@ -52,11 +52,29 @@ if (Meteor.isClient) {
       // below can be refactored
       var voterOptions = ballotsCollection.findOne({voteId : currId, createdBy: Meteor.userId()});
       var optionsArray = voterOptions.choicesCurr.map(function(obj) {
-        return obj._id;
+        if (obj.sortStatus != "sorted") {
+          return obj._id;
+        } else {
+          return null;
+        };
       });
+
+      optionsArray = optionsArray.filter(function(val){
+        return (val);
+      });
+
       console.log(optionsArray);
       Session.set("currentVoteBallot", voterOptions._id);
-      console.log("Current ballot: " + voterOptions._id);
+      console.log("currentVoteBallot: " + voterOptions._id);
+
+      // If there are no unsorted options, we will redirect
+      // the user. Later we need to flag the full ballot as
+      // completed, then conditionally redirect at router
+      // level.
+      if (optionsArray.length <= 1) {
+        Router.go("voteConfirm");
+      };
+
       // We need to select now from the optionsCollection
       // so that vote data is reactive and dynamic.
       // we may have to make this based on the ballot rather
@@ -182,26 +200,27 @@ if (Meteor.isClient) {
       var numOptions = ballotRecord.choicesCurr;
       var count = 0;
       for (var i = numOptions.length - 1; i >= 0; i--) {
-        console.log("is it filtered?");
-        console.log(filteredOptions);
         if (numOptions[i].sortStatus != "sorted") {
           count++;
           filteredOptions.push(numOptions[i]);
         };
+        console.log("is it filtered?");
+        console.log(filteredOptions);
          
       }; 
 
 
       console.log("numOptions: " + count);
       // get the number of elements without .sortStatus="sorted";
-      var initNumOptions = ballotRecord.choicesInit.length - 1;
+      var initNumOptions = ballotRecord.choicesInit.length;
       var numOffset = initNumOptions - count;
+      console.log("the numOffset: " + numOffset);
       var nextStep = s - 1;
 
       if (nextStep === 0) {
         // then we are at the end of the list
         // here we will flag the last item...
-        ballotRecord.choicesCurr[0].sortStatus = "sorted";
+        ballotRecord.choicesCurr[numOffset].sortStatus = "sorted";
         // maybe we can just decrement here to advance
         // through the array? It's a hack though...
         console.log("active ballotRecord.choicesCurr: ");
@@ -214,11 +233,15 @@ if (Meteor.isClient) {
         // reset nextStep
         // perhaps best is to do the same .count() with
         // query from helper that gets limited options.
-        nextStep = ballotRecord.choicesCurr.length - 1;
+        nextStep = numOffset - 1;
 
       };
       console.log("this nextStep: " + nextStep);
       // Update the ballot state "step"
+
+      // use conditional to redirect if all vote choices
+      // are labelled as "sorted". This is done in helper
+      // so as to redirect any other access.
       ballotsCollection.update(ballotId, {$set: {step: nextStep}});
 
       // Clear the selection indicator
