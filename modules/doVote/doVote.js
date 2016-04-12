@@ -57,7 +57,7 @@ if (Meteor.isClient) {
         // There are not enough items left to compare. (ie. not two).
         // Add updating of ballot choice sorted status
         // Add updating of ballot status
-        Router.go("voteConfirm");
+        Router.go("voteConfirm", {_id: voterOptions._id});
       } else {
         // There are still items to compare
         // We need to select choice data from the optionsCollection
@@ -214,7 +214,7 @@ if (Meteor.isClient) {
       // Update the iterative state of the ballot
       var nextStep = s - 1;
 
-      if (nextStep == 0) {
+      if (nextStep <= 0) {
         // then we are at the end of the list
         // here we will flag the last item...
         ballotRecord.choicesCurr[indexOffset].sortStatus = "sorted";
@@ -225,7 +225,7 @@ if (Meteor.isClient) {
         // if necessary without duplication?
         // Should be safe as long as all operations on ballot are isolated
         // conditionally from one another.
-        ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}})
+        ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}});
 
         // Reset the iteration
         // This is -2 because one less to increment, and one less to account for
@@ -234,6 +234,14 @@ if (Meteor.isClient) {
         // 2 options, otherwise the single last option is placed as last in sort.
         nextStep = count - 2;
 
+        if (nextStep < 1) {
+          // update the last remaining ballot choice to "sorted"
+          ballotRecord.choicesCurr[indexOffset+1].sortStatus = "sorted";
+          ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}});
+          // Now we can set the ballot status to "completed"
+          ballotsCollection.update({_id:ballotId},{$set: {ballotStatus: "completed"}});
+
+        };
       };
       console.log("this nextStep: " + nextStep);
       // Update the ballot state "step"
