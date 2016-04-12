@@ -1,7 +1,12 @@
 /* CSS declarations go here */
 
+/*full heights for elements*/
+html, body, .full-height {
+  height: 100%;
+}
+
 body {
-	padding-top: 62px;
+	padding-top: 50px;
 }
 
 a:focus, button:focus{
@@ -22,5 +27,41 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 
 .navbar-nav.navbar-right {
   text-align: right;
+}
+
+
+/*Vote option styles. We can eventually replace with bootstrap4 cards*/
+
+.thumbnail.VA-option-thumb {
+  position: relative;
+  height: calc(50% - 17px); /* 1/2 height - the height of sibling controls */
+  margin-bottom: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.thumbnail.VA-option-thumb .caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.VA-option-selector {
+  visibility: hidden;
+  position: absolute;
+  left: 50%;
+  margin-left: -40px;
+  font-size: 100px;
+  top: 50%;
+  margin-top: -64px;
+  color: rgba(1, 194, 1, 0.59);
+
+}
+
+.selected .VA-option-selector {
+  visibility: visible;
 }
 

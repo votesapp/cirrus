@@ -1,0 +1,5 @@
+<template name="voteConfirm">
+  <h3>Confirm your vote.</h3>
+  {{#with ballotResults}} vote choices info{{/with}}
+  {{> voteChoicesList voteChoices=ballotResults}}
+</template>

@@ -1,6 +1,6 @@
 <template name="voteInfo">
   {{#with voteData}}
-  
+
   {{#if ../edit}}
   <h2 contenteditable="true" data-field="title">{{title}}</h2>
   <p contenteditable="true" data-field="description">{{description}}</p><a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a>
@@ -23,8 +23,20 @@
   {{else}}
   <h2>{{title}}</h2>
   <div class="btn-group pull-right">
+    {{#if isVoteOwner}}
      <a href="{{pathFor route='voteEdit'}}" class="btn btn-default" role="button">Edit</a>
-     <a href="{{pathFor route='doVote'}}" class="btn btn-primary" role="button">Do Vote</a>
+    {{/if}}
+    {{#with ballotStatus}}
+      {{#unless completed}}
+        {{#if incomplete}}
+          <a href="" class="btn btn-primary" data-action="doVote" role="button">Continue Vote</a>
+        {{else}}
+          <a href="" class="btn btn-primary" data-action="doVote" role="button">Take Vote</a>
+        {{/if}}
+      {{else}}
+        <a href="#" class="btn btn-primary disabled" role="button">Completed</a>
+      {{/unless}}
+    {{/with}}
    </div>
   <p>{{description}}</p>
   <p><blockquote>This is some other info on the vote</blockquote></p>

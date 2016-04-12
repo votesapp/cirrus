@@ -1,0 +1,42 @@
+<template name="voteChoicesList">
+
+
+  {{#if edit}}
+  <form class="form-group" id="addVoteChoice">
+    <div class="input-group">
+      <input type="text" placeholder="Add New Item" name="name" class="form-control" autocomplete="off" autofocus="true">
+      <span class="input-group-btn">
+        <button type="submit" name="submit" class="btn btn-success">+</button>
+      </span>
+    </div>
+  </form>
+  {{/if}}
+
+  <ul class="list-group">
+
+    {{#if edit}}
+
+      {{#each voteChoices}}
+      <a class="list-group-item" href="{{pathFor route='voteOptionEdit'}}" {{!-- data-toggle="myModal" data-target="#mainModal"  --}} role="button">
+        {{name}}
+        {{!-- <span class="glyphicon glyphicon-remove pull-right close" name="{{_id}}" data-action="deleteVoteOption" role="button"></span> --}}
+        <button type="button" class="close" name="{{_id}}" data-action="deleteVoteChoice">&times;</button>
+        <button type="button" class="btn btn-text pull-right">
+          <span class="glyphicon glyphicon-cog"></span>
+        </button>
+      </a>
+      {{/each}}
+
+    {{else}}
+
+      {{#each voteChoices}}
+      <a class="list-group-item" href="{{pathFor route='voteOption'}}" data-toggle="myModal" data-target="#mainModal" role="button">{{name}}</a>
+      {{/each}}
+
+    {{/if}}
+
+
+
+  </ul>
+
+</template>

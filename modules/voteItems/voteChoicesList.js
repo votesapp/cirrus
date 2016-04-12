@@ -1,7 +1,7 @@
 if (Meteor.isClient) {
 
-  Template.voteOptionsList.helpers({
-    voteOptions : function () {
+  Template.voteChoicesList.helpers({
+    voteChoicesx : function () {
       var recordId = Router.current().params._id;
       // We need a conditional to display results?
       console.log("logging 'this' in voteOptionsList helper: ");
@@ -26,9 +26,9 @@ if (Meteor.isClient) {
 
   });
 
-  Template.voteOptionsList.events({
+  Template.voteChoicesList.events({
 
-    "submit #addVoteOption": function (event) {
+    "submit #addVoteChoice": function (event) {
       event.preventDefault();
       var name = event.target.name.value;
 
@@ -48,7 +48,7 @@ if (Meteor.isClient) {
 
     },
 
-    "click [data-action='deleteVoteOption']": function (event) {
+    "click [data-action='deleteVoteChoice']": function (event) {
       event.preventDefault();
       // var docId = Session.get('selectedVote');
       // var recordId = Router.current().params._id;
