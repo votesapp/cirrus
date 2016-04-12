@@ -2,4 +2,12 @@
   <h3>Confirm your vote.</h3>
   {{#with ballotResults}} vote choices info{{/with}}
   {{> voteChoicesList voteChoices=ballotResults}}
+
+  <div class="col-xs-6">
+    <button class="btn btn-lg btn-default btn-block">Redo Vote</button>
+  </div>
+  <div class="col-xs-6">
+    <button class="btn btn-lg btn-success btn-block">Confirm Vote</button>
+  </div>
+
 </template>
