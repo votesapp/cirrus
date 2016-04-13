@@ -6,6 +6,8 @@ if (Meteor.isClient) {
   Template.votesList.helpers({
 
     votesList: function () {
+      // Here we will develop filters for searching and displaying different
+      // groups of votes.
       return votesCollection.find({},{sort: {createdOn: -1}}).fetch();
     }
 

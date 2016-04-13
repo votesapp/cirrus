@@ -4,7 +4,110 @@
 if (Meteor.isClient) {
   Meteor.subscribe("votesList");
   Meteor.subscribe("voteOptions");
-  Meteor.subscribe("voteResults");
+  Meteor.subscribe("voteChoices");
+
+  Template.doVote.onCreated(function () {
+    console.log("This template instance was created!!");
+      // Get the vode ID. This is not the best way?
+      // var voteId = this._id;
+
+      var voteId = Router.current().params._id;
+
+      // Let's add a check against this user having done the
+      // vote already. The UI will block this, but routing makes
+      // the template accessible (unless we restrict the route?).
+      // This seems the best, last point of security against that.
+      // get the array?
+
+
+      // The below MUST include filter for user
+      // so that multiple ballots from other users
+      // aren't returned for the same vote.
+      var existingBallot =  ballotsCollection.findOne(
+        {voteId : voteId, createdBy: Meteor.userId()}
+        );
+
+      if (existingBallot) {
+        // This user has started this vote already.
+        // We will eventually change this to be if(status==="completed")
+        // But also we must account for initialization conditions
+        console.log("This vote: " + voteId + " already initialized for user: " + Meteor.userId());
+        var voteStatus = existingBallot.ballotStatus;
+        console.log("voter's vote:");
+        console.log(voteStatus);
+
+        if (voteStatus === "incomplete") {
+          console.log("the user has not completed this vote. Redirect to voting");
+          // Router.go("doVote", {_id: voteId});
+        } else {
+          // NOTE: We can add additional connditions and results here...
+          // Also NOTE: We will need to redirect back to voteInfo if
+          // voteStatus == "completed"
+          console.log("The vote was completed");
+          Router.go("voteInfo", {_id: voteId});
+        };
+
+      } else {
+        // since existingBallot != truthy, we will initialize the new vote for the user
+
+        /* ********************************* */
+        /* ******** Initialize Vote ******** */
+        /* ********************************* */
+        console.log("This is a new vote to initialize");
+        // Get all of the vote choice _id's for the vote to initialize the ballot.
+        var voteChoices = optionsCollection.find({voteId:voteId}).map(function(item){ 
+          var obj = {_id:item._id};
+          return obj;
+        });
+
+        console.log("the vote choices");
+        console.log(voteChoices);
+
+        // We now put these options in a random order to start the vote unbaised. 
+        // We are using Fischer-Yates shuffle algorithm here.
+        var voteShuffle = voteChoices, i = 0, j = 0, temp = null;
+
+        for (i = voteShuffle.length - 1; i > 0; i -= 1) {
+          j = Math.floor(Math.random() * (i + 1))
+          temp = voteShuffle[i]
+          voteShuffle[i] = voteShuffle[j]
+          voteShuffle[j] = temp
+        };
+
+        console.log("shuffled choices: ");
+        console.log(voteShuffle);
+
+        // No we added it directly to the ballotsCollection, since
+        // @params: 
+        //   voteId - the _id of the vote being voted on.
+        //   orderInit(array) - an array of the initial items shuffle.
+        //   pairs(array) - track all pairs compared in the vote,
+        //     which will allow us to eliminate duplicate comparisons.
+        //   orderCurr(array) - the current state of the sort by the user.
+        //   status[default=incomplete] - a field to track the status of the vote.
+
+        // We use a step counter to track progress of the user through
+        // each iteration of the sort, storing the state of the ballot.
+        var theStep = voteShuffle.length - 1;
+
+        // Initialize the ballot in the ballotsCollection
+        var result = ballotsCollection.insert(
+          {
+            voteId : voteId,
+            choicesInit : voteShuffle,
+            choicesCurr : voteShuffle,
+            createdOn: new Date(),
+            createdBy: Meteor.userId(),
+            ballotStatus: "incomplete",
+            step: theStep
+          }
+        );
+        console.log("initialized new vote");
+        console.log(result);
+
+      }; // end if(existingBallot)
+
+  });
 
   Template.doVote.helpers({
 
@@ -167,12 +270,7 @@ if (Meteor.isClient) {
       console.log("getting active options");
       console.log(activeChoices);
 
-      // below needs to be modified to get the number of
-      // only those choices not sorted.
-      // Determin the current state ("step") of the vote, and reset the
-      // choice "cycle" if needed.
-      // Rather than track number of unsorted options at this point, we
-      // will derive the current state, the state to update, and the next
+      // We will derive the current state, the state to update, and the next
       // state of the ballot based on the current step, and unsorted options
       // get the number of elements without .sortStatus="sorted";
       var initNumOptions = ballotRecord.choicesInit.length;
@@ -196,11 +294,9 @@ if (Meteor.isClient) {
       // We only need to update the array if the user 
       // selected and "out of order" choice.
 
-      // NOTE: Below is wrong. It will set the wrong item, since items being
-      // compared are not out of full array, but out of unsorted options.
       var aElem = s + indexOffset;
       if (activeChoices[aElem] === theSelection) {
-        // Swap the order of the options
+        // The user selected the lower ranked option, so we will swap the elements
         var swapper = ballotRecord.choicesCurr[aElem];
         ballotRecord.choicesCurr[aElem] = ballotRecord.choicesCurr[aElem - 1];
         ballotRecord.choicesCurr[aElem - 1] = swapper;
@@ -239,7 +335,7 @@ if (Meteor.isClient) {
           ballotRecord.choicesCurr[indexOffset+1].sortStatus = "sorted";
           ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}});
           // Now we can set the ballot status to "completed"
-          ballotsCollection.update({_id:ballotId},{$set: {ballotStatus: "completed"}});
+          // ballotsCollection.update({_id:ballotId},{$set: {ballotStatus: "completed"}});
 
         };
       };
