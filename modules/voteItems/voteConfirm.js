@@ -11,39 +11,28 @@ if (Meteor.isClient) {
       // pass the ballot results to the template
       var recordId = Router.current().params._id;
 
-      console.log("this is in voteConfirm.helpers ballotResults:")
-      console.log(recordId);
-
+      // Get an array of choices _id's
       var ballotData = ballotsCollection.findOne({_id : recordId});
-      console.log(Meteor.userId());
       console.log("The ballot data:");
       console.log(ballotData);
-
-
-      // Now we need to get the original choices data
       var choicesArray = ballotData.choicesCurr.map(function(obj) {
         return obj._id;
       });
-      var choicesData = optionsCollection.find({_id: {$in: choicesArray}}).fetch();
-      console.log("The choices data:");
-      console.log(choicesData);
 
+      // Find all choices data based on the array of _id's
+      var choicesData = optionsCollection.find({_id: {$in: choicesArray}}).fetch();
+
+      // Sort the data according to the user ballot choices order
       var sortedChoices = [];
-      // now we need to sort the data according to the user ballot
       for (var i = choicesData.length - 1; i >= 0; i--) {
-        console.log(choicesData[i]);
         var temp = choicesData.filter(function(obj){
           return (obj._id == choicesArray[i]);
         });
         sortedChoices[i] = temp[0];
-        console.log("sorted objects:");
-        console.log(sortedChoices);
-
       };
 
       console.log("sorted objects:");
       console.log(sortedChoices);
-
 
       return sortedChoices;
     }
@@ -55,32 +44,32 @@ if (Meteor.isClient) {
     "click [data-action='redoVote']" : function (event) {
       // This will let the user reset their ballot and redo the voting process
 
-      // First change ballot status
-      // What if we just delete the ballot, and redirect them to doVote
-      // That will cause re-initialization of a new ballot...
-
-      // We just need the ballot _id...
+      // We delete the ballot, and redirect the user to doVote
+      // which will cause re-initialization of a new ballot...
       var ballotId = Router.current().params._id;
-      console.log("clicked redoVote");
-      console.log(ballotId);
 
+      // We need the voteId before it is deleted since router._id is ballot id
       var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
-      // We need the voteId before it is deleted
       console.log("the voteId");
       console.log(voteId);
 
+      // Delete the ballot
       var result = ballotsCollection.remove({_id:ballotId});
 
+      // Redirect the user to initialize a new ballot and redo the vote
       Router.go("doVote",{_id:voteId});
-
-      // Remove sorted status from ballot options (maybe just delete)
 
     },
 
     "click [data-action='confirmBallot']" : function(event) {
       console.log("confirming the ballot");
-      var ballotId = Session.get("currentVoteBallot");
+      var ballotId = Router.current().params._id;
+      // var ballotId = Session.get("currentVoteBallot");
+
+      // Update the status of the ballot
       ballotsCollection.update({_id:ballotId},{$set: {ballotStatus: "completed"}});
+
+      // Get the voteId and return user to info page to view vote results
       var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
       console.log("the vote id");
       console.log(voteId);

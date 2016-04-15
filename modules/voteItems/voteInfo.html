@@ -22,9 +22,10 @@
   </div>
   {{else}}
   <h2>{{title}}</h2>
+  <p>{{description}}</p>
   <div class="btn-group pull-right">
     {{#if isVoteOwner}}
-     <a href="{{pathFor route='voteEdit'}}" class="btn btn-default" role="button">Edit</a>
+     <a href="{{pathFor route='voteInfo' edit='edit'}}" class="btn btn-default" role="button">Edit</a>
     {{/if}}
     {{#with ballotStatus}}
       {{#unless completed}}
@@ -38,7 +39,6 @@
       {{/unless}}
     {{/with}}
    </div>
-  <p>{{description}}</p>
   <p><blockquote>This is some other info on the vote</blockquote></p>
 
   {{/if}}

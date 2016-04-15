@@ -1,4 +1,4 @@
-// Javascript file for voteOption template
+// Javascript file for voteChoice template
 
 if (Meteor.isClient) {
   Meteor.subscribe("voteOptions");

@@ -5,11 +5,11 @@ if (Meteor.isClient) {
 
   Template.body.helpers({
     // Global helpers (is it really global?)
-    currentVote: function () {
+    GcurrentVote: function () {
       return Session.get("currentVote");
     },
 
-    currentVoteOption: function () {
+    GcurrentVoteOption: function () {
       return Session.get("currentVoteOption");
     }
 
@@ -71,6 +71,7 @@ if (Meteor.isClient) {
     // Global event for linking and navigating that
     // eliminates the need for wrapper anchor elements.
     "click [data-nav]": function (event) {
+      event.preventDefault();
       var tar = event.currentTarget.dataset.nav;
       Router.go(tar);
     },
