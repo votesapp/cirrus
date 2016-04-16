@@ -48,6 +48,14 @@ if (Meteor.isClient) {
       console.log(theStatus);
 
       return theStatus;
+    },
+
+    choicesList : function () {
+      // Return the vote choices
+      var recordId = Router.current().params._id;
+      var ballotData = optionsCollection.find({voteId : recordId}).fetch();
+
+      return ballotData;
     }
   });
 

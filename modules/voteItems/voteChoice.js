@@ -5,7 +5,7 @@ if (Meteor.isClient) {
 
   Template.voteChoice.helpers({
 
-    optionRecord : function () {
+    choiceRecord : function () {
       console.log("logging this from optionRecord helper");
       console.log(this);
 
