@@ -53,7 +53,7 @@ if (Meteor.isClient) {
     choicesList : function () {
       // Return the vote choices
       var recordId = Router.current().params._id;
-      var ballotData = optionsCollection.find({voteId : recordId}).fetch();
+      var ballotData = choicesCollection.find({voteId : recordId}, {sort: {createdOn: -1}}).fetch();
 
       return ballotData;
     }
@@ -155,7 +155,7 @@ Meteor.methods({
 
     // Delete all of the options associated with a vote.
     // Usually because the vote was deleted elsewhere.
-    optionsCollection.remove({voteId:voteId});
+    choicesCollection.remove({voteId:voteId});
 
   }
 

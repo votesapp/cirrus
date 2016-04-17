@@ -1,12 +1,21 @@
 // Javascript file for voteChoice template
 
 if (Meteor.isClient) {
-  Meteor.subscribe("voteOptions");
+  Template.voteChoice.onCreated(function () {
+    var self = this;
+
+    // When this todo list template is used, get
+    // the tasks we need.
+    self.autorun(function () {
+      self.subscribe("voteChoices");
+    });
+  });
+  // Meteor.subscribe("voteChoices");
 
   Template.voteChoice.helpers({
 
     choiceRecord : function () {
-      console.log("logging this from optionRecord helper");
+      console.log("logging this from choiceRecord helper");
       console.log(this);
 
       // This will likely break when using modals. Get
@@ -17,7 +26,7 @@ if (Meteor.isClient) {
         var recordId = Router.current().params._id;
       };
 
-      return optionsCollection.findOne({_id:recordId});
+      return choicesCollection.findOne({_id:recordId});
 
     }
 
@@ -56,7 +65,7 @@ if (Meteor.isClient) {
         // It seems like "editable" elements are so controlled by
         // browser that additional content posted to it is only
         // added to the editable element...
-        var result = optionsCollection.update(docId,{$set: updateObj});
+        var result = choicesCollection.update(docId,{$set: updateObj});
         console.log(result);
         event.currentTarget.innerHTML = "";
 
