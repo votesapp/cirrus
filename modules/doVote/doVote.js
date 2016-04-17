@@ -16,28 +16,26 @@ if (Meteor.isClient) {
     var voteId = Router.current().params._id;
 
 
-    // The below MUST include filter for user
-    // so that multiple ballots from other users
-    // aren't returned for the same vote.
+    // Find the user's existing ballot for this vote
     var existingBallot = ballotsCollection.findOne(
       {voteId : voteId, createdBy: Meteor.userId()}
       );
 
     if (existingBallot) {
 
-      console.log("This vote: " + voteId + " already initialized for user: " + Meteor.userId());
       var voteStatus = existingBallot.ballotStatus;
+
+      console.log("This vote: " + voteId + " already initialized for user: " + Meteor.userId());
       console.log("Voter's ballot status:");
       console.log(voteStatus);
 
-      if (voteStatus != "incomplete") {
+      if (voteStatus == "completed") {
         console.log("The vote was completed");
         // Route the user back to voteInfo if they have already completed the vote
         Router.go("voteInfo", {_id: voteId});
       } else {
         console.log("the user has not completed this vote. Continuing to voting");
         // Do nothing to continue. 
-        // TODO: reverse this if() logic if no additional actions needed
       };
 
     } else {
@@ -149,14 +147,23 @@ if (Meteor.isClient) {
       console.log("currentVoteBallot: " + voterBallot._id);
 
       // If there are no unsorted options, we will redirect the user to confirm their ballot
-      // User's can only get to this if they have a ballot that is "completed" so
+      // User's can only get to this if they have a ballot that is not "completed" so
       // they cannot re-confirm their vote.
       if (choicesArray.length <= 1) {
         // There are not enough items left to compare. (ie. not two).
         // Add updating of ballot choice sorted status
         // Add updating of ballot status
         // This is added in the voteConfirm event below
-        Router.go("voteConfirm", {_id: currId});
+        if (voterBallot.ballotStatus != "completed") {
+
+          Router.go("voteConfirm", {_id: currId});
+
+        } else {
+          // The vote has already been confirmed
+          Router.go("voteInfo", {_id: currId});
+
+        };
+        
       } else {
         // There are still items to compare
         // Get the original choices data to present to user
@@ -195,24 +202,18 @@ if (Meteor.isClient) {
         console.log("voterPair[]: ");
         console.log(votePair);
 
-        // Store the pair in the ballot. 
-        // TODO: how can this be done to prevent spamming of pairs in collection
-        // from things like page reloads?
-
         // ballotsCollection.update({_id:...},{choicePairs:votePair});
 
         // Random order the pair with a "coin flip" to eliminate bias
-        // based on the order of choices on the ballot.
         var coinFlip = Math.floor(Math.random() * 2);
 
         if (coinFlip > 0) {
-          // Swap the values
           var swapper = votePair[0];
           votePair[0] = votePair[1];
           votePair[1] = swapper;
         };
 
-        // Send the processed vote pair to the view template data context
+        // Send the vote pair to the view
         return votePair;
 
       }; // End if(optionsArray.length <= 1)
@@ -269,9 +270,6 @@ if (Meteor.isClient) {
       // We will derive the current state, and update the state of the ballot
       // based on the current step, and unsorted options
 
-      // TODO: The below statement is unecessary, just count choicesCurr
-      // var initNumChoices = ballotRecord.choicesInit.length;
-
       var numChoices = ballotRecord.choicesCurr;
       var filteredOptions = [];
       var count = 0;
@@ -298,8 +296,6 @@ if (Meteor.isClient) {
         console.log("We had to swap the items: ");
         console.log(activeChoices);
 
-        // now we must also update the document
-        // ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}})
       };
 
       // Update the iterative state of the ballot
@@ -312,12 +308,6 @@ if (Meteor.isClient) {
         console.log("active ballotRecord.choicesCurr: ");
         console.log(ballotRecord.choicesCurr);
 
-        // this is duplicat of above, but how to update only
-        // if necessary without duplication?
-        // Should be safe as long as all operations on ballot are isolated
-        // conditionally from one another.
-        // ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}});
-
         // Reset the iteration
         // This is -2 because one less to increment, and one less to account for
         // zero indexed array that options are stored in.
@@ -327,16 +317,14 @@ if (Meteor.isClient) {
         // 2 options, otherwise the single last option is placed as last with status "sorted"
         if (nextStep < 1) {
           ballotRecord.choicesCurr[indexOffset+1].sortStatus = "sorted";
-          // ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}});
         };
 
       };
       console.log("this nextStep: " + nextStep);
       // Update the ballot state "step"
 
-      // Update the collection. Redirects are handled in onCreated, and in helpers.
-      ballotsCollection.update(ballotId, {$set: {step: nextStep}});
-      ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr}})
+      // Update the collection. Redirects are handled in onCreated, and in routers/helpers.
+      ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr, step: nextStep}});
 
       // Reset the selection UI
       $(".VA-choice-thumb").removeClass( "selected" );
