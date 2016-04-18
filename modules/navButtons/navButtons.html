@@ -1,7 +1,7 @@
 <template name="navButtons">
   <div class="btn-group btn-group-justified" role="group" aria-label="nav buttons">
     <a class="btn btn-sm btn-default" href="#" role="button" data-action="previous">Prev</a>
-    <a class="btn btn-sm btn-default" href="{{pathFor route='votesList'}}" role="button">MyVotes</a>
+    <a class="btn btn-sm btn-default" href="{{pathFor route='myVotes'}}" role="button">MyVotes</a>
 
     {{#each navAction}}
     <a class="btn btn-sm btn-default" href="{{pathFor route=navRoute _id=stateId}}" role="button" >{{name}}</a>

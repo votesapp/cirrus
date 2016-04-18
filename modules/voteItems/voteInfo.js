@@ -153,6 +153,7 @@ Meteor.methods({
 
   deleteOptions : function (voteId) {
 
+    check(voteId, String);
     // Delete all of the options associated with a vote.
     // Usually because the vote was deleted elsewhere.
     choicesCollection.remove({voteId:voteId});
