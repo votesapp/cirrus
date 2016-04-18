@@ -1,30 +1,9 @@
 if (Meteor.isClient) {
 
-  Template.voteChoicesList.helpers({
-    voteChoicesx : function () {
-      var recordId = Router.current().params._id;
-      // We need a conditional to display results?
-      console.log("logging 'this' in voteOptionsList helper: ");
-      console.log(this);
-
-      console.log("logging 'recordId' in voteOptionsList helper: ");
-      console.log(recordId);
-
-      // how is this possible without subscription above?
-      // it's always subscribed in containing templates
-      var returnArray = optionsCollection.find(
-        {
-          voteId: recordId
-        },
-        {
-          sort: {createdOn: -1}
-        }
-      );
-      
-      return returnArray;
-    }
-
-  });
+  // We are setting data contexts for this template from the
+  // parent template, as this template is assumed to always be
+  // be nested inside another template with a data context. That 
+  // context will be passed by the calling template.
 
   Template.voteChoicesList.events({
 
@@ -35,7 +14,7 @@ if (Meteor.isClient) {
       // Careful on the data context here...
       var recordId = Router.current().params._id;
 
-      optionsCollection.insert(
+      choicesCollection.insert(
         {
           name: name,
           createdOn: new Date(),
@@ -57,7 +36,7 @@ if (Meteor.isClient) {
       console.log("trying to delete record: ");
       console.log(recordId);
       // console.log(event);
-      optionsCollection.remove(recordId);
+      choicesCollection.remove(recordId);
 
     }
   });

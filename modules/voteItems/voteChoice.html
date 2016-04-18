@@ -1,10 +1,11 @@
 <template name="voteChoice">
 
-{{#if edit}} {{!-- If this template content is being edited... --}}
-  {{#with optionRecord}}
+{{#if edit}} 
+
+  {{#with choiceRecord}}
+    <pre>&lt;img&gt; goes here</pre>
     <h2 contenteditable="true" data-field="name">{{name}}</h2>
     <i>{{_id}}</i>
-    <pre>&lt;img&gt; goes here</pre>
     <h4>Description</h4>
     {{#if description}}
     <p contenteditable="true" data-field="description">{{description}}</p>
@@ -13,18 +14,18 @@
     {{/if}}
   {{/with}}
 
-{{else}} {{!-- Otherwise the content is not being edited... --}}
+{{else}} 
 
-  {{#with optionRecord}}
+  {{#with choiceRecord}}
+    <pre>&lt;img&gt; goes here</pre>
     <h2>{{name}}</h2>
     {{!-- <i>{{_id}}</i> --}}
-    <pre>&lt;img&gt; goes here</pre>
-    <h4>Description</h4>
-    <a href="#" class="btn btn-primary pull-right" data-nav="{{pathFor route='voteOptionEdit'}}" data-dismiss="modal">Edit Option</a>
+
     {{#if description}}
+    <h4>Description</h4>
     <p>{{description}}</p>
     {{else}}
-    <p>There is no description yet. Edit this to create a description</p>
+    <!-- We can put other content conditionally here... -->
     {{/if}}
   {{/with}}
 

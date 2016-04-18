@@ -4,30 +4,30 @@
   {{!-- <i>id: {{_id}}</i> --}}
   {{/with}}
 
-  {{#with optionPair}}
+  {{#with votePair}}
 
-  <div id="{{this.[0].optionId}}" class="thumbnail VA-option-thumb" style="background-image: url('/242x200_placeholder.svg');">
+  <div id="{{this.[0].choiceId}}" class="thumbnail VA-choice-thumb" style="background-image: url('/242x200_placeholder.svg');">
     <div class="caption">
-      <h2>{{this.[0].optionName}}</h2>
+      <h2>{{this.[0].choiceName}}</h2>
       {{!-- <p>{{this.[0].optionDesc}}</p> --}}
       {{!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> --}}
     </div>
-    <span class="glyphicon glyphicon-ok VA-option-selector text-success" aria-hidden="true"></span>
+    <span class="glyphicon glyphicon-ok VA-choice-selector text-success" aria-hidden="true"></span>
   </div>
 
   <div class="btn-group btn-group-justified" role="group" aria-label="nav buttons">
     <a class="btn btn-default" href="{{pathFor route='voteInfo'}}">Back</a>
-    <a class="btn btn-default" href="{{pathFor route='userProfile'}}" role="button">Option</a>
+    <a class="btn btn-default disabled" href="#" role="button">VS</a>
     <a class="btn btn-default" href="#" role="button" data-action="confirmSelection">Confirm</a>
   </div>
 
-  <div id="{{this.[1].optionId}}" class="thumbnail VA-option-thumb" style="background-image: url('/242x200_placeholder.svg');">
+  <div id="{{this.[1].choiceId}}" class="thumbnail VA-choice-thumb" style="background-image: url('/242x200_placeholder.svg');">
     <div class="caption">
-      <h2>{{this.[1].optionName}}</h2>
+      <h2>{{this.[1].choiceName}}</h2>
       {{!-- <p>{{this.[1].optionDesc}}</p> --}}
       {{!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> --}}
     </div>
-    <span class="glyphicon glyphicon-ok VA-option-selector text-success" aria-hidden="true"></span>
+    <span class="glyphicon glyphicon-ok VA-choice-selector text-success" aria-hidden="true"></span>
   </div>
 
   {{/with}}

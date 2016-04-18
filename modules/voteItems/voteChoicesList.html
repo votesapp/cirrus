@@ -17,20 +17,17 @@
     {{#if edit}}
 
       {{#each voteChoices}}
-      <a class="list-group-item" href="{{pathFor route='voteOptionEdit'}}" {{!-- data-toggle="myModal" data-target="#mainModal"  --}} role="button">
+      <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal">
         {{name}}
-        {{!-- <span class="glyphicon glyphicon-remove pull-right close" name="{{_id}}" data-action="deleteVoteOption" role="button"></span> --}}
         <button type="button" class="close" name="{{_id}}" data-action="deleteVoteChoice">&times;</button>
-        <button type="button" class="btn btn-text pull-right">
-          <span class="glyphicon glyphicon-cog"></span>
-        </button>
+        <a class="glyphicon glyphicon-pencil close" href="{{pathFor route='voteChoice' edit=../edit}}">&nbsp;</a>
       </a>
       {{/each}}
 
     {{else}}
 
       {{#each voteChoices}}
-      <a class="list-group-item" href="{{pathFor route='voteOption'}}" data-toggle="myModal" data-target="#mainModal" role="button">{{name}}</a>
+      <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" >{{name}}</a>
       {{/each}}
 
     {{/if}}

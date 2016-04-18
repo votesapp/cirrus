@@ -3,7 +3,8 @@
 if (Meteor.isClient) {
   Meteor.subscribe("votesList");
   Meteor.subscribe("voteOptions");
-  // this is for initializing votes
+  Meteor.subscribe("voteChoices");
+  // This subscription is for initializing vote and also displaying vote results
   Meteor.subscribe("myBallots");
 
   Template.voteInfo.helpers({
@@ -11,54 +12,50 @@ if (Meteor.isClient) {
     voteData : function () {
       // Get the data for the selected vote
       var recordId = Router.current().params._id;
-
+      console.log("The recordId: " + recordId);
       return votesCollection.findOne({ _id:recordId });
+
     },
 
     isVoteOwner : function () {
-      // return if the vote is owned by the user
-      var recordId = Router.current().params._id;
+      // Check if the vote is owned by the user, and set data context.
 
-      return votesCollection.findOne({ _id:recordId, createdBy: Meteor.userId()})
+      return votesCollection.findOne({ _id:this._id, createdBy: Meteor.userId()})
 
     },
 
     ballotStatus: function () {
+      // Used to set the "next action" UI component to give the user
+      // appropriate vote options depending on their account's
+      // ballot status for the vote.
 
-      // This is so we can set the "next action" UI
-      // component to give appropriate vote options
-      // to the user depending on their account's
-      // relationship to the vote.
-      var recordId = Router.current().params._id;
-      console.log("the _id of the vote: ");
-      console.log(recordId);
-      // Add check for ownership of vote in
-      // addition to below
-      // TODO: what happens when there is no status set?
-      var profileVoted = ballotsCollection.findOne({voteId:recordId, createdBy:Meteor.userId()});
+      var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
 
-      // var ballotStatus = profileVoted.ballotStatus;
-      console.log(profileVoted);
-
+      // Get the status of the vote.
       var theStatus = {};
-      // More conditionals are needed to check
-      // for ownership and published status.
-      if (profileVoted) {
+      if (userBallot) {
         console.log("the stored status");
-        console.log(profileVoted.ballotStatus);
-        theStatus[profileVoted.ballotStatus] = true;
+        console.log(userBallot.ballotStatus);
+        // Set the key for the ballot status to the status, with a value of true.
+        // This is for template view, since no comparison can be done in the view.
+        theStatus[userBallot.ballotStatus] = true;
       } else {
-        console.log("not status, new ballot required");
+        console.log("No ballot status, new ballot required.");
         theStatus.noBallot = true;
       };
-
-      // We are overriding this helper to debug.
-      // var status = "new";
 
       console.log("This is the status of this vote");
       console.log(theStatus);
 
       return theStatus;
+    },
+
+    choicesList : function () {
+      // Return the vote choices
+      var recordId = Router.current().params._id;
+      var ballotData = choicesCollection.find({voteId : recordId}, {sort: {createdOn: -1}}).fetch();
+
+      return ballotData;
     }
   });
 
@@ -140,132 +137,12 @@ if (Meteor.isClient) {
 
     "click [data-action='doVote']" : function (event) {
       event.preventDefault();
-      // Prepare the data for voting....
-      // Eventually we wont to do it onLoad of doVote template/module
       console.log("clicked 'doVote': ");
       console.log(this);
 
-      // Get the vode ID. This is not the best way?
-      // var voteId = this._id;
-
       var voteId = Router.current().params._id;
 
-      // Let's add a check against this user having done the
-      // vote already. The UI will block this, but routing makes
-      // the template accessible (unless we restrict the route?).
-      // This seems the best, last point of security against that.
-      // get the array?
-      // var profileVote = Meteor.user().profile.votes;
-      // The below does not work because it is not supported by meteorDB.
-      // var profileVoted =  Meteor.users.findOne(
-      //   {'profile.votes.voteId' : voteId},
-      //   {'profile.votes.$': 1}
-      //   );
-
-
-      // The below MUST include filter for user
-      // so that multiple ballots from other users
-      // aren't returned for the same vote.
-      var existingBallot =  ballotsCollection.findOne(
-        {voteId : voteId, createdBy: Meteor.userId()}
-        );
-
-      if (existingBallot) {
-        // This user has started this vote already.
-        // We will eventually change this to be if(status==="completed")
-        // But also we must account for initialization conditions
-        console.log("This vote: " + voteId + " already initialized for user: " + Meteor.userId());
-        var voteStatus = existingBallot.ballotStatus;
-        console.log("voter's vote:");
-        console.log(voteStatus);
-
-        if (voteStatus === "incomplete") {
-          console.log("the user has not completed this vote. Redirect to voting");
-          // add other conditionals for other statuses. If more than 3, do we want
-          // to use switch()? is it worth it now?
-          Router.go("doVote", {_id: voteId});
-        } else {
-          console.log("The vote was completed");
-        };
-
-      } else {
-        // since profileVote != truthy, we will initialize the new vote for the user
-        console.log("This is a new vote to initialize");
-        // Get all of the vote choices for the vote
-        // To initialize the ballot.
-        var voteChoices = optionsCollection.find({voteId:voteId}).map(function(item){ 
-          var obj = {_id:item._id};
-          return obj;
-        });
-
-        console.log("the vote choices");
-        console.log(voteChoices);
-
-        // We now put these options in a random order to 
-        // start the vote unbaised. 
-        // We are using Fischer-Yates shuffle algorithm here.
-        var voteShuffle = voteChoices, i = 0, j = 0, temp = null;
-
-        for (i = voteShuffle.length - 1; i > 0; i -= 1) {
-          j = Math.floor(Math.random() * (i + 1))
-          temp = voteShuffle[i]
-          voteShuffle[i] = voteShuffle[j]
-          voteShuffle[j] = temp
-        };
-
-        console.log("shuffled choices: ");
-        console.log(voteShuffle);
-
-        // No we added it directly to the ballotsCollection, since
-        // @params: 
-        //   voteId - the _id of the vote being voted on.
-        //   orderInit(array) - an array of the initial items shuffle.
-        //   pairs(array) - track all pairs compared in the vote,
-        //     which will allow us to eliminate duplicate comparisons.
-        //   orderCurr(array) - the current state of the sort by the user.
-        //   status[default=incomplete] - a field to track the status of the vote.
-
-        // NOTE: This is only if ballots are going in
-        // the users collection as a nested object.
-        // The big downside is that you cant use
-        // "dot" concatenation for nested array
-        // filters beyone one level. So you can't do
-        // that if storing ballot in Meteor.users
-
-        // Build the object first
-        // var voteObj = {
-        //   voteId: voteId,
-        //   orderInit: voteShuffle,
-        //   status: "incomplete"
-        // };
-
-        // Initialize the vote in the user's profile field in users collection.
-        // var result = Meteor.users.update(Meteor.userId(), {$push: {'profile.votes': voteObj}});
-
-        var theStep = voteShuffle.length - 1;
-
-        // Initialize the ballot in the ballotsCollection.
-        var result = ballotsCollection.insert(
-          {
-            voteId : voteId,
-            choicesInit : voteShuffle,
-            choicesCurr : voteShuffle,
-            createdOn: new Date(),
-            createdBy: Meteor.userId(),
-            ballotStatus: "incomplete",
-            step: theStep
-          }
-        );
-        console.log("initialized new vote");
-        console.log(result);
-
-        // Router.go('doVote',{ params: { "_id":voteId }});
-        Router.go("doVote", {_id: voteId});
-
-      }; // end if(profileVoted)
-
-
-
+      Router.go("doVote", {_id: voteId});
 
     }
 
@@ -278,7 +155,7 @@ Meteor.methods({
 
     // Delete all of the options associated with a vote.
     // Usually because the vote was deleted elsewhere.
-    optionsCollection.remove({voteId:voteId});
+    choicesCollection.remove({voteId:voteId});
 
   }
 

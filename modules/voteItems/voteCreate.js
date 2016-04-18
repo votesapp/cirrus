@@ -38,7 +38,7 @@ if (Meteor.isClient) {
         $("#createVoteForm textarea").val("");
 
         // Rerout the user to the newly created vote for editing
-        Router.go("voteEdit", { _id:newDoc });
+        Router.go("voteInfo", { _id:newDoc, edit:"edit" });
       } else {
         // Create an alert because the form was not valid
         Bert.alert({

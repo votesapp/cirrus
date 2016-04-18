@@ -34,6 +34,75 @@ if (Meteor.isClient) {
     }
   });
 
+  Template.body.events({
+    // Handle global use of myModal
+
+    "click [data-toggle='myModal']" : function (event) {
+      event.preventDefault();
+
+      // Function to trigger modals manually via jQuery. This 
+      // allows us to wait on load, and better set and 
+      // synchronize the modal and it's content. Automatically
+      // triggering the modal from the DOM causes AJAX
+      // collisions and errors when combined with dynamically
+      // loading modal content through Blaze templates.
+
+      // This function also allows us to parse routing data
+      // in the target element through it's URL parameter in
+      // either the href or data-template attributes, and set
+      // modal content dynamically based on that URL, similarly
+      // to what a router would do, but with rendering the
+      // content in a modal popup, hopefully with the same
+      // or a similar data context.
+
+
+
+
+      if (event.target == event.currentTarget) {
+        var template;
+        // Get parameter values from DOM properties
+        var modalTarget = event.currentTarget.dataset.target;
+        var content = event.currentTarget.dataset.template;
+
+        if (content) {
+          // If a template was found, then we use it.
+          template = content.split('/')[1];
+          // template = content.replace(/^\//,'');
+        } else {
+          // Otherwise look to the href element propery.
+          content = event.currentTarget.getAttribute("href");
+          template = content.split('/')[1];
+          // template = content.replace(/^\//,'');
+        };
+        var routeId = content.split('/')[2];
+
+        var modalRoute = {
+          _id: routeId,
+          template: template
+        };
+
+        // We track the template in a session variable to easily
+        // access in the modal helper. Esesentially the route is stored here,
+        // without having been rendered by a router.
+        // TODO: Add full parsing of all route params, data, and other properties
+        console.log("event.currentTarget is: ");
+        console.log(event.currentTarget);
+        console.log("event.target is: ");
+        console.log(event.target);
+        Session.set("modalRoute", modalRoute);
+
+        $(modalTarget).modal("toggle");
+
+      };
+      console.log("event.currentTarget is: ");
+      console.log(event.currentTarget);
+      console.log("event.target is: ");
+      console.log(event.target);
+
+    }
+
+  });
+
   Template.modalView.events({
     // code...
     "submit .modal-body form" : function () {

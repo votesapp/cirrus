@@ -4,7 +4,7 @@
     <a class="btn btn-sm btn-default" href="{{pathFor route='votesList'}}" role="button">MyVotes</a>
 
     {{#each navAction}}
-    <a class="btn btn-sm btn-default" href="/{{navRoute}}/{{stateId}}" role="button" >{{name}}</a>
+    <a class="btn btn-sm btn-default" href="{{pathFor route=navRoute _id=stateId}}" role="button" >{{name}}</a>
     {{/each}}
 
     <a class="btn btn-sm btn-success" href="{{pathFor route='voteCreate'}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}" role="button">New +</a>
