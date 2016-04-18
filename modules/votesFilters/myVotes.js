@@ -13,7 +13,7 @@ if (Meteor.isClient) {
   Template.myVotes.helpers({
 
     // Helpers for myVotes
-    votesList : function () {
+    myVotesList : function () {
 
       return votesCollection.find({},{sort: {createdOn: -1}});
 
