@@ -1,27 +1,58 @@
 // Helpers, events, and scripts for voteInfo template
 
 if (Meteor.isClient) {
-  Meteor.subscribe("votesList");
-  Meteor.subscribe("voteOptions");
-  Meteor.subscribe("voteChoices");
-  // This subscription is for initializing vote and also displaying vote results
-  Meteor.subscribe("myBallots");
+  Template.voteInfo.onCreated(function () {
+    var self = this;
+
+    self.autorun(function () {
+      self.subscribe("votesList");
+      self.subscribe("myVotes");
+      self.subscribe("voteChoices");
+      self.subscribe("myBallots");
+    });
+  });
 
   Template.voteInfo.helpers({
+
+    menuOptions : function () {
+      // menu options for vote actions
+      var menuItems = {
+        options: {
+          align: "pull-right",
+          menuAlign: "dropdown-menu-right",
+          defaultName: "Save Draft"
+        },
+        items: [
+          {name: "Save Draft", action: "saveDraft"},
+          {name: "Publish Vote", action: "publishVote"},
+          {seperator: true},
+          {name: "Delete Vote", action: "deleteVote"}
+        ]
+      }
+
+      return menuItems;
+    },
 
     voteData : function () {
       // Get the data for the selected vote
       var recordId = Router.current().params._id;
       console.log("The recordId: " + recordId);
-      return votesCollection.findOne({ _id:recordId });
-
+      if (recordId) {
+        return votesCollection.findOne({ _id:recordId });
+      };
     },
 
     isVoteOwner : function () {
-      // Check if the vote is owned by the user, and set data context.
+      // Check if the vote is owned by the user
+      if (this._id) {
+        return votesCollection.findOne({ _id:this._id, createdBy: Meteor.userId()})
+      };
+    },
 
-      return votesCollection.findOne({ _id:this._id, createdBy: Meteor.userId()})
-
+    votePublished : function () {
+      if (this.voteStatus == "published") {
+        return true;
+      };
     },
 
     ballotStatus: function () {
@@ -61,18 +92,31 @@ if (Meteor.isClient) {
 
   Template.voteInfo.events({
 
+    "click [data-action='saveDraft']" : function () {
+      // Right now this is a pseudo event and placeholder should we
+      // need to change how votes are saved (instead of below)
+      Bert.alert("The vote was saved", "info");
+
+    },
+
+    "click [data-action='publishVote']" : function () {
+      // Change the status of the vote to publish
+      var voteId = Router.current().params._id;
+      Meteor.call("updateVote", voteId, {voteStatus: "published"});
+      Bert.alert("The vote was published!", "info");
+      Router.go("myVotes");
+    },
+
     "click [data-action='deleteVote']" : function (event) {
       event.preventDefault();
 
-      // Delete the selected vote
       var recordId = Router.current().params._id;
 
-      votesCollection.remove(recordId);
+      // Delete the vote record
+      Meteor.call("deleteVote", recordId);
 
       // Then delete all the vote options associated with the vote
-      // NOTE: Below has to be done through a method since it deletes
-      // multiple records, which can not be done on the client side.
-      Meteor.call("deleteOptions", recordId);
+      Meteor.call("deleteChoices", recordId);
 
       // Notify the user of the success of the delete
       Bert.alert({
@@ -114,7 +158,14 @@ if (Meteor.isClient) {
         // Update the collection based on the collected data.
         var updateObj = {};
         updateObj[dataElement] = dataContent;
-        var result = votesCollection.update(docId,{$set: updateObj});
+        Meteor.call("updateVote", docId, updateObj, function (err, data){
+          if (err) {
+            console.log("Error: " + err);
+          };
+          var result = data;
+          console.log(result);
+        });
+        // var result = votesCollection.update(docId,{$set: updateObj});
         // Do we need to clear the field to prevent duplication?
         // It seems like "editable" elements are so controlled by
         // browser that additional content posted to it is only
@@ -122,7 +173,6 @@ if (Meteor.isClient) {
         // TODO: This can cause UI glitches as the DOM rerenders.
         // Maybe we can suppress reactive rendering instead of blanking
         // the element?
-        console.log(result);
 
         // WHATIF: Instead of blaking the content, we set it to the value
         // that was used to update the collection. Maybe Meteor would
@@ -151,13 +201,5 @@ if (Meteor.isClient) {
 
 Meteor.methods({
 
-  deleteOptions : function (voteId) {
-
-    check(voteId, String);
-    // Delete all of the options associated with a vote.
-    // Usually because the vote was deleted elsewhere.
-    choicesCollection.remove({voteId:voteId});
-
-  }
 
 });

@@ -8,7 +8,7 @@
           <img class="media-object" src="/64x64_placeholder.svg" alt="...">
       </div>
       <div class="media-body">
-        <h4 class="media-heading">{{title}}</h4>
+        <h4 class="media-heading">{{#if draftStatus}}<small class="text-muted">(draft)&nbsp;</small>{{/if}}{{title}}</h4>
         {{description}}
       </div>
     </li> {{!-- /.media --}}

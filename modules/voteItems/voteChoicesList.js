@@ -14,14 +14,14 @@ if (Meteor.isClient) {
       // Careful on the data context here...
       var recordId = Router.current().params._id;
 
-      choicesCollection.insert(
-        {
-          name: name,
-          createdOn: new Date(),
-          createdBy: Meteor.userId(),
-          voteId: recordId
-        }
-      );
+      var choiceData = {
+        name: name,
+        createdOn: new Date(),
+        createdBy: Meteor.userId(),
+        voteId: recordId
+      };
+
+      Meteor.call("createChoice", choiceData);
 
       event.target.name.value = "";
 
@@ -36,9 +36,10 @@ if (Meteor.isClient) {
       console.log("trying to delete record: ");
       console.log(recordId);
       // console.log(event);
-      choicesCollection.remove(recordId);
+      Meteor.call("deleteChoice", recordId);
 
     }
   });
 
 };
+

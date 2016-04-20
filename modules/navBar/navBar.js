@@ -7,6 +7,9 @@ if (Meteor.isClient) {
 
       $('.navbar .collapse').collapse('hide');
       //TODO: check if add not:(.collapsed) for efficieny
+      // Also is this better to do with a callback for
+      // the actual function being accessed though the click?
+      // This would mean misclicks wouldn't close the navbar.
 
     }
 

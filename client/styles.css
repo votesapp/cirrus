@@ -29,6 +29,12 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   text-align: right;
 }
 
+.VA-nav-buttons {
+  position: fixed;
+  bottom: 0;
+  z-index: 1000;
+}
+
 
 /*Vote option styles. We can eventually replace with bootstrap4 cards*/
 

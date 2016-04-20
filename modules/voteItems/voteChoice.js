@@ -4,13 +4,10 @@ if (Meteor.isClient) {
   Template.voteChoice.onCreated(function () {
     var self = this;
 
-    // When this todo list template is used, get
-    // the tasks we need.
     self.autorun(function () {
       self.subscribe("voteChoices");
     });
   });
-  // Meteor.subscribe("voteChoices");
 
   Template.voteChoice.helpers({
 
@@ -65,8 +62,7 @@ if (Meteor.isClient) {
         // It seems like "editable" elements are so controlled by
         // browser that additional content posted to it is only
         // added to the editable element...
-        var result = choicesCollection.update(docId,{$set: updateObj});
-        console.log(result);
+        Meteor.call("updateChoice", docId, updateObj);
         event.currentTarget.innerHTML = "";
 
       } else {
