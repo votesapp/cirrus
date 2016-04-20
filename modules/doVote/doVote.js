@@ -8,7 +8,7 @@ if (Meteor.isClient) {
 
     self.autorun(function () {
       self.subscribe("votesList");
-      self.subscribe("votesChoices");
+      self.subscribe("voteChoices");
       self.subscribe("myBallots");
     });
     console.log("This template instance was created!!");
@@ -86,17 +86,19 @@ if (Meteor.isClient) {
       var theStep = voteShuffle.length - 1;
 
       // Initialize the ballot in the ballotsCollection
-      var result = ballotsCollection.insert(
-        {
-          voteId : voteId,
-          choicesInit : voteShuffle,
-          choicesCurr : voteShuffle,
-          createdOn: new Date(),
-          createdBy: Meteor.userId(),
-          ballotStatus: "incomplete",
-          step: theStep
-        }
-      );
+      var ballotData = {
+        voteId : voteId,
+        choicesInit : voteShuffle,
+        choicesCurr : voteShuffle,
+        createdOn: new Date(),
+        createdBy: Meteor.userId(),
+        ballotStatus: "incomplete",
+        step: theStep
+      }
+      console.log("ballotData:");
+      console.log(ballotData);
+
+      result = Meteor.call("createBallot", ballotData)
       console.log("initialized new vote");
       console.log(result);
 
@@ -202,6 +204,7 @@ if (Meteor.isClient) {
         console.log("voterPair[]: ");
         console.log(votePair);
 
+        // TODO: Add tracking of pairs to reduce redundency
         // ballotsCollection.update({_id:...},{choicePairs:votePair});
 
         // Random order the pair with a "coin flip" to eliminate bias
@@ -324,7 +327,8 @@ if (Meteor.isClient) {
       // Update the ballot state "step"
 
       // Update the collection. Redirects are handled in onCreated, and in routers/helpers.
-      ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr, step: nextStep}});
+      Meteor.call("updateBallot", ballotId, {choicesCurr: ballotRecord.choicesCurr, step: nextStep });
+      // ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr, step: nextStep}});
 
       // Reset the selection UI
       $(".VA-choice-thumb").removeClass( "selected" );
@@ -334,3 +338,4 @@ if (Meteor.isClient) {
   });
 
 };
+

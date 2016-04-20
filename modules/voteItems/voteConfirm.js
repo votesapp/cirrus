@@ -95,7 +95,8 @@ if (Meteor.isClient) {
       console.log(ballotId);
 
       // Delete the ballot to restart vote with new ballot
-      ballotsCollection.remove({_id:ballotId});
+      Meteor.call("deleteBallot", ballotId);
+
       Router.go("doVote", {_id: voteId});
 
     },
@@ -107,7 +108,7 @@ if (Meteor.isClient) {
       var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
 
       // Update the status of the ballot
-      ballotsCollection.update({_id:ballotId},{$set: {ballotStatus: "completed"}});
+      Meteor.call("updateBallot", ballotId, {ballotStatus: "completed"})
 
       console.log("the vote id");
       console.log(voteId);
@@ -120,3 +121,4 @@ if (Meteor.isClient) {
 
 
 };
+

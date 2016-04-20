@@ -1,0 +1,24 @@
+<template name="dropdownSelect">
+
+      {{#with menuOptions}}
+  <div class="btn-group {{options.align}}" role="group">
+    <div class="btn-group" role="group">
+        <button class="btn btn-default dropdown-toggle VA-dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          {{options.defaultName}}&nbsp;
+          <span class="caret"></span>
+        </button>
+      <ul class="dropdown-menu VA-dropdown-select {{options.menuAlign}}" aria-labelledby="dropdownMenu1">
+        {{#each items}}
+          {{#if seperator}}
+            <li role="separator" class="divider"></li>
+          {{else}}
+            <li class="{{state}}"><a href="#" data-menuaction="{{action}}">{{name}}</a></li>
+          {{/if}}
+        {{/each}}
+      </ul>
+    </div>
+    <button class="btn btn-default VA-dropdown-action" type="button">OK</button>
+  </div>
+      {{/with}}
+
+</template>
