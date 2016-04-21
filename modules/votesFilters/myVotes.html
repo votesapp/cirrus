@@ -1,7 +1,7 @@
 <template name="myVotes">
   <h4>My Votes</h4>
   <ul class="media-list">
-    
+    {{#if myVotesList}}
     {{#each myVotesList}}
     <li class="media" data-nav="{{pathFor route='voteInfo'}}">
       <div class="media-left">
@@ -13,6 +13,10 @@
       </div>
     </li> {{!-- /.media --}}
     {{/each}}
+    {{else}}
+    <p class="text-muted">You have no votes yet. <a class="btn btn-sm btn-success" href="{{pathFor route='voteCreate'}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}">Create one!</a></p>
+    
+    {{/if}}
 
   </ul>
 </template>

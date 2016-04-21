@@ -6,13 +6,16 @@
   <h2 contenteditable="true" data-field="title">{{title}}</h2>
   <h5>Description</h5>
   <p contenteditable="true" data-field="description">{{description}}</p>
-  {{!-- <a href="" class="btn btn-danger pull-right" role="button" data-action="deleteVote">Delete</a> --}}
-  {{> dropdownSelect menuOptions=menuOptions}}
+  {{> dropdownSelect dropMenuData=dropMenuData}}
   <div class="clearfix"></div>
+
   {{else}}
+
   <h2>{{title}}</h2>
   <p>{{description}}</p>
-  <div class="btn-group pull-right">
+  {{> dropdownSelect dropMenuData=dropMenuData}}
+
+{{!--   <div class="btn-group pull-right">
     {{#if isVoteOwner}}
      <a href="{{pathFor route='voteInfo' edit='edit'}}" class="btn btn-default" role="button">Edit Vote</a>
     {{/if}}
@@ -30,6 +33,7 @@
       {{/with}}
     {{/if}}
    </div>
+ --}}
   <p><blockquote>This is some other info on the vote</blockquote></p>
 
   {{/if}}

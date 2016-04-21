@@ -12,7 +12,7 @@ if (Meteor.isClient) {
     votesList: function () {
       // Here we will develop filters for searching and displaying different
       // groups of votes.
-      return votesCollection.find({voteStatus: "published"},{sort: {createdOn: -1}}).fetch();
+      return votesCollection.find({voteStatus: "published"},{sort: {publishedOn: -1, createdOn: -1}}).fetch();
     }
 
   });

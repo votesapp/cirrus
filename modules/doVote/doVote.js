@@ -239,6 +239,7 @@ if (Meteor.isClient) {
       // Update the UI to reflect user's choice
       $(".VA-choice-thumb").removeClass( "selected" );
       $(event.currentTarget).addClass( "selected" );
+      $("[data-action='confirmSelection']").removeClass( "disabled" );
 
     },
 
@@ -332,6 +333,7 @@ if (Meteor.isClient) {
 
       // Reset the selection UI
       $(".VA-choice-thumb").removeClass( "selected" );
+      $("[data-action='confirmSelection']").addClass( "disabled" );
 
     }
 
