@@ -9,6 +9,7 @@ if (Meteor.isClient) {
       self.subscribe("myVotes");
       self.subscribe("voteChoices");
       self.subscribe("myBallots");
+      self.subscribe("voteResults");
     });
   });
 
@@ -20,9 +21,51 @@ if (Meteor.isClient) {
       var recordId = Router.current().params._id;
       console.log("The recordId: " + recordId);
       if (recordId) {
+        // Is this causing a problem on reactive re-render after deleteVote
+        // causes undefined result from below before redirectin to new route?
         var recordData = votesCollection.findOne({ _id:recordId })
         return (recordData) ? recordData : null;
       };
+    },
+
+    ballotStatus: function () {
+      // Used to set the "next action" UI component to give the user
+      // appropriate vote options depending on their account's
+      // ballot status for the vote.
+
+      var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
+
+      // Get the status of the vote.
+      var theStatus = {};
+      if (userBallot) {
+        console.log("the stored status");
+        console.log(userBallot.ballotStatus);
+        // Set the key for the ballot status to the status, with a value of true.
+        // This is for template view, since no comparison can be done in the view.
+        theStatus[userBallot.ballotStatus] = true;
+        console.log(theStatus);
+
+      } else {
+        console.log("No ballot status, new ballot required.");
+        theStatus.noBallot = true;
+      };
+
+      return theStatus;
+
+    },
+
+    choicesList : function () {
+      // Return the vote choices
+      var recordId = Router.current().params._id;
+      var ballotData = choicesCollection.find({voteId : recordId}, {sort: {createdOn: -1}}).fetch();
+
+      return ballotData;
+    },
+
+    voteResults : function () {
+      // if we use the context of choices list, we have the choice data _id...
+      // var choiceCount = resultsCollection.findo
+
     },
 
     dropMenuData : function () {
@@ -137,41 +180,9 @@ if (Meteor.isClient) {
       // this could be problematic with reactivity in this module.
 
       return dropMenu;
-    },
-
-    ballotStatus: function () {
-      // Used to set the "next action" UI component to give the user
-      // appropriate vote options depending on their account's
-      // ballot status for the vote.
-
-      var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
-
-      // Get the status of the vote.
-      var theStatus = {};
-      if (userBallot) {
-        console.log("the stored status");
-        console.log(userBallot.ballotStatus);
-        // Set the key for the ballot status to the status, with a value of true.
-        // This is for template view, since no comparison can be done in the view.
-        theStatus[userBallot.ballotStatus] = true;
-      } else {
-        console.log("No ballot status, new ballot required.");
-        theStatus.noBallot = true;
-      };
-
-      console.log("This is the status of this vote");
-      console.log(theStatus);
-
-      return theStatus;
-    },
-
-    choicesList : function () {
-      // Return the vote choices
-      var recordId = Router.current().params._id;
-      var ballotData = choicesCollection.find({voteId : recordId}, {sort: {createdOn: -1}}).fetch();
-
-      return ballotData;
     }
+
+
   });
 
   Template.voteInfo.events({

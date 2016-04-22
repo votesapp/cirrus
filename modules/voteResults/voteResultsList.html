@@ -1,0 +1,7 @@
+<template name="voteResultsList">
+  <i>This is the votesResultsList template</i>
+  {{!-- {{#each voteChoices}} --}}
+  {{#each resultsData}}
+  <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" >{{name}}</a>
+  {{/each}}
+</template>

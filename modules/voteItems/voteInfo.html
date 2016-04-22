@@ -9,6 +9,9 @@
   {{> dropdownSelect dropMenuData=dropMenuData}}
   <div class="clearfix"></div>
 
+  <h4>Vote Choices</h4>
+  {{> voteChoicesList voteChoices=choicesList edit=../edit}}
+
   {{else}}
 
   <h2>{{title}}</h2>
@@ -36,12 +39,20 @@
  --}}
   <p><blockquote>This is some other info on the vote</blockquote></p>
 
+    {{#with ballotStatus}}
+      {{#if completed}}
+        <h4>Vote Results</h4>
+        <i class="text-muted">We should see results.</i>
+        {{> voteResultsList voteChoices=choicesList}}
+      {{else}}
+        <h4>Vote Choices</h4>
+        <i class="text-muted">These are the normal choices.</i>
+        {{> voteChoicesList voteChoices=choicesList}}
+      {{/if}}
+    {{/with}}
+
   {{/if}}
 
   {{/with}}
-
-  <h4>Vote Choices</h4>
-  
-  {{> voteChoicesList voteChoices=choicesList edit=edit}}
 
 </template>
