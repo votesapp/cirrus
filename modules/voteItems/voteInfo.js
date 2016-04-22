@@ -20,7 +20,8 @@ if (Meteor.isClient) {
       var recordId = Router.current().params._id;
       console.log("The recordId: " + recordId);
       if (recordId) {
-        return votesCollection.findOne({ _id:recordId });
+        var recordData = votesCollection.findOne({ _id:recordId })
+        return (recordData) ? recordData : null;
       };
     },
 
@@ -72,6 +73,7 @@ if (Meteor.isClient) {
           // TODO: check for any existing ballot status, and determine output for that
           if (ballotStatus == "completed") {
             // we should not show a button
+            console.log("completed ballot, non-creator.");
           } else if (ballotStatus == "incomplete") {
             dropMenu.items = [
               {name: "Continue Vote", action: "doVote"}
@@ -95,8 +97,8 @@ if (Meteor.isClient) {
             ];
             if (ballotStatus == "completed") {
               // there will be no first element to do the vote
-              // pull the first item
-              // dropMenu.items.unshift({name: "Vote Completed", state: "disabled"})
+              // This is redundent with above, but we will need
+              // some additional checks for "Closed" and "Archived" status
             } else if (ballotStatus == "incomplete"){
               dropMenu.items.unshift({name: "Continue Vote", action: "doVote"});
             } else {
