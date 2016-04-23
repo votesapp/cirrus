@@ -103,12 +103,13 @@ if (Meteor.isClient) {
 
     "click [data-action='confirmBallot']" : function(event) {
       // Update ballot status to completed
+
+      // Add a session get to get the actual live ballot data.
       console.log("confirming the ballot");
       var ballotId = Session.get("currentVoteBallot");
       var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
 
       // Update the status of the ballot
-      // Meteor.call("updateBallot", ballotId, {ballotStatus: "completed"})
       // We can also update the voteResults.
       // The update method will do the results calculation so it will
       // be run on the server.
@@ -127,7 +128,7 @@ if (Meteor.isClient) {
       console.log("the vote id in ballot confirm helper: ");
       console.log(voteId);
 
-      // Router.go("voteInfo", {_id: voteId});
+      Router.go("voteInfo", {_id: voteId});
     }
 
 

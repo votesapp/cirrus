@@ -18,36 +18,54 @@ if (Meteor.isClient) {
       var voteId = Router.current().params._id;
       var voteResults = resultsCollection.findOne({voteId: voteId}).voteCount;
       // We merge this with vote information
-      var voteRecord = votesCollection.findOne({_id: voteId});
-      voteRecord.voteCount = voteResults;
+      // var voteRecord = votesCollection.findOne({_id: voteId});
+      // voteRecord.voteCount = voteResults;
+      // var list = {"you": 100, "me": 75, "foo": 116, "bar": 15};
+      // var keysSorted = Object.keys(list).sort(function(a,b){return list[a]-list[b]});
+      var choicesArray = Object.keys(voteResults).sort(function(a,b){return voteResults[b]-voteResults[a]});
+      // console.log(keysSorted);
+      // var choicesArray = Object.keys(voteResults);
 
       // Also get the ballot option data...
-      var choicesData = choicesCollection.find({voteId: voteId});
+      // var choicesData = choicesCollection.find({voteId: voteId});
       var sortedChoices = [];
 
       if (voteResults) {
 
-        var choicesArray = voteResults.map(function(obj) {
-          return obj._id;
-        });
+
+        // var choicesArray = voteResults.map(function(obj) {
+        //   return obj.key(0);
+        // });
+
+        console.log("choicesArray in if()");
+        console.log(choicesArray);
+
 
         // Find all choices data from choices collection
         var choicesData = choicesCollection.find({_id: {$in: choicesArray}}).fetch();
-
-        // Sort data according to the results array order
+        console.log(choicesData);
+        // Sort data records according to the results array order
         for (var i = choicesData.length - 1; i >= 0; i--) {
 
           var temp = choicesData.filter(function(obj){
             return (obj._id == choicesArray[i]);
           });
+          // console.log(choicesData.filter(function(obj){return (obj._id == choicesArray[i])}));
+          // add the score of the vote here
+          // the sort value is in voteResults with the key in temp[0]
+          // var getScore =
+          // get the current id
+          temp[0].score = voteResults[choicesArray[i]];
 
           sortedChoices[i] = temp[0];
 
         };
 
       };
+
       console.log("sorted results:");
       console.log(sortedChoices);
+
 
       return sortedChoices;
 

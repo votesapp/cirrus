@@ -1,7 +1,11 @@
 <template name="voteResultsList">
   <i>This is the votesResultsList template</i>
   {{!-- {{#each voteChoices}} --}}
-  {{#each resultsData}}
-  <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" >{{name}}</a>
-  {{/each}}
+  {{!-- {{#with resultsData}}{{name}}{{/with}} --}}
+  <ul class="list-group">
+    {{#each resultsData}}
+    <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" >{{name}}<span class="badge">{{score}}</span></a>
+    {{/each}}
+  </ul>
+  {{!-- {{/with}} --}}
 </template>
