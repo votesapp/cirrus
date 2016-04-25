@@ -33,10 +33,13 @@ if (Meteor.isClient) {
 							message: error.reason,
 							type: "warning"
 						});
+					} else {
+						Router.go("home");
 					};
 				}
 
 			); // End Accounts.createUser()
+
 
 		},
 
@@ -54,6 +57,8 @@ if (Meteor.isClient) {
 					  message: error.reason,
 					  type: "warning"
 					});
+				} else {
+					Router.go("home");
 				};
 			}); // End Meteor.loginWithPassword()
 		}

@@ -9,49 +9,22 @@ if (Meteor.isClient) {
       self.subscribe("myVotes");
       self.subscribe("voteChoices");
       self.subscribe("myBallots");
+      self.subscribe("voteResults");
     });
   });
 
+
   Template.voteInfo.helpers({
-
-    menuOptions : function () {
-      // menu options for vote actions
-      var menuItems = {
-        options: {
-          align: "pull-right",
-          menuAlign: "dropdown-menu-right",
-          defaultName: "Save Draft"
-        },
-        items: [
-          {name: "Save Draft", action: "saveDraft"},
-          {name: "Publish Vote", action: "publishVote"},
-          {seperator: true},
-          {name: "Delete Vote", action: "deleteVote"}
-        ]
-      }
-
-      return menuItems;
-    },
 
     voteData : function () {
       // Get the data for the selected vote
       var recordId = Router.current().params._id;
       console.log("The recordId: " + recordId);
       if (recordId) {
-        return votesCollection.findOne({ _id:recordId });
-      };
-    },
-
-    isVoteOwner : function () {
-      // Check if the vote is owned by the user
-      if (this._id) {
-        return votesCollection.findOne({ _id:this._id, createdBy: Meteor.userId()})
-      };
-    },
-
-    votePublished : function () {
-      if (this.voteStatus == "published") {
-        return true;
+        // Is this causing a problem on reactive re-render after deleteVote
+        // causes undefined result from below before redirectin to new route?
+        var recordData = votesCollection.findOne({ _id:recordId })
+        return (recordData) ? recordData : null;
       };
     },
 
@@ -70,24 +43,148 @@ if (Meteor.isClient) {
         // Set the key for the ballot status to the status, with a value of true.
         // This is for template view, since no comparison can be done in the view.
         theStatus[userBallot.ballotStatus] = true;
+        console.log(theStatus);
+
       } else {
         console.log("No ballot status, new ballot required.");
         theStatus.noBallot = true;
       };
 
-      console.log("This is the status of this vote");
-      console.log(theStatus);
-
       return theStatus;
+
     },
 
     choicesList : function () {
       // Return the vote choices
       var recordId = Router.current().params._id;
-      var ballotData = choicesCollection.find({voteId : recordId}, {sort: {createdOn: -1}}).fetch();
+      var choicesArray = votesCollection.findOne({_id: recordId}).choices;
+      var choicesData = choicesCollection.find({_id: {$in: choicesArray}}, {sort: {createdOn: -1}}).fetch();
 
-      return ballotData;
+      return choicesData;
+    },
+
+    voteResults : function () {
+      // if we use the context of choices list, we have the choice data _id...
+      // var choiceCount = resultsCollection.findo
+      // We are using the voteResults helper for this instead...
+
+    },
+
+    dropMenuData : function () {
+      // Menu options for vote actions dropdown menu. We are defining next actions for votes 
+      // using this menu.
+      // We rely on router access filtering to handle and resolve any conflicts.
+
+      var ballotStatus;
+      var user = Meteor.userId();
+      var creator = this.createdBy;
+      var dropMenu = {
+        config: {
+          align: "pull-right",
+          menuAlign: "dropdown-menu-right",
+          style: "btn-default"
+        }
+      };
+      var edit = Router.current().params.edit;
+      var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
+
+      if (userBallot) {
+        console.log("the stored status");
+        console.log(userBallot.ballotStatus);
+        // Set the key for the ballot status to the status, with a value of true.
+        // This is for template view, since no comparison can be done in the view.
+        ballotStatus = userBallot.ballotStatus;
+      };
+
+      if (edit == "edit") {
+
+        // The user is assumed creator to access /edit
+        // TODO: The user should not be able to access edit if the vote is published.
+        console.log("we are having a 'edit' menu");
+        dropMenu.items = [
+          {name: "Save Draft", action: "saveDraft"},
+          {name: "Publish Vote", action: "publishVote"},
+          {seperator: true},
+          {name: "Delete Vote", action: "deleteVote"}
+        ];
+
+      } else {
+
+        if (user != creator) {
+          // User is not creator, and is not editing the vote
+          // We will assume that routes restrict access to non-published votes
+          // for non-creators of the votes
+
+          // TODO: check for any existing ballot status, and determine output for that
+          if (ballotStatus == "completed") {
+            // we should not show a button
+            console.log("completed ballot, non-creator.");
+          } else if (ballotStatus == "incomplete") {
+            dropMenu.items = [
+              {name: "Continue Vote", action: "doVote"}
+            ];
+          } else {
+            dropMenu.items = [
+              {name: "Take Vote", action: "doVote"}
+            ];
+          };
+
+          dropMenu.config.style = "btn-info";
+
+        } else {
+
+          // User is creator of vote, and not editing
+          if (this.voteStatus == "published") {
+
+            dropMenu.items = [
+              {name: "Close Vote", action: "closeVote"},
+              {name: "Archive Vote", action: "archiveVote"}
+            ];
+            if (ballotStatus == "completed") {
+              // there will be no first element to do the vote
+              // This is redundent with above, but we will need
+              // some additional checks for "Closed" and "Archived" status
+            } else if (ballotStatus == "incomplete"){
+              dropMenu.items.unshift({name: "Continue Vote", action: "doVote"});
+            } else {
+              // use the default
+              dropMenu.items.unshift({name: "Take Vote", action: "doVote"});
+            };
+
+          } else {
+
+            // display options for creator of unpublished vote, not editing
+            console.log("this user created this vote");
+            dropMenu.items = [
+              {name: "Edit Vote", action: "editVote"},
+              // {name: "Publish Vote", action: "publishVote"},
+              // {seperator: true},
+              // {name: "Delete Vote", action: "deleteVote"}
+            ];
+            dropMenu.config.style = "btn-warning";
+          };
+          
+        };
+      };
+
+      // var numItems = dropMenu.items.length;
+      // console.log("numItems in menu object: " + numItems);
+      // Add a check for number of items
+
+      if (dropMenu.items.length == 1) {
+        // there is only one option, and flag as such
+        console.log("there is only one menu item");
+        dropMenu.config.singleton = true;
+      };
+
+
+      // use jQuery to highlight the first item?
+      // this could be problematic with reactivity in this module.
+
+      return dropMenu;
     }
+
+
   });
 
   Template.voteInfo.events({
@@ -95,14 +192,24 @@ if (Meteor.isClient) {
     "click [data-action='saveDraft']" : function () {
       // Right now this is a pseudo event and placeholder should we
       // need to change how votes are saved (instead of below)
+      var voteId = Router.current().params._id;
       Bert.alert("The vote was saved", "info");
+      Router.go("voteInfo", {_id:voteId});
+
+    },
+
+    "click [data-action='editVote']" : function () {
+      // Right now this is a pseudo event and placeholder should we
+      // need to change how votes are saved (instead of below)
+      var voteId = Router.current().params._id;
+      Router.go("voteInfo", {_id:voteId, edit:"edit"});
 
     },
 
     "click [data-action='publishVote']" : function () {
       // Change the status of the vote to publish
       var voteId = Router.current().params._id;
-      Meteor.call("updateVote", voteId, {voteStatus: "published"});
+      Meteor.call("updateVote", voteId, {voteStatus: "published", publishedOn: new Date()});
       Bert.alert("The vote was published!", "info");
       Router.go("myVotes");
     },
@@ -116,7 +223,9 @@ if (Meteor.isClient) {
       Meteor.call("deleteVote", recordId);
 
       // Then delete all the vote options associated with the vote
-      Meteor.call("deleteChoices", recordId);
+      // We are not doing this so choices will be able to be
+      // re-used in the future.
+      // Meteor.call("deleteChoices", recordId);
 
       // Notify the user of the success of the delete
       Bert.alert({

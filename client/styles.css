@@ -32,7 +32,6 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 .VA-nav-buttons {
   position: fixed;
   bottom: 0;
-  z-index: 1000;
 }
 
 

@@ -14,7 +14,9 @@ if (Meteor.isClient) {
 
     // Helpers for myVotes
     myVotesList : function () {
-      return votesCollection.find({createdBy: Meteor.userId()},{sort: {createdOn: -1}});
+      
+      return votesCollection.find({createdBy: Meteor.userId()},{sort: {createdOn: -1}}).fetch();;
+
     },
 
     draftStatus: function () {
