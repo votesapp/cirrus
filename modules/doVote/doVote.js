@@ -57,7 +57,11 @@ if (Meteor.isClient) {
       //   step(int) - A step counter to track state of the ballot
 
       // Get an array of objects containing all of the vote choice _id's 
-      var voteChoices = choicesCollection.find({voteId:voteId}).map(function(item){ 
+
+      var choicesArray =  votesCollection.findOne({_id: voteId}).choices;
+      var choicesData = choicesCollection.find({_id: {$in: choicesArray}}).fetch();
+      // var voteChoices = choicesCollection.find({voteId:voteId}).map(function(item){ 
+      var voteChoices = choicesData.map(function(item){ 
         var obj = {_id:item._id};
         return obj;
       });

@@ -57,14 +57,16 @@ if (Meteor.isClient) {
     choicesList : function () {
       // Return the vote choices
       var recordId = Router.current().params._id;
-      var ballotData = choicesCollection.find({voteId : recordId}, {sort: {createdOn: -1}}).fetch();
+      var choicesArray = votesCollection.findOne({_id: recordId}).choices;
+      var choicesData = choicesCollection.find({_id: {$in: choicesArray}}, {sort: {createdOn: -1}}).fetch();
 
-      return ballotData;
+      return choicesData;
     },
 
     voteResults : function () {
       // if we use the context of choices list, we have the choice data _id...
       // var choiceCount = resultsCollection.findo
+      // We are using the voteResults helper for this instead...
 
     },
 
@@ -221,7 +223,9 @@ if (Meteor.isClient) {
       Meteor.call("deleteVote", recordId);
 
       // Then delete all the vote options associated with the vote
-      Meteor.call("deleteChoices", recordId);
+      // We are not doing this so choices will be able to be
+      // re-used in the future.
+      // Meteor.call("deleteChoices", recordId);
 
       // Notify the user of the success of the delete
       Bert.alert({

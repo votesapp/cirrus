@@ -17,11 +17,16 @@ if (Meteor.isClient) {
       var choiceData = {
         name: name,
         createdOn: new Date(),
-        createdBy: Meteor.userId(),
-        voteId: recordId
+        createdBy: Meteor.userId()
       };
 
-      Meteor.call("createChoice", choiceData);
+      // Add the choice to the collection
+      Meteor.call("createChoice", choiceData, function (error, result) {
+        if (result) {
+          // Add the choice to the array of choices for this vote
+          Meteor.call("addVoteArray", recordId, {choices: result});
+        };
+      });
 
       event.target.name.value = "";
 
