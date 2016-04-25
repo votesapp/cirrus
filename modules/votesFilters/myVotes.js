@@ -19,9 +19,10 @@ if (Meteor.isClient) {
 
     },
 
-    draftStatus: function () {
-      if (this.voteStatus == "draft") {
-        return true
+    voteStatus: function () {
+      // This has the data context of a document from the myVotesList helper
+      if (this.voteStatus != "published") {
+        return this.voteStatus;
       };
     }
 

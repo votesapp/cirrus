@@ -29,9 +29,7 @@ if (Meteor.isClient) {
     },
 
     ballotStatus: function () {
-      // Used to set the "next action" UI component to give the user
-      // appropriate vote options depending on their account's
-      // ballot status for the vote.
+      // Used to determin if the user can see results.
 
       var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
 
@@ -64,10 +62,7 @@ if (Meteor.isClient) {
     },
 
     voteResults : function () {
-      // if we use the context of choices list, we have the choice data _id...
-      // var choiceCount = resultsCollection.findo
-      // We are using the voteResults helper for this instead...
-
+      // We are using the voteResults helpers for this instead...
     },
 
     dropMenuData : function () {
@@ -99,7 +94,6 @@ if (Meteor.isClient) {
       if (edit == "edit") {
 
         // The user is assumed creator to access /edit
-        // TODO: The user should not be able to access edit if the vote is published.
         console.log("we are having a 'edit' menu");
         dropMenu.items = [
           {name: "Save Draft", action: "saveDraft"},
@@ -112,13 +106,13 @@ if (Meteor.isClient) {
 
         if (user != creator) {
           // User is not creator, and is not editing the vote
-          // We will assume that routes restrict access to non-published votes
+          // We are assuming that routes restrict access to non-published votes
           // for non-creators of the votes
 
-          // TODO: check for any existing ballot status, and determine output for that
           if (ballotStatus == "completed") {
             // we should not show a button
-            console.log("completed ballot, non-creator.");
+            dropMenu.items = null;
+            console.log("completed ballot, non-creator. voteInfo.js:121, this is a bug");
           } else if (ballotStatus == "incomplete") {
             dropMenu.items = [
               {name: "Continue Vote", action: "doVote"}
@@ -133,6 +127,7 @@ if (Meteor.isClient) {
 
         } else {
 
+          console.log("this user created this vote");
           // User is creator of vote, and not editing
           if (this.voteStatus == "published") {
 
@@ -140,46 +135,41 @@ if (Meteor.isClient) {
               {name: "Close Vote", action: "closeVote"},
               {name: "Archive Vote", action: "archiveVote"}
             ];
-            if (ballotStatus == "completed") {
-              // there will be no first element to do the vote
-              // This is redundent with above, but we will need
-              // some additional checks for "Closed" and "Archived" status
-            } else if (ballotStatus == "incomplete"){
+            if (ballotStatus == "incomplete"){
+              // Put the voting action "Do Vote" as the first item in the menu
               dropMenu.items.unshift({name: "Continue Vote", action: "doVote"});
-            } else {
-              // use the default
+            } else if (ballotStatus != "completed") {
+              // Put the voting "continue" action as the first item in the menu
               dropMenu.items.unshift({name: "Take Vote", action: "doVote"});
             };
 
           } else {
 
             // display options for creator of unpublished vote, not editing
-            console.log("this user created this vote");
-            dropMenu.items = [
-              {name: "Edit Vote", action: "editVote"},
-              // {name: "Publish Vote", action: "publishVote"},
-              // {seperator: true},
-              // {name: "Delete Vote", action: "deleteVote"}
-            ];
-            dropMenu.config.style = "btn-warning";
+            if (this.voteStatus == "draft") {
+              dropMenu.items = [
+                {name: "Edit Vote", action: "editVote"},
+              ];
+
+              dropMenu.config.style = "btn-warning";
+
+            } else if (this.voteStatus == "closed"){
+              // Allow the user to archive the vote
+              dropMenu.items = [{name: "Archive Vote", action: "archiveVote"}];
+            } else if (this.voteStatus == "archived") {
+              // Allow the user to un-archive the vote to "closed" status
+              dropMenu.items = [{name: "Unarchive Vote", action: "closeVote"}];
+            };
+
           };
           
         };
       };
 
-      // var numItems = dropMenu.items.length;
-      // console.log("numItems in menu object: " + numItems);
-      // Add a check for number of items
-
       if (dropMenu.items.length == 1) {
         // there is only one option, and flag as such
-        console.log("there is only one menu item");
         dropMenu.config.singleton = true;
       };
-
-
-      // use jQuery to highlight the first item?
-      // this could be problematic with reactivity in this module.
 
       return dropMenu;
     }
@@ -198,20 +188,37 @@ if (Meteor.isClient) {
 
     },
 
-    "click [data-action='editVote']" : function () {
-      // Right now this is a pseudo event and placeholder should we
-      // need to change how votes are saved (instead of below)
-      var voteId = Router.current().params._id;
-      Router.go("voteInfo", {_id:voteId, edit:"edit"});
-
-    },
-
     "click [data-action='publishVote']" : function () {
       // Change the status of the vote to publish
       var voteId = Router.current().params._id;
       Meteor.call("updateVote", voteId, {voteStatus: "published", publishedOn: new Date()});
       Bert.alert("The vote was published!", "info");
       Router.go("myVotes");
+    },
+
+    "click [data-action='closeVote']" : function () {
+      // Change the status of the vote to publish
+      // TODO: We may need to check for ownership of the vote
+      var voteId = Router.current().params._id;
+      Meteor.call("updateVote", voteId, {voteStatus: "closed", closedOn: new Date()});
+      Bert.alert("The vote was closed!", "info");
+      Router.go("myVotes");
+    },
+
+    "click [data-action='archiveVote']" : function () {
+      // Change the status of the vote to publish
+      var voteId = Router.current().params._id;
+      Meteor.call("updateVote", voteId, {voteStatus: "archived", archivedOn: new Date()});
+      Bert.alert("The vote was archived!", "info");
+      Router.go("myVotes");
+    },
+
+    "click [data-action='editVote']" : function () {
+      // Right now this is a pseudo event and placeholder should we
+      // need to change how votes are saved (instead of below)
+      var voteId = Router.current().params._id;
+      Router.go("voteInfo", {_id:voteId, edit:"edit"});
+
     },
 
     "click [data-action='deleteVote']" : function (event) {
@@ -239,8 +246,6 @@ if (Meteor.isClient) {
       Router.go("votesList");
 
     },
-
-    // TODL: We need handlers for all the possible editing events.
 
     "blur [contenteditable=true]" : function (event) {
       // This is a function to handle editing of content by the user.
@@ -296,8 +301,6 @@ if (Meteor.isClient) {
 
     "click [data-action='doVote']" : function (event) {
       event.preventDefault();
-      console.log("clicked 'doVote': ");
-      console.log(this);
 
       var voteId = Router.current().params._id;
 
@@ -307,8 +310,3 @@ if (Meteor.isClient) {
 
   });
 };
-
-Meteor.methods({
-
-
-});
