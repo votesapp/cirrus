@@ -25,9 +25,6 @@ if (Meteor.isClient) {
 
 				function (error) {
 					if (error) {
-						// TODO: below is causing errors. We should create
-						// a global error object, and use one function to 
-						// output errors.
 						Bert.alert({
 							title: "User Authentication",
 							message: error.reason,
@@ -50,7 +47,6 @@ if (Meteor.isClient) {
 			var password = event.target.password.value;
 
 			Meteor.loginWithPassword(email, password, function (error){
-				// var errReason = error.reason;
 				if (error) {
 					Bert.alert({
 					  title: "User Authentication:",
