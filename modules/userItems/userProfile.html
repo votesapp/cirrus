@@ -6,23 +6,30 @@
   <form id="profileForm" class="form">
     <div class="form-group">
       <label class="form-label" for="profileUsername">Username</label>
-      <input id="profileUsername" type="text" class="form-control" name="username" placeholder="Choose a username"/>
+      <input id="profileUsername" type="text" class="form-control" name="username" placeholder="Choose a username" value="{{#with profileData}}{{username}}{{/with}}"/>
     </div>
     <div class="form-group">
       <label class="form-label" for="profileDescription">Profile Description</label>
-      <textarea id="profileDescription" rows="4" class="form-control" name="description" placeholder="Write a description"></textarea>
+      <textarea id="profileDescription" rows="4" class="form-control" name="description" placeholder="Write a description" value="{{#with profileData}}{{profile.description}}{{/with}}"></textarea>
     </div>
     <input type="submit" name="submit" value="Submit" class="btn btn-success pull-right" />
   </form>
+      <p>{{emails.[0].address}}</p>
   {{else}}
   {{#with profileData}}
-    {{#if userName}}
+    {{#if username}}
       <h4>{{username}}</h4>
     {{else}}
       <h4 class="text-muted">No username yet...</h4>
     {{/if}}
+    {{#if profile.description}}
+      <p>{{profile.description}}</p>
+    {{else}}
+      <p class="text-muted">There is no description yet...</p>
+    {{/if}}
+      <p>{{emails.[0].address}}</p>
   {{/with}}
 
   {{/if}}
-  
+
 </template>
