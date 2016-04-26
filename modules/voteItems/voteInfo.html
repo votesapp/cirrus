@@ -1,56 +1,36 @@
 <template name="voteInfo">
   {{#with voteData}}
 
-  {{#if ../edit}}
-  <h5>Title</h5>
-  <h2 contenteditable="true" data-field="title">{{title}}</h2>
-  <h5>Description</h5>
-  <p contenteditable="true" data-field="description">{{description}}</p>
-  {{> dropdownSelect dropMenuData=dropMenuData}}
-  <div class="clearfix"></div>
+    {{#if ../edit}}
 
-  <h4>Vote Choices</h4>
-  {{> voteChoicesList voteChoices=choicesList edit=../edit}}
+    <h5>Title</h5>
+    <h2 contenteditable="true" data-field="title">{{title}}</h2>
+    <h5>Description</h5>
+    <p contenteditable="true" data-field="description">{{description}}</p>
+    {{> dropdownSelect dropMenuData=dropMenuData}}
+    <div class="clearfix"></div>
 
-  {{else}}
+    <h4>Vote Choices</h4>
+    {{> voteChoicesList voteChoices=choicesList edit=../edit}}
 
-  <h2>{{title}}</h2>
-  <p>{{description}}</p>
-  {{> dropdownSelect dropMenuData=dropMenuData}}
+    {{else}}
 
-{{!--   <div class="btn-group pull-right">
-    {{#if isVoteOwner}}
-     <a href="{{pathFor route='voteInfo' edit='edit'}}" class="btn btn-default" role="button">Edit Vote</a>
-    {{/if}}
-    {{#if votePublished}}
+    <h2>{{title}}</h2>
+    <p>{{description}}</p>
+    {{> dropdownSelect dropMenuData=dropMenuData}}
+    <p><blockquote>This is some other info on the vote</blockquote></p>
+
       {{#with ballotStatus}}
-        {{#unless completed}}
-          {{#if incomplete}}
-            <a href="" class="btn btn-primary" data-action="doVote" role="button">Continue Vote</a>
-          {{else}}
-            <a href="" class="btn btn-primary" data-action="doVote" role="button">Take Vote</a>
-          {{/if}}
+        {{#if completed}}
+          <h4>Vote Results</h4>
+          {{> voteResultsList}}
         {{else}}
-          <a href="#" class="btn btn-primary disabled" role="button">Completed</a>
-        {{/unless}}
+          <h4>Vote Choices</h4>
+          {{> voteChoicesList voteChoices=choicesList}}
+        {{/if}}
       {{/with}}
+
     {{/if}}
-   </div>
- --}}
-  <p><blockquote>This is some other info on the vote</blockquote></p>
-
-    {{#with ballotStatus}}
-      {{#if completed}}
-        <h4>Vote Results</h4>
-        {{> voteResultsList}}
-      {{else}}
-        <h4>Vote Choices</h4>
-        {{> voteChoicesList voteChoices=choicesList}}
-      {{/if}}
-    {{/with}}
-
-  {{/if}}
 
   {{/with}}
-
 </template>

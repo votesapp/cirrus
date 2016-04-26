@@ -14,6 +14,14 @@ if (Meteor.isClient) {
     console.log("This template instance was created!!");
 
     var voteId = Router.current().params._id;
+    var voteStatus = votesCollection.findOne({voteId}).voteStatus;
+
+    if (voteStatus != "published") {
+      // we need to redirect the user out of here
+      Router.go("voteInfo", {_id: voteId});
+      // TODO: Do we need to put the rest of the ballot evaluation
+      // and initialization in the "else" of this?
+    };
 
 
     // Find the user's existing ballot for this vote
@@ -23,14 +31,14 @@ if (Meteor.isClient) {
 
     if (existingBallot) {
 
-      var voteStatus = existingBallot.ballotStatus;
+      var ballotStatus = existingBallot.ballotStatus;
 
       console.log("This vote: " + voteId + " already initialized for user: " + Meteor.userId());
       console.log("Voter's ballot status:");
-      console.log(voteStatus);
+      console.log(ballotStatus);
 
-      if (voteStatus == "completed") {
-        console.log("The vote was completed");
+      if (ballotStatus == "completed") {
+        console.log("The ballot was completed");
         // Route the user back to voteInfo if they have already completed the vote
         Router.go("voteInfo", {_id: voteId});
       } else {

@@ -15,7 +15,8 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="active"><a href="{{pathFor route='home'}}">Home</a></li>
         {{#if currentUser}}
-        <li><a href="{{pathFor route='userProfile'}}">Profile</a></li>
+        {{!-- <li><a href="{{pathFor route='userProfile'}}">Profile</a></li> --}}
+        <li><a href="/userProfile/{{currentUser._id}}">Profile</a></li>
         <li><a href="{{pathFor route='userSettings'}}">Settings</a></li>
         <li><a href="#" data-action="logoutUser">Logout</a></li>
         {{/if}}
