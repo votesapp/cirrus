@@ -70,3 +70,18 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   visibility: visible;
 }
 
+#VA-alert-box {
+  position: fixed;
+  width: 100%;
+  z-index: 1050;
+
+}
+ #VA-alert-box li {
+  margin-top: 3px;
+  margin-bottom: 3px;
+ }
+
+
+
+
+
