@@ -9,19 +9,24 @@ if (Meteor.isClient) {
     self.autorun(function () {
       self.subscribe("votesList");
       self.subscribe("voteChoices");
+      self.subscribe("myVotes");
       self.subscribe("myBallots");
     });
     console.log("This template instance was created!!");
 
     var voteId = Router.current().params._id;
-    var voteStatus = votesCollection.findOne({voteId}).voteStatus;
+    console.log(voteId);
+    var voteData = votesCollection.findOne({_id:voteId});
+    console.log(voteData);
 
-    if (voteStatus != "published") {
-      // we need to redirect the user out of here
+    if (voteData.voteStatus != "published") {
       Router.go("voteInfo", {_id: voteId});
-      // TODO: Do we need to put the rest of the ballot evaluation
-      // and initialization in the "else" of this?
     };
+    // we need to redirect the user out of here
+    // Only creators of votes would have access to votes
+    // without the "published" status.
+    // TODO: Do we need to put the rest of the ballot evaluation
+    // and initialization in the "else" of this?
 
 
     // Find the user's existing ballot for this vote

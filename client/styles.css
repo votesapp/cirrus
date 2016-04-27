@@ -32,6 +32,9 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 .VA-nav-buttons {
   position: fixed;
   bottom: 0;
+  left: 0;
+  padding: 0 10px;
+  z-index: 900;
 }
 
 
@@ -69,4 +72,20 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 .selected .VA-choice-selector {
   visibility: visible;
 }
+
+#VA-alert-box {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1050;
+
+}
+ #VA-alert-box li {
+  margin-top: 3px;
+  margin-bottom: 3px;
+ }
+
+
+
+
 

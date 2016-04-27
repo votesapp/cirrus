@@ -24,3 +24,5 @@ accounts-password
 standard-minifier-css
 standard-minifier-js
 check
+jparker:crypto-core
+jparker:crypto-sha1

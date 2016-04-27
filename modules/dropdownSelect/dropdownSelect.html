@@ -6,24 +6,27 @@
   <button class="btn {{config.style}} {{config.align}}" data-action="{{items.[0].action}}">{{items.[0].name}}</button>
   {{else}}
 
-  <div class="btn-group {{config.align}}" role="group">
-    <div class="btn-group" role="group">
-        <button class="btn {{config.style}} dropdown-toggle VA-dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          {{items.[0].name}}&nbsp;
-          <span class="caret"></span>
-        </button>
-      <ul class="dropdown-menu VA-dropdown-menu {{config.menuAlign}}" aria-labelledby="dropdownMenu1">
-        {{#each items}}
-          {{#if seperator}}
-            <li role="separator" class="divider"></li>
-          {{else}}
-            <li class="{{state}}"><a href="#" data-menuaction="{{action}}">{{name}}</a></li>
-          {{/if}}
-        {{/each}}
-      </ul>
+    {{#if items}}
+    <div class="btn-group {{config.align}}" role="group">
+      <div class="btn-group" role="group">
+          <button class="btn {{config.style}} dropdown-toggle VA-dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            {{items.[0].name}}&nbsp;
+            <span class="caret"></span>
+          </button>
+        <ul class="dropdown-menu VA-dropdown-menu {{config.menuAlign}}" aria-labelledby="dropdownMenu1">
+          {{#each items}}
+            {{#if seperator}}
+              <li role="separator" class="divider"></li>
+            {{else}}
+              <li class="{{state}}"><a href="#" data-menuaction="{{action}}">{{name}}</a></li>
+            {{/if}}
+          {{/each}}
+        </ul>
+      </div>
+      <button class="btn {{config.style}} VA-dropdown-action" type="button" data-action="{{items.[0].action}}">OK</button>
     </div>
-    <button class="btn {{config.style}} VA-dropdown-action" type="button" data-action="{{items.[0].action}}">OK</button>
-  </div>
+    {{/if}}
+    
   {{/if}}
 
 {{/with}}
