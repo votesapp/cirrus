@@ -46,6 +46,9 @@ if (Meteor.isClient) {
 
       Router.go("userProfile", {_id: Meteor.userId()});
 
+    },
+
+    "click #test-alert" : function () {
     }
 
   });

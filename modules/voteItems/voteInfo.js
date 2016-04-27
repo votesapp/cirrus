@@ -6,8 +6,8 @@ if (Meteor.isClient) {
 
     self.autorun(function () {
       self.subscribe("votesList");
-      self.subscribe("myVotes");
       self.subscribe("voteChoices");
+      self.subscribe("myVotes");
       self.subscribe("myBallots");
       self.subscribe("voteResults");
     });
@@ -105,23 +105,30 @@ if (Meteor.isClient) {
       } else {
 
         if (user != creator) {
+          console.log("this is not the vote creator")
           // User is not creator, and is not editing the vote
           // We are assuming that routes restrict access to non-published votes
           // for non-creators of the votes
-
-          if (ballotStatus == "completed") {
-            // we should not show a button
+          if (this.voteStatus != "published") {
+            // display nothing
             dropMenu.items = null;
-            console.log("completed ballot, non-creator. voteInfo.js:121, this is a bug");
-          } else if (ballotStatus == "incomplete") {
-            dropMenu.items = [
-              {name: "Continue Vote", action: "doVote"}
-            ];
           } else {
-            dropMenu.items = [
-              {name: "Take Vote", action: "doVote"}
-            ];
+            if (ballotStatus == "completed") {
+              // we should not show a button
+              dropMenu.items = null;
+              console.log("completed ballot, non-creator. voteInfo.js:121, this is a bug");
+            } else if (ballotStatus == "incomplete") {
+              console.log("incomple ballot, but closed vote")
+              dropMenu.items = [
+                {name: "Continue Vote", action: "doVote"}
+              ];
+            } else {
+              dropMenu.items = [
+                {name: "Take Vote", action: "doVote"}
+              ];
+            };
           };
+
 
           dropMenu.config.style = "btn-info";
 
