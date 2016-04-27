@@ -58,7 +58,7 @@ if (Meteor.isClient) {
 							);
 						};
 
-
+						return result;
 					} else {
 
 						Bert.alert({
@@ -76,7 +76,7 @@ if (Meteor.isClient) {
 						type: "warning"
 					});
 				};
-
+				return error;
 			});
 			// console.log("Valid code: " + validCode);
 
