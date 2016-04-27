@@ -1,6 +1,10 @@
 if (Meteor.isClient) {
 
   Template.userProfile.onCreated( function() {
+    var self = this;
+
+    self.autorun(function () {
+    });
 
   });
 
@@ -49,6 +53,11 @@ if (Meteor.isClient) {
     },
 
     "click #test-alert" : function () {
+      console.warn("clicked #test-alert");
+      // Meteor.alertsCollection.insert({title: "the title", type: "success", content: "Successfull!"})
+      var alert = {title: "alert title", type: "success", content: "this is a new alert!"};
+      Session.set("alert", alert);
+
     }
 
   });
