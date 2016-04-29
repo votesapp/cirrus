@@ -253,6 +253,7 @@ if (Meteor.isClient) {
   Template.doVote.events({
 
     "click .VA-choice-thumbx" : function (event) {
+      // This is not in use at the moment. Consider for removal.
       event.preventDefault();
 
       // Process the user input to make a selection from choices
@@ -268,14 +269,6 @@ if (Meteor.isClient) {
       $(event.currentTarget).addClass( "selected" );
       $("[data-action='confirmSelection']").removeClass( "disabled" );
 
-    },
-    "click [data-action='confirmSelectionx']" : function (event) {
-      event.preventDefault();
-      // test function
-      var theSelection = event.currentTarget.dataset.item;
-      // var theSelection = Session.get("selectedVoteChoice");
-      console.log("confirming the selection");
-      console.log(theSelection);
     },
 
     "click [data-action='confirmSelection']" : function (event) {
@@ -371,6 +364,12 @@ if (Meteor.isClient) {
       // Reset the selection UI
       // $(".VA-choice-thumb").removeClass( "selected" );
       // $("[data-action='confirmSelection']").addClass( "disabled" );
+
+    },
+
+    "click [data-action='prevStep']" : function (event) {
+      event.preventDefault();
+      // Meteor.call("updateBallot", step: -1);
 
     }
 
