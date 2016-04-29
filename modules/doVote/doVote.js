@@ -206,7 +206,11 @@ if (Meteor.isClient) {
             choiceName: choicesCollection.findOne(
               {_id: choicesArray[s]},
               {name:1, _id:0}
-            ).name
+            ).name,
+            choiceDesc: choicesCollection.findOne(
+              {_id: choicesArray[s]},
+              {name:1, _id:0}
+            ).description
             // optionDesc: optionsData[s].description
           },
           {
@@ -214,7 +218,11 @@ if (Meteor.isClient) {
             choiceName: choicesCollection.findOne(
               {_id: choicesArray[s-1]},
               {name:1, _id:0}
-            ).name
+            ).name,
+            choiceDesc: choicesCollection.findOne(
+              {_id: choicesArray[s]},
+              {name:1, _id:0}
+            ).description
           }
         ];
 
@@ -244,7 +252,7 @@ if (Meteor.isClient) {
 
   Template.doVote.events({
 
-    "click .VA-choice-thumb" : function (event) {
+    "click .VA-choice-thumbx" : function (event) {
       event.preventDefault();
 
       // Process the user input to make a selection from choices
@@ -253,11 +261,21 @@ if (Meteor.isClient) {
       console.log(selectedChoice);
       Session.set("selectedVoteChoice", selectedChoice);
 
+      // var theSelection = event.currentTarget.id;
+
       // Update the UI to reflect user's choice
       $(".VA-choice-thumb").removeClass( "selected" );
       $(event.currentTarget).addClass( "selected" );
       $("[data-action='confirmSelection']").removeClass( "disabled" );
 
+    },
+    "click [data-action='confirmSelectionx']" : function (event) {
+      event.preventDefault();
+      // test function
+      var theSelection = event.currentTarget.dataset.item;
+      // var theSelection = Session.get("selectedVoteChoice");
+      console.log("confirming the selection");
+      console.log(theSelection);
     },
 
     "click [data-action='confirmSelection']" : function (event) {
@@ -267,7 +285,9 @@ if (Meteor.isClient) {
       // of choice selection
 
       // Get the selected vote option:
-      var theSelection = Session.get("selectedVoteChoice");
+      // We will now be getting this from the DOM
+      var theSelection = event.currentTarget.dataset.item;
+      // var theSelection = Session.get("selectedVoteChoice");
       console.log("confirming the selection");
       console.log(theSelection);
 
@@ -349,8 +369,8 @@ if (Meteor.isClient) {
       // ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr, step: nextStep}});
 
       // Reset the selection UI
-      $(".VA-choice-thumb").removeClass( "selected" );
-      $("[data-action='confirmSelection']").addClass( "disabled" );
+      // $(".VA-choice-thumb").removeClass( "selected" );
+      // $("[data-action='confirmSelection']").addClass( "disabled" );
 
     }
 

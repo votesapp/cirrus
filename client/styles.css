@@ -6,7 +6,10 @@ html, body, .full-height {
 }
 
 body {
-	padding-top: 50px;
+	/*padding-top: 50px;*/
+}
+body.container:first-child {
+  padding-top: 50px;
 }
 
 a:focus, button:focus{
@@ -39,11 +42,20 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 
 
 /*Vote option styles. We can eventually replace with bootstrap4 cards*/
+.VA-vote-container {
+  padding-top: 42px;
+  /*padding-bottom: 20px;*/
+}
+
+.VA-doVoteNav {
+  min-height: 36px !important;
+
+}
 
 .thumbnail.VA-choice-thumb {
   position: relative;
   height: calc(50% - 17px); /* 1/2 height - the height of sibling controls */
-  margin-bottom: 0;
+  margin-bottom: 17px;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
