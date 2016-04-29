@@ -14,10 +14,12 @@
           <label for="signupEmail">Email Address</label>
           <input id="signupEmail" name="email" type="text" class="form-control" placeholder="email@address.com">
         </div>
+        {{#if productionMode}}
         <div class="form-group">
           <label for="accessCode">Access Code</label>
           <input id="accessCode" name="code" type="text" class="form-control" placeholder="your code here">
         </div>
+        {{/if}}
         <div class="form-group">
           <label for="signupPass">Password</label>
           <input id="signupPass" name="password" type="password" class="form-control" placeholder="password">
