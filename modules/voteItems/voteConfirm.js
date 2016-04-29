@@ -46,7 +46,11 @@ if (Meteor.isClient) {
       // Get the ballot results to be confirmed
       var voteId = Router.current().params._id;
 
-      var ballotData = ballotsCollection.findOne({voteId : voteId, createdBy: Meteor.userId()});
+      var ballotData = Session.get("currentVoteBallot");
+
+      if (!ballotData) {
+        ballotData = ballotsCollection.findOne({voteId : voteId, createdBy: Meteor.userId()});
+      };
 
       console.log("The ballot data:");
       console.log(ballotData);
@@ -92,10 +96,11 @@ if (Meteor.isClient) {
       var voteId = Router.current().params._id;
 
       console.log("the ballotId");
-      console.log(ballotId);
+      console.log(ballotId._id);
 
       // Delete the ballot to restart vote with new ballot
-      Meteor.call("deleteBallot", ballotId);
+      Meteor.call("deleteBallot", ballotId._id);
+      Session.set("currentVoteBallot", null);
 
       Router.go("doVote", {_id: voteId});
 
@@ -106,15 +111,19 @@ if (Meteor.isClient) {
 
       // Add a session get to get the actual live ballot data.
       console.log("confirming the ballot");
-      var ballotId = Session.get("currentVoteBallot");
-      var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
+      var userBallot = Session.get("currentVoteBallot");
+      // var ballotId = userBallot._id;
+      // var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
+      var voteId = userBallot.voteId;
+      // var choicesSort = userBallot.choicesCurr;
 
       // Update the status of the ballot
       // We can also update the voteResults.
       // The update method will do the results calculation so it will
       // be run on the server.
+      // We should probably just pass along the sorted choices
 
-      var theResults = Meteor.call("addBallotResults", ballotId, voteId, function (error, result) {
+      var theResults = Meteor.call("addBallotResults", userBallot, function (error, result) {
         if (error) {
           // throw an error
         } else {
