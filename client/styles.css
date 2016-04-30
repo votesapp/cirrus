@@ -8,7 +8,9 @@ html, body, .full-height {
 body {
 	/*padding-top: 50px;*/
 }
-body.container:first-child {
+
+/*Compensation for Bootstrap fixed nav*/
+body > .content {
   padding-top: 50px;
 }
 
@@ -43,7 +45,7 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 
 /*Vote option styles. We can eventually replace with bootstrap4 cards*/
 .VA-vote-container {
-  padding-top: 42px;
+  padding-top: 42px !important;
   /*padding-bottom: 20px;*/
 }
 

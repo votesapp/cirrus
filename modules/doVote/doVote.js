@@ -49,7 +49,11 @@ if (Meteor.isClient) {
       } else {
         console.log("the user has not completed this vote. Continuing to voting");
         // Do nothing to continue. 
+        // Set the session ballot for ballot casting process
+        Session.set("currentVoteBallot", existingBallot);
       };
+
+
 
     } else {
       // There is no existing ballot, initialize a new ballot for the user
@@ -64,16 +68,13 @@ if (Meteor.isClient) {
       //   voteId(_id) - the _id of the vote being voted on.
       //   choicesInit(array) - an array of the initial choices shuffled state.
       //   choicesCurr(array) - the current state of the sort by the user.
-      //   choicePairs(array) - track all pairs compared in the vote,
-      //     which will allow us to eliminate duplicate comparisons.
       //   status[default=incomplete] - a field to track the status of the vote.
       //   step(int) - A step counter to track state of the ballot
 
       // Get an array of objects containing all of the vote choice _id's 
-
       var choicesArray =  votesCollection.findOne({_id: voteId}).choices;
       var choicesData = choicesCollection.find({_id: {$in: choicesArray}}).fetch();
-      // var voteChoices = choicesCollection.find({voteId:voteId}).map(function(item){ 
+      
       var voteChoices = choicesData.map(function(item){ 
         var obj = {_id:item._id};
         return obj;
@@ -115,11 +116,22 @@ if (Meteor.isClient) {
       console.log("ballotData:");
       console.log(ballotData);
 
-      result = Meteor.call("createBallot", ballotData)
-      console.log("initialized new vote");
-      console.log(result);
+      Meteor.call("createBallot", ballotData, function (error, result) {
+        if (error) {
+          // throw error
+        } else {
+          console.log("initialized new vote");
+          console.log(result);
+
+          ballotData._id = result;
+          Session.set("currentVoteBallot", ballotData);
+        };
+
+      });
 
     }; // end if(existingBallot)
+
+    // This is where we can add the ballot to the user session.
 
   });
 
@@ -144,7 +156,8 @@ if (Meteor.isClient) {
       // Genereate and present the pair of options to the template
 
       // Get the choices from the user's ballot
-      var voterBallot = ballotsCollection.findOne({voteId : currId, createdBy: Meteor.userId()});
+      // var voterBallot = ballotsCollection.findOne({voteId : currId, createdBy: Meteor.userId()});
+      var voterBallot = Session.get("currentVoteBallot");
 
       // Filter and transpose the result for only those choices which have not
       // been sorted by the user.
@@ -162,7 +175,8 @@ if (Meteor.isClient) {
       });
 
       console.log(choicesArray);
-      Session.set("currentVoteBallot", voterBallot._id);
+      // If we set this above, we no longer need this here.
+      // Session.set("currentVoteBallot", voterBallot._id);
       console.log("currentVoteBallot: " + voterBallot._id);
 
       // If there are no unsorted options, we will redirect the user to confirm their ballot
@@ -253,6 +267,7 @@ if (Meteor.isClient) {
   Template.doVote.events({
 
     "click .VA-choice-thumbx" : function (event) {
+      // This is not in use at the moment. Consider for removal.
       event.preventDefault();
 
       // Process the user input to make a selection from choices
@@ -268,14 +283,6 @@ if (Meteor.isClient) {
       $(event.currentTarget).addClass( "selected" );
       $("[data-action='confirmSelection']").removeClass( "disabled" );
 
-    },
-    "click [data-action='confirmSelectionx']" : function (event) {
-      event.preventDefault();
-      // test function
-      var theSelection = event.currentTarget.dataset.item;
-      // var theSelection = Session.get("selectedVoteChoice");
-      console.log("confirming the selection");
-      console.log(theSelection);
     },
 
     "click [data-action='confirmSelection']" : function (event) {
@@ -294,10 +301,13 @@ if (Meteor.isClient) {
       // This is where we process the vote choice selection
 
       // Get the relevant data
-      var ballotId = Session.get("currentVoteBallot");
+      var ballotRecord = Session.get("currentVoteBallot");
+      var ballotId = ballotRecord._id;
+
       // "ballotRecord" is used as the active ballot, and we will update
       // the actual ballot record with this document.
-      var ballotRecord = ballotsCollection.findOne({_id:ballotId});
+      // We will replace the below with a session call
+      // var ballotRecord = ballotsCollection.findOne({_id:ballotId});
       var s = ballotRecord.step;
 
       // Get the choices id's from the user's ballot
@@ -329,11 +339,12 @@ if (Meteor.isClient) {
       // We only need to update the array if the user 
       // selected and "out of order" choice.
       var aElem = s + indexOffset;
+      var theChoices = ballotRecord.choicesCurr;
       if (activeChoices[aElem] === theSelection) {
         // The user selected the "lower" ranked option, so we will swap the elements
-        var swapper = ballotRecord.choicesCurr[aElem];
-        ballotRecord.choicesCurr[aElem] = ballotRecord.choicesCurr[aElem - 1];
-        ballotRecord.choicesCurr[aElem - 1] = swapper;
+        var swapper = theChoices[aElem];
+        theChoices[aElem] = theChoices[aElem - 1];
+        theChoices[aElem - 1] = swapper;
         console.log("We had to swap the items: ");
         console.log(activeChoices);
 
@@ -364,13 +375,22 @@ if (Meteor.isClient) {
       console.log("this nextStep: " + nextStep);
       // Update the ballot state "step"
 
+      ballotRecord.step = nextStep;
       // Update the collection. Redirects are handled in onCreated, and in routers/helpers.
-      Meteor.call("updateBallot", ballotId, {choicesCurr: ballotRecord.choicesCurr, step: nextStep });
+      // We are eliminating this, and replacing it with storing in session() data
+      // Meteor.call("updateBallot", ballotId, {choicesCurr: ballotRecord.choicesCurr, step: nextStep });
+      Session.set("currentVoteBallot", ballotRecord);
       // ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr, step: nextStep}});
 
       // Reset the selection UI
       // $(".VA-choice-thumb").removeClass( "selected" );
       // $("[data-action='confirmSelection']").addClass( "disabled" );
+
+    },
+
+    "click [data-action='prevStep']" : function (event) {
+      event.preventDefault();
+      // Meteor.call("updateBallot", step: -1);
 
     }
 

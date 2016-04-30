@@ -58,7 +58,12 @@ if (Meteor.isClient) {
 
 
 
-      if (event.target == event.currentTarget) {
+      // This checks for acceptable elements to trigger modal.
+      // We do this to UI "cards", which will have nested events,
+      // can trigger a modal like a thumbnail, without collision of events.
+
+      var eTag = event.target.tagName;
+      if (eTag != "A" && eTag != "BUTTON" || event.target == event.currentTarget) {
         var template;
         // Get parameter values from DOM properties
         var modalTarget = event.currentTarget.dataset.target;
@@ -85,10 +90,6 @@ if (Meteor.isClient) {
         // access in the modal helper. Esesentially the route is stored here,
         // without having been rendered by a router.
         // TODO: Add full parsing of all route params, data, and other properties
-        console.log("event.currentTarget is: ");
-        console.log(event.currentTarget);
-        console.log("event.target is: ");
-        console.log(event.target);
         Session.set("modalRoute", modalRoute);
 
         $(modalTarget).modal("toggle");
@@ -98,6 +99,8 @@ if (Meteor.isClient) {
       console.log(event.currentTarget);
       console.log("event.target is: ");
       console.log(event.target);
+      console.log("event.target.tagName is: ");
+      console.log(event.target.tagName);
 
     }
 
