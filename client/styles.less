@@ -11,7 +11,7 @@ body {
 	/*padding-top: 50px;*/
 }
 
-/*Compensation for Bootstrap fixed nav*/
+/*Compensation for Bootstrap fixed-nav*/
 body > .content {
   padding-top: 50px;
 }
@@ -36,11 +36,15 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   text-align: right;
 }
 
-h4, h5, h6 {
+/*Section headers for content*/
+.content > .row > div > h4,
+.content > .row > div > h5,
+.content > .row > div > h6 {
   text-transform: uppercase;
 }
 
-.small {
+
+small {
   text-transform: none !important;
 }
 
@@ -89,7 +93,7 @@ h4, h5, h6 {
 
 .thumbnail.VA-choice-thumb {
   position: relative;
-  height: calc(50% - 17px); /* 1/2 height - the height of sibling controls */
+  height: ~"calc(50% - 17px)"; /* 1/2 height - the height of sibling controls */
   margin-bottom: 17px;
   background-position: center;
   background-size: cover;

@@ -11,7 +11,7 @@
         <span class="icon-bar"></span>
       </button>
  --}}
-      <a class="btn btn-default" href="{{#with this.params}}{{pathFor route='voteInfo'}}{{/with}}">save &amp; exit</a>
+      <a class="btn btn-default" href="{{#with currentBallot}}{{pathFor route='voteInfo' _id=voteId}}{{/with}}">save &amp; exit</a>
       {{!-- <a class="btn btn-default pull-right" href="#">next</a> --}}
     </div>
 {{!--     <div id="navbar" class="collapse navbar-collapse">
