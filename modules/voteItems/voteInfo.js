@@ -75,7 +75,7 @@ if (Meteor.isClient) {
       var creator = this.createdBy;
       var dropMenu = {
         config: {
-          align: "pull-right",
+          align: "",
           menuAlign: "dropdown-menu-right",
           style: "btn-default"
         }

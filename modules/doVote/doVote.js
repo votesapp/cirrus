@@ -135,6 +135,14 @@ if (Meteor.isClient) {
 
   });
 
+  Template.doVote.onDestroyed(function () {
+    var userBallot = Session.get("currentVoteBallot");
+    // delete ballotData._id, ballotData.choicesInit, ballotData.voteId, userBallot.ballotStatus;
+    Meteor.call("updateBallot", userBallot._id, userBallot, null, function () {
+      // this will be after updating the ballot
+    });
+  });
+
   Template.doVote.helpers({
 
     currentVote : function () {

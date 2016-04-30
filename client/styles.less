@@ -1,5 +1,7 @@
 /* CSS declarations go here */
 
+@import "lib/custom.bootstrap.import.less";
+
 /*full heights for elements*/
 html, body, .full-height {
   height: 100%;
@@ -9,7 +11,7 @@ body {
 	/*padding-top: 50px;*/
 }
 
-/*Compensation for Bootstrap fixed nav*/
+/*Compensation for Bootstrap fixed-nav*/
 body > .content {
   padding-top: 50px;
 }
@@ -34,6 +36,29 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   text-align: right;
 }
 
+/*Section headers for content*/
+.content > .row > div > h4,
+.content > .row > div > h5,
+.content > .row > div > h6 {
+  text-transform: uppercase;
+}
+
+
+small {
+  text-transform: none !important;
+}
+
+.line {
+  display: block;
+  background: transparent;
+  height: 0;
+  border-top: 1px solid grey;
+}
+
+.btn {
+  font-weight: bold;
+}
+
 .VA-nav-buttons {
   position: fixed;
   bottom: 0;
@@ -42,11 +67,23 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   z-index: 900;
 }
 
+.VA-CTA {
+  padding-top: 16px;
+  padding-bottom: 10px;
+  /*border-top: 1px solid grey;*/
+}
+
+.VA-CTA .btn {
+  padding-left: 42px;
+  padding-right: 42px;
+}
+
 
 /*Vote option styles. We can eventually replace with bootstrap4 cards*/
 .VA-vote-container {
   padding-top: 42px !important;
   /*padding-bottom: 20px;*/
+  background-color: #e3e3e3;
 }
 
 .VA-doVoteNav {
@@ -56,7 +93,7 @@ a::-moz-focus-inner, button::-moz-focus-inner {
 
 .thumbnail.VA-choice-thumb {
   position: relative;
-  height: calc(50% - 17px); /* 1/2 height - the height of sibling controls */
+  height: ~"calc(50% - 17px)"; /* 1/2 height - the height of sibling controls */
   margin-bottom: 17px;
   background-position: center;
   background-size: cover;
