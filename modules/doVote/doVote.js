@@ -49,10 +49,10 @@ if (Meteor.isClient) {
       } else {
         console.log("the user has not completed this vote. Continuing to voting");
         // Do nothing to continue. 
+        // Set the session ballot for ballot casting process
+        Session.set("currentVoteBallot", existingBallot);
       };
 
-      // Set the session ballot
-      Session.set("currentVoteBallot", existingBallot);
 
 
     } else {
@@ -68,16 +68,13 @@ if (Meteor.isClient) {
       //   voteId(_id) - the _id of the vote being voted on.
       //   choicesInit(array) - an array of the initial choices shuffled state.
       //   choicesCurr(array) - the current state of the sort by the user.
-      //   choicePairs(array) - track all pairs compared in the vote,
-      //     which will allow us to eliminate duplicate comparisons.
       //   status[default=incomplete] - a field to track the status of the vote.
       //   step(int) - A step counter to track state of the ballot
 
       // Get an array of objects containing all of the vote choice _id's 
-
       var choicesArray =  votesCollection.findOne({_id: voteId}).choices;
       var choicesData = choicesCollection.find({_id: {$in: choicesArray}}).fetch();
-      // var voteChoices = choicesCollection.find({voteId:voteId}).map(function(item){ 
+      
       var voteChoices = choicesData.map(function(item){ 
         var obj = {_id:item._id};
         return obj;
@@ -119,12 +116,18 @@ if (Meteor.isClient) {
       console.log("ballotData:");
       console.log(ballotData);
 
-      result = Meteor.call("createBallot", ballotData);
-      console.log("initialized new vote");
-      console.log(result);
+      Meteor.call("createBallot", ballotData, function (error, result) {
+        if (error) {
+          // throw error
+        } else {
+          console.log("initialized new vote");
+          console.log(result);
 
-      ballotData._id = result;
-      Session.set("currentVoteBallot", ballotData);
+          ballotData._id = result;
+          Session.set("currentVoteBallot", ballotData);
+        };
+
+      });
 
     }; // end if(existingBallot)
 

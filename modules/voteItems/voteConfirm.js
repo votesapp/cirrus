@@ -49,6 +49,7 @@ if (Meteor.isClient) {
       var ballotData = Session.get("currentVoteBallot");
 
       if (!ballotData) {
+        // If there was no session ballot, get the saved ballot from the DB
         ballotData = ballotsCollection.findOne({voteId : voteId, createdBy: Meteor.userId()});
       };
 
@@ -123,21 +124,21 @@ if (Meteor.isClient) {
       // be run on the server.
       // We should probably just pass along the sorted choices
 
-      var theResults = Meteor.call("addBallotResults", userBallot, function (error, result) {
+      Meteor.call("addBallotResults", userBallot, function (error, result) {
         if (error) {
           // throw an error
         } else {
+          console.log("The current vote results");
+          console.log(result);
+
+          console.log("the vote id in ballot confirm event: ");
+          console.log(voteId);
+
+          Router.go("voteInfo", {_id: voteId});
           return result;
         };
       });
 
-      console.log("The current vote results");
-      console.log(theResults);
-
-      console.log("the vote id in ballot confirm helper: ");
-      console.log(voteId);
-
-      Router.go("voteInfo", {_id: voteId});
     }
 
 

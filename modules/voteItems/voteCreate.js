@@ -24,7 +24,7 @@ if (Meteor.isClient) {
       var title = event.target.title.value;
       var desc = event.target.description.value;
 
-      if (title) {
+      if (title && desc) {
         var voteData = {
           title: title,
           description: desc,
@@ -44,6 +44,7 @@ if (Meteor.isClient) {
         // var newDoc =
         // console.log("new doc: " + newDoc);
         // Close the  modal if one is open
+        // TODO: This should be handled in the modalRouter
         $("#mainModal").modal("hide");
 
         // and clear all input fields for future use.
@@ -55,7 +56,7 @@ if (Meteor.isClient) {
         // Create an alert because the form was not valid
         Bert.alert({
           title: "Form error",
-          message: "No vote title was entered.",
+          message: "Title and description required for vote creation and editing.",
           type: "warning"
         });
       };

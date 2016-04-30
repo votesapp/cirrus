@@ -11,8 +11,8 @@
         <span class="icon-bar"></span>
       </button>
  --}}
-      <a class="btn btn-default" href="{{pathFor route='votesList'}}">prev</a>
-      <a class="btn btn-default pull-right" href="#">next</a>
+      <a class="btn btn-default" href="{{#with this.params}}{{pathFor route='voteInfo'}}{{/with}}">save &amp; exit</a>
+      {{!-- <a class="btn btn-default pull-right" href="#">next</a> --}}
     </div>
 {{!--     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
