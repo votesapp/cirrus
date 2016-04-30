@@ -1,5 +1,5 @@
 # 'cirrus'
- thin, wispy strands, a ringlet for democracy
+thin, wispy strands, a ringlet for democracy
  
 ## Welcome to the Votesapp main development repository
  
