@@ -7,25 +7,31 @@
     <h2 contenteditable="true" data-field="title">{{title}}</h2>
     <h5>Description</h5>
     <p contenteditable="true" data-field="description">{{description}}</p>
+    <div class="text-center">
     {{> dropdownSelect dropMenuData=dropMenuData}}
+    </div>
     <div class="clearfix"></div>
 
-    <h4>Vote Choices</h4>
+    <h5>Vote Choices</h5>
     {{> voteChoicesList voteChoices=choicesList edit=../edit}}
 
     {{else}}
 
-    <h2>{{title}}</h2>
+    <h2 class="text-center">{{title}}</h2>
+    <div class="line"></div>
+    <div class="text-center VA-CTA">
+      {{> dropdownSelect dropMenuData=dropMenuData}}
+    </div>
+    <h5>Description</h5>
     <p>{{description}}</p>
-    {{> dropdownSelect dropMenuData=dropMenuData}}
-    <p><blockquote>This is some other info on the vote</blockquote></p>
+    {{!-- <p><blockquote>This is some other info on the vote</blockquote></p> --}}
 
       {{#with ballotStatus}}
         {{#if completed}}
-          <h4>Vote Results</h4>
+          <h5>Vote Results</h5>
           {{> voteResultsList}}
         {{else}}
-          <h4>Vote Choices <small>(Take vote to see results)</small></h4>
+          <h5>Description&nbsp;<small>(Take vote to see results)</small></h5>
           {{> voteChoicesList voteChoices=choicesList}}
         {{/if}}
       {{/with}}
