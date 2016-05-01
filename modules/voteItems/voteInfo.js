@@ -56,7 +56,13 @@ if (Meteor.isClient) {
       // Return the vote choices
       var recordId = Router.current().params._id;
       var choicesArray = votesCollection.findOne({_id: recordId}).choices;
-      var choicesData = choicesCollection.find({_id: {$in: choicesArray}}, {sort: {createdOn: -1}}).fetch();
+      console.log("in voteInfo.js/choicesList");
+      console.log(choicesArray);
+      var choicesData;
+      if (choicesArray) {
+        // var choicesArray = voteRecord.choices;
+        choicesData = choicesCollection.find({_id: {$in: choicesArray}}, {sort: {createdOn: -1}}).fetch();
+      };
 
       return choicesData;
     },
@@ -111,11 +117,11 @@ if (Meteor.isClient) {
           // for non-creators of the votes
           if (this.voteStatus != "published") {
             // display nothing
-            dropMenu.items = null;
+            dropMenu = null;
           } else {
             if (ballotStatus == "completed") {
               // we should not show a button
-              dropMenu.items = null;
+              dropMenu = null;
               console.log("completed ballot, non-creator. voteInfo.js:121, this is a bug");
             } else if (ballotStatus == "incomplete") {
               console.log("incomple ballot, but closed vote")
@@ -191,7 +197,7 @@ if (Meteor.isClient) {
       // need to change how votes are saved (instead of below)
       var voteId = Router.current().params._id;
       Bert.alert("The vote was saved", "info");
-      Router.go("voteInfo", {_id:voteId});
+      Router.go("myVotes");
 
     },
 
@@ -234,7 +240,7 @@ if (Meteor.isClient) {
       // Right now this is a pseudo event and placeholder should we
       // need to change how votes are saved (instead of below)
       var voteId = Router.current().params._id;
-      Router.go("voteInfo", {_id:voteId, edit:"edit"});
+      Router.go("voteEdit", {_id:voteId, edit:"edit"});
 
     },
 

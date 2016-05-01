@@ -27,33 +27,72 @@ if (Meteor.isClient) {
 
   });
 
-  Template.userProfile.events({
+  Template.userProfileEdit.helpers({
+    profileData : function () {
+      // Can this not be replaced with {{currenUser}}?
+      return Meteor.user();
+    }
+  });
+
+  Template.userProfileEdit.events({
 
     "submit #profileForm" : function (event) {
       event.preventDefault();
 
       var userName = event.currentTarget.username.value;
       var userDesc = event.currentTarget.description.value;
+      var userAvatar = event.currentTarget.avatar.files;
 
-      var dataObj = {
-        username: userName,
-        profile: {
-          description: userDesc
-        }
+      // If there is an avatar upload we need to handle it!
+
+      if (userAvatar) {
+        console.log("there was a userAvatar file included");
+        Cloudinary._upload_file(userAvatar[0], {}, function (error, result) {
+          console.log("in cloudinary callback");
+          if (error) {
+            //Throw an error
+            console.log("Error in cloudinary upload callback function");
+            console.log(error);
+          } else {
+            console.log("We got a result from cloudinary!");
+            console.log(result);
+            Meteor.call("updateUser", {profile: {avatar: result.public_id}})
+          };
+        });
       };
 
-      Meteor.call("updateUser", dataObj, function (error, result) {
-        if (error) {
-          console.alert(error.reason);
+      if (userName || userDesc) {
+
+        var dataObj = {
+          username: userName,
+          profile: {
+            description: userDesc
+          }
         };
-      });
+
+        Meteor.call("updateUser", dataObj, function (error, result) {
+          if (error) {
+            console.alert(error.reason);
+          } else {
+            Bert.alert("Updated user profile", "info");
+          };
+        });
+
+      };
+
+
+      Router.go("userProfile", {_id: Meteor.userId()});
+
+    },
+
+    "click #cancelEdit" : function () {
 
       Router.go("userProfile", {_id: Meteor.userId()});
 
     },
 
     "click #test-alert" : function () {
-      console.warn("clicked #test-alert");
+      console.alert("clicked #test-alert");
       // Meteor.alertsCollection.insert({title: "the title", type: "success", content: "Successfull!"})
       var alert = {title: "alert title", type: "success", content: "this is a new alert!"};
       Session.set("alert", alert);

@@ -12,8 +12,10 @@
     </div>
     <div class="clearfix"></div>
 
-    <h5>Vote Choices</h5>
-    {{> voteChoicesList voteChoices=choicesList edit=../edit}}
+    {{#if choicesList}}
+      <h5>Vote Choices</h5>
+      {{> voteChoicesList voteChoices=choicesList edit=../edit}}
+    {{/if}}
 
     {{else}}
 
@@ -32,7 +34,9 @@
           {{> voteResultsList}}
         {{else}}
           <h5>Vote Choices&nbsp;<small>(Take vote to see results)</small></h5>
-          {{> voteChoicesList voteChoices=choicesList}}
+          {{#if choicesList}}
+            {{> voteChoicesList voteChoices=choicesList}}
+          {{/if}}
         {{/if}}
       {{/with}}
 
@@ -40,3 +44,4 @@
 
   {{/with}}
 </template>
+

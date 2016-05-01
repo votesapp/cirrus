@@ -2,21 +2,10 @@
 
   <h3>User Profile</h3>
 
-  {{#if edit}}
-  <form id="profileForm" class="form">
-    <div class="form-group">
-      <label class="form-label" for="profileUsername">Username</label>
-      <input id="profileUsername" type="text" class="form-control" name="username" placeholder="Choose a username" value="{{#with profileData}}{{username}}{{/with}}"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="profileDescription">Profile Description</label>
-      <textarea id="profileDescription" rows="4" class="form-control" name="description" placeholder="Write a description" value="{{#with profileData}}{{profile.description}}{{/with}}"></textarea>
-    </div>
-    <input type="submit" name="submit" value="Submit" class="btn btn-success pull-right" />
-  </form>
-      <p>{{emails.[0].address}}</p>
-  {{else}}
   {{#with profileData}}
+    {{#if profile.avatar}}
+    <img src="{{c.url profile.avatar}}" class="img-responsive" />
+    {{/if}}
     {{#if username}}
       <h4>{{username}}</h4>
     {{else}}
@@ -28,9 +17,36 @@
       <p class="text-muted">There is no description yet...</p>
     {{/if}}
       <p>{{emails.[0].address}}</p>
+    <a href="{{pathFor route='userProfileEdit'}}">(Edit Profile)</a>
   {{/with}}
+  <button id="test-alert" type="button" class="btn btn-warning">Test</button>
 
-  {{/if}}
   {{!-- <input type="button" class="btn btn-info" id="test-alert" value="Test Alert" /> --}}
 
+</template>
+
+<template name="userProfileEdit">
+  <h3>Edit User Profile</h3>
+  {{#with profileData}}
+  <form id="profileForm" class="form">
+    <div class="form-group">
+      {{#if profile.avatar}}
+        <img src="{{c.url profile.avatar width=100 crop='fill'}}" />
+      {{/if}}
+      <label for="userAvatar">User Avatar</label>
+      <input type="file" id="userAvatar" name="avatar" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="profileUsername">Username</label>
+      <input id="profileUsername" type="text" class="form-control" name="username" placeholder="Choose a username" value="{{username}}"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="profileDescription">Profile Description</label>
+      <textarea id="profileDescription" rows="4" class="form-control" name="description" placeholder="Write a description" value="{{profile.description}}"></textarea>
+    </div>
+    <a href="{{pathFor route='userProfile'}}" class="btn btn-default pull-right">Cancel</a>
+    <input type="submit" name="submit" value="Submit" class="btn btn-success pull-right" />
+  </form>
+  <p>{{emails.[0].address}}</p>
+  {{/with}}
 </template>

@@ -42,8 +42,8 @@ if (Meteor.isClient) {
       console.log("Voter's ballot status:");
       console.log(ballotStatus);
 
-      if (ballotStatus == "completed") {
-        console.log("The ballot was completed");
+      if (ballotStatus != "incomplete") {
+        console.log("The ballot was not incomplete");
         // Route the user back to voteInfo if they have already completed the vote
         Router.go("voteInfo", {_id: voteId});
       } else {
@@ -53,7 +53,48 @@ if (Meteor.isClient) {
         Session.set("currentVoteBallot", existingBallot);
       };
 
+      // We need to add checks for ballot state
 
+      // Get the choices from the user's ballot
+      // var voterBallot = ballotsCollection.findOne({voteId : currId, createdBy: Meteor.userId()});
+      var voterBallot = Session.get("currentVoteBallot");
+
+      // Filter and transpose the result for only those choices which have not
+      // been sorted by the user.
+
+      var choicesArray = voterBallot.choicesCurr.map(function(obj) {
+        if (obj.sortStatus != "sorted") {
+          return obj._id;
+        } else {
+          return null;
+        };
+      });
+      // Eliminate the empty array elements created by map() above
+      choicesArray = choicesArray.filter(function(val){
+        return (val);
+      });
+
+      console.log(choicesArray);
+      // If we set this above, we no longer need this here.
+      // Session.set("currentVoteBallot", voterBallot._id);
+      console.log("currentVoteBallot: " + voterBallot._id);
+
+      // If there are no unsorted options, we will redirect the user to confirm their ballot
+      // User's can only get to this if they have a ballot that is not "completed" so
+      // they cannot re-confirm their vote.
+      if (choicesArray.length <= 1) {
+        // There are not enough items left to compare. (ie. not two).
+        // Add updating of ballot choice sorted status
+        // Add updating of ballot status
+        // This is added in the voteConfirm event below
+        Router.go("voteConfirm", {_id: voteId});
+
+      }; // End if(optionsArray.length <= 1)
+
+
+      /* ************************************************** */
+      /* we are finishing checking existing vote and ballot */
+      /* ************************************************** */
 
     } else {
       // There is no existing ballot, initialize a new ballot for the user
@@ -61,7 +102,7 @@ if (Meteor.isClient) {
       /* *********************************** */
       /* ******** Initialize Ballot ******** */
       /* *********************************** */
-      console.log("This is a new vote to initialize");
+      console.log("This is a new ballot to initialize");
 
       // Build the initilization object and add it to the ballotsCollection
       // @params: 
@@ -120,7 +161,7 @@ if (Meteor.isClient) {
         if (error) {
           // throw error
         } else {
-          console.log("initialized new vote");
+          console.log("Initialized new ballot");
           console.log(result);
 
           ballotData._id = result;
@@ -138,8 +179,13 @@ if (Meteor.isClient) {
   Template.doVote.onDestroyed(function () {
     var userBallot = Session.get("currentVoteBallot");
     // delete ballotData._id, ballotData.choicesInit, ballotData.voteId, userBallot.ballotStatus;
-    Meteor.call("updateBallot", userBallot._id, userBallot, null, function () {
+    Meteor.call("updateBallot", userBallot._id, userBallot, null, function (error, result) {
       // this will be after updating the ballot
+      if (error) {
+        //throw error
+      } else {
+        Bert.alert("The vote was saved", "info");
+      };
     });
   });
 
@@ -169,59 +215,30 @@ if (Meteor.isClient) {
 
       // Filter and transpose the result for only those choices which have not
       // been sorted by the user.
-      var choicesArray = voterBallot.choicesCurr.map(function(obj) {
-        if (obj.sortStatus != "sorted") {
-          return obj._id;
-        } else {
-          return null;
-        };
-      });
-
-      // Eliminate the empty array elements created by map() above
-      choicesArray = choicesArray.filter(function(val){
-        return (val);
-      });
-
-      console.log(choicesArray);
-      // If we set this above, we no longer need this here.
-      // Session.set("currentVoteBallot", voterBallot._id);
-      console.log("currentVoteBallot: " + voterBallot._id);
-
-      // If there are no unsorted options, we will redirect the user to confirm their ballot
-      // User's can only get to this if they have a ballot that is not "completed" so
-      // they cannot re-confirm their vote.
-      if (choicesArray.length <= 1) {
-        // There are not enough items left to compare. (ie. not two).
-        // Add updating of ballot choice sorted status
-        // Add updating of ballot status
-        // This is added in the voteConfirm event below
-        if (voterBallot.ballotStatus != "completed") {
-
-          Router.go("voteConfirm", {_id: currId});
-
-        } else {
-          // The vote has already been confirmed
-          Router.go("voteInfo", {_id: currId});
-
-        };
-        
+      var choicesArray;
+      if (!voterBallot) {
+        return null;
       } else {
-        // There are still items to compare
-        // Get the original choices data to present to user
-        // We are not using this, until we need more info
-        // var choicesData = choicesCollection.find({_id: {$in: optionsArray}}).fetch();
 
-        // console.log("getting the options via $in (array)");
-        // console.log(optionsData);
+        choicesArray = voterBallot.choicesCurr.map(function(obj) {
+          if (obj.sortStatus != "sorted") {
+            return obj._id;
+          } else {
+            return null;
+          };
+        });
+        // Eliminate the empty array elements created by map() above
+        choicesArray = choicesArray.filter(function(val){
+          return (val);
+        });
+        console.log(choicesArray);
+        // If we set this above, we no longer need this here.
+        // Session.set("currentVoteBallot", voterBallot._id);
+        console.log("currentVoteBallot: " + voterBallot._id);
 
         // Get the current state of the iteration
         var s = voterBallot.step;
 
-        // Generate the choices pair to be considered by the user
-        // based on the current ballot "step" and the number of choices
-        // not labelled as "sorted" (ie. unsorted).
-        // TODO: Add conditional to escape this when there is only
-        // one option left. It this not handled above when we redirect?
         var votePair = [
           {
             choiceId: choicesArray[s],
@@ -265,8 +282,10 @@ if (Meteor.isClient) {
 
         // Send the vote pair to the view
         return votePair;
+      }; // end if(!voterBallot)
 
-      }; // End if(optionsArray.length <= 1)
+
+
 
     }
 
@@ -340,55 +359,60 @@ if (Meteor.isClient) {
         };
       }; 
 
-      var indexOffset = numChoices.length - count;
       console.log("number of unsorted choices: " + count);
-      console.log("the indexOffset: " + indexOffset);
 
-      // We only need to update the array if the user 
-      // selected and "out of order" choice.
-      var aElem = s + indexOffset;
-      var theChoices = ballotRecord.choicesCurr;
-      if (activeChoices[aElem] === theSelection) {
-        // The user selected the "lower" ranked option, so we will swap the elements
-        var swapper = theChoices[aElem];
-        theChoices[aElem] = theChoices[aElem - 1];
-        theChoices[aElem - 1] = swapper;
-        console.log("We had to swap the items: ");
-        console.log(activeChoices);
+      if (count <= 2) {
+        // Go to voteConfirm
+        Router.go("voteConfirm", {_id: ballotRecord.voteId});
+      } else {
 
-      };
+        var indexOffset = numChoices.length - count;
+        console.log("the indexOffset: " + indexOffset);
 
-      // Update the iterative state of the ballot
-      var nextStep = s - 1;
+        // We only need to update the array if the user 
+        // selected and "out of order" choice.
+        var aElem = s + indexOffset;
+        var theChoices = ballotRecord.choicesCurr;
+        if (activeChoices[aElem] === theSelection) {
+          // The user selected the "lower" ranked option, so we will swap the elements
+          var swapper = theChoices[aElem];
+          theChoices[aElem] = theChoices[aElem - 1];
+          theChoices[aElem - 1] = swapper;
+          console.log("We had to swap the items: ");
+          console.log(activeChoices);
 
-      if (nextStep <= 0) {
-        // then we are at the end of the list
-        // here we will flag the last item...
-        ballotRecord.choicesCurr[indexOffset].sortStatus = "sorted";
-        console.log("active ballotRecord.choicesCurr: ");
-        console.log(ballotRecord.choicesCurr);
-
-        // Reset the iteration
-        // This is -2 because one less to increment, and one less to account for
-        // zero indexed array that options are stored in.
-        nextStep = count - 2;
-
-        // The count should never be less than 2 (zero based "1"), since the user must always compare
-        // 2 options, otherwise the single last option is placed as last with status "sorted"
-        if (nextStep < 1) {
-          ballotRecord.choicesCurr[indexOffset+1].sortStatus = "sorted";
         };
 
-      };
-      console.log("this nextStep: " + nextStep);
-      // Update the ballot state "step"
+        // Update the iterative state of the ballot
+        var nextStep = s - 1;
 
-      ballotRecord.step = nextStep;
-      // Update the collection. Redirects are handled in onCreated, and in routers/helpers.
-      // We are eliminating this, and replacing it with storing in session() data
-      // Meteor.call("updateBallot", ballotId, {choicesCurr: ballotRecord.choicesCurr, step: nextStep });
-      Session.set("currentVoteBallot", ballotRecord);
-      // ballotsCollection.update({_id:ballotId},{$set: {choicesCurr: ballotRecord.choicesCurr, step: nextStep}});
+        if (nextStep <= 0) {
+          // then we are at the end of the list
+          // here we will flag the last item...
+          ballotRecord.choicesCurr[indexOffset].sortStatus = "sorted";
+          console.log("active ballotRecord.choicesCurr: ");
+          console.log(ballotRecord.choicesCurr);
+
+          // Reset the iteration
+          // This is -2 because one less to increment, and one less to account for
+          // zero indexed array that options are stored in.
+          nextStep = count - 2;
+
+          // The count should never be less than 2 (zero based "1"), since the user must always compare
+          // 2 options, otherwise the single last option is placed as last with status "sorted"
+          if (nextStep < 1) {
+            ballotRecord.choicesCurr[indexOffset+1].sortStatus = "sorted";
+          };
+
+        };
+        
+        // Update the ballot state "step"
+        ballotRecord.step = nextStep;
+        console.log("this nextStep: " + nextStep);
+        Session.set("currentVoteBallot", ballotRecord);
+
+      };
+
 
       // Reset the selection UI
       // $(".VA-choice-thumb").removeClass( "selected" );
