@@ -20,7 +20,7 @@
       <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal">
         {{name}}
         <button type="button" class="close" name="{{_id}}" data-action="deleteVoteChoice">&times;</button>
-        <a class="glyphicon glyphicon-pencil close" href="{{pathFor route='voteChoice' edit=../edit}}"></a>
+        <a class="glyphicon glyphicon-pencil close" href="{{pathFor route='voteChoiceEdit'}}"></a>
       </a>
       {{/each}}
 

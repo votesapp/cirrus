@@ -108,6 +108,15 @@ if (Meteor.isClient) {
       };
     },
 
+    "click [data-action='saveDraft']" : function () {
+      // Right now this is a pseudo event and placeholder should we
+      // need to change how votes are saved (instead of below)
+      var voteId = Router.current().params._id;
+      Bert.alert("The vote was saved", "info");
+      Router.go("myVotes");
+
+    },
+
     "click [data-action='publishVote']" : function () {
       // Change the status of the vote to publish
       var voteId = Router.current().params._id;
@@ -150,7 +159,38 @@ if (Meteor.isClient) {
           };
         });
       };
-    }
+    },
+    
+    "click [data-action='deleteVote']" : function (event) {
+      event.preventDefault();
+
+      var recordId = Router.current().params._id;
+
+      // Delete the vote record
+      Meteor.call("deleteVote", recordId, function (error, result) {
+        if (error) {
+          //throw error
+        } else {
+          // Then delete all the vote options associated with the vote
+          // We are not doing this so choices will be able to be
+          // re-used in the future.
+          // Meteor.call("deleteChoices", recordId);
+
+          // Notify the user of the success of the delete
+          Bert.alert({
+            title: "Vote Deleted",
+            message: "The vote <b>" + recordId + "</b> was deleted.",
+            type: "danger"
+          });
+
+          // Redirect the user to other content after the vote is deleted.
+          // TODO: We can implement the "previous" function instead.
+          Router.go("votesList");
+        };
+      });
+
+
+    },
 
 
   });
