@@ -1,4 +1,28 @@
 <template name="voteEdit">
-  <h5>Editing Vote:</h5>
+  {{#with editVoteData}}
+    <div class="well">this well</div>
+    <h5>Title</h5>
+    <h2 contenteditable="true" data-field="title">{{title}}</h2>
+    <h5>Description</h5>
+    <p contenteditable="true" data-field="description">{{description}}</p>
+    <div class="text-center">
+    {{!-- {{> dropdownSelect dropMenuData=dropMenuData}} --}}
+    </div>
+    <div class="clearfix"></div>
+
+    {{!-- {{#if editChoicesList}} --}}
+      <h5>Vote Choices</h5>
+      {{> voteChoicesList voteChoices=editChoicesList edit="edit"}}
+    {{!-- {{/if}} --}}
+
+  {{/with}}
+  <div class="row">
+    <div class="col-xs-6">
+      <button type="button" class="btn btn-block btn-default" data-nav="voteInfo">Save Draft</button>
+    </div>
+    <div class="col-xs-6">
+      <button type="button" class="btn btn-block btn-info" data-action="publishVote">Publish Vote</button>
+    </div>
+  </div>
 
 </template>

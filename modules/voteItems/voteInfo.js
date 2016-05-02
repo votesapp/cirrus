@@ -23,6 +23,10 @@ if (Meteor.isClient) {
       if (recordId) {
         // Is this causing a problem on reactive re-render after deleteVote
         // causes undefined result from below before redirectin to new route?
+        // NOTE: This is returning null on a vote that the user did note create
+        // or that is not published/closed. This is because that record is not
+        // served in a subscription. This is a good security measure, but
+        // we should redirect the user if this is the case.
         var recordData = votesCollection.findOne({ _id:recordId })
         return (recordData) ? recordData : null;
       };
@@ -60,7 +64,6 @@ if (Meteor.isClient) {
       console.log(choicesArray);
       var choicesData;
       if (choicesArray) {
-        // var choicesArray = voteRecord.choices;
         choicesData = choicesCollection.find({_id: {$in: choicesArray}}, {sort: {createdOn: -1}}).fetch();
       };
 
