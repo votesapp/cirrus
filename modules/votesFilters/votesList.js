@@ -15,8 +15,6 @@ if (Meteor.isClient) {
   Template.votesList.helpers({
 
     votesList: function () {
-      // Here we will develop filters for searching and displaying different
-      // groups of votes.
       const instance = Template.instance();
       
       const baseQuery = {
@@ -28,7 +26,7 @@ if (Meteor.isClient) {
     
       const sort = {sort: {publishedOn: -1, createdOn: -1}};
 
-      //return all of the tasks
+      //return all of the votes
       let query = baseQuery;
 
       let inputChanged = instance.titles.get('inputChanged');
@@ -48,11 +46,9 @@ if (Meteor.isClient) {
   });
 
   Template.votesList.events({
-    'input .input-changed input'(event, instance) { //event: input, class: input-changed, tag: input
+    'input .input-changed input'(event, instance) {
       instance.titles.set('inputChanged', event.target.value);
     }
   });
-
-
 
 };
