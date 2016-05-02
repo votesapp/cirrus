@@ -86,7 +86,7 @@ if (Meteor.isClient) {
         config: {
           align: "",
           menuAlign: "dropdown-menu-right",
-          style: "btn-default"
+          style: "btn-default btn-block"
         }
       };
       var edit = Router.current().params.edit;
@@ -139,7 +139,7 @@ if (Meteor.isClient) {
           };
 
 
-          dropMenu.config.style = "btn-info";
+          dropMenu.config.style = "btn-info btn-block";
 
         } else {
 
@@ -167,7 +167,7 @@ if (Meteor.isClient) {
                 {name: "Edit Vote", action: "editVote"},
               ];
 
-              dropMenu.config.style = "btn-warning";
+              dropMenu.config.style = "btn-warning btn-block";
 
             } else if (this.voteStatus == "closed"){
               // Allow the user to archive the vote

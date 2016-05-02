@@ -1,6 +1,14 @@
 <template name="voteInfo">
   {{#with voteData}}
 
+    {{#if keyImage}}
+      <div class="row">
+        <div class="jumbotron">
+          <img src="{{c.url keyImage}}" class="img-responsive" />
+        </div>
+      </div>
+    {{/if}}
+
     <h2 class="text-center">{{title}}</h2>
     {{#if dropMenuData}}
     <div class="line"></div>

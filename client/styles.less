@@ -24,13 +24,17 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   border: 0 !important;
 }
 
+textarea {
+    resize: none;
+}
+
 [data-nav] {
   cursor: pointer;
 }
 
 /* This is temporary styling */
 [data-nav]:hover {
-  background-color: #D3E7F1;
+  /*background-color: #D3E7F1;*/
 }
 
 .navbar-nav.navbar-right {
@@ -52,13 +56,30 @@ small {
 .line {
   display: block;
   height: 0;
-  margin: 16px 0 10px 0;
+  margin: 18px 0 18px 0;
   background: transparent;
-  border-top: 1px solid @gray-light;
+  border-top: 1px solid @gray-lighter;
 }
 
 .btn {
   font-weight: bold;
+}
+
+.navbar > .container {
+  text-align: center;
+}
+
+ul.list-group .glyphicon.close {
+  font-size: 15px;
+  line-height: 18px;
+}
+
+ul.list-group .close {
+  padding: 0 2px 0 10px;
+}
+
+.VA-top-spacer {
+  margin-top: 12px;
 }
 
 .VA-nav-buttons {
@@ -67,10 +88,6 @@ small {
   left: 0;
   padding: 0 10px;
   z-index: 900;
-}
-
-.navbar > .container {
-  text-align: center;
 }
 
 .VA-navbar-title {
@@ -83,15 +100,20 @@ small {
 }
 
 .VA-CTA {
-  padding: 10px 0;
+  padding: 6px 0;
   /*padding-top: 16px;*/
   /*padding-bottom: 10px;*/
   /*border-top: 1px solid grey;*/
 }
 
-.VA-CTA .btn {
-  padding-left: 42px;
-  padding-right: 42px;
+
+
+.VA-CTA .btn.btn-block {
+  /*padding-left: 42px;*/
+  /*padding-right: 42px;*/
+  max-width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
