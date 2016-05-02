@@ -33,11 +33,11 @@ if (Meteor.isClient) {
           voteStatus: "draft"
         };
 
-        Meteor.call("createVote", voteData, function (err, data){
-          if (err) {
-            console.log("There was an error creating the vote: " + err);
+        Meteor.call("createVote", voteData, function (error, result){
+          if (error) {
+            console.log("There was an error creating the vote: " + error);
           } else {
-            Router.go("voteInfo", { _id:data, edit:"edit" });
+            Router.go("voteEdit", { _id:result});
           };
 
         });

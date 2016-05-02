@@ -156,16 +156,16 @@
 
 @btn-font-weight:                normal;
 
-@btn-default-color:              #333;
-@btn-default-bg:                 #fff;
-@btn-default-border:             darken(@btn-default-bg, 7%); // #ccc
+@btn-default-color:              #fff; // #333
+@btn-default-bg:                 @gray-light;
+@btn-default-border:             darken(@btn-default-bg, 2%); // #ccc
 
 @btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-primary;
+@btn-primary-bg:                 lighten(@brand-primary, 3%);
 @btn-primary-border:             darken(@btn-primary-bg, 2%);
 
 @btn-success-color:              #fff;
-@btn-success-bg:                 @brand-success;
+@btn-success-bg:                 lighten(@brand-success, 3%);
 @btn-success-border:             darken(@btn-success-bg, 2%);
 
 @btn-info-color:                 #fff;
@@ -200,7 +200,7 @@
 //** Text color for `<input>`s
 @input-color:                    @gray;
 //** `<input>` border color
-@input-border:                   #ccc;
+@input-border:                   @gray-lighter;
 
 // TODO: Rename `@input-border-radius` to `@input-border-radius-base` in v4
 //** Default `.form-control` border radius

@@ -100,10 +100,14 @@ if (Meteor.isClient) {
       console.log(ballotId._id);
 
       // Delete the ballot to restart vote with new ballot
-      Meteor.call("deleteBallot", ballotId._id);
-      Session.set("currentVoteBallot", null);
-
-      Router.go("doVote", {_id: voteId});
+      Meteor.call("deleteBallot", ballotId._id, function (error, result) {
+        if (error) {
+          //throw error
+        } else {
+          Session.set("currentVoteBallot", null);
+          Router.go("doVote", {_id: voteId});
+        };
+      });
 
     },
 

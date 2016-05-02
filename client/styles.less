@@ -14,6 +14,7 @@ body {
 /*Compensation for Bootstrap fixed-nav*/
 body > .content {
   padding-top: 50px;
+  padding-bottom: 42px;
 }
 
 a:focus, button:focus{
@@ -23,13 +24,17 @@ a::-moz-focus-inner, button::-moz-focus-inner {
   border: 0 !important;
 }
 
+textarea {
+    resize: none;
+}
+
 [data-nav] {
   cursor: pointer;
 }
 
 /* This is temporary styling */
 [data-nav]:hover {
-  background-color: #D3E7F1;
+  /*background-color: #D3E7F1;*/
 }
 
 .navbar-nav.navbar-right {
@@ -50,13 +55,31 @@ small {
 
 .line {
   display: block;
-  background: transparent;
   height: 0;
-  border-top: 1px solid grey;
+  margin: 18px 0 18px 0;
+  background: transparent;
+  border-top: 1px solid @gray-lighter;
 }
 
 .btn {
   font-weight: bold;
+}
+
+.navbar > .container {
+  text-align: center;
+}
+
+ul.list-group .glyphicon.close {
+  font-size: 15px;
+  line-height: 18px;
+}
+
+ul.list-group .close {
+  padding: 0 2px 0 10px;
+}
+
+.VA-top-spacer {
+  margin-top: 12px;
 }
 
 .VA-nav-buttons {
@@ -67,15 +90,30 @@ small {
   z-index: 900;
 }
 
+.VA-navbar-title {
+  display: inline-block;
+  position: absolute;
+  height: @navbar-height;
+  margin-left: (@grid-gutter-width / 2 * -1);
+  padding-top: ((@navbar-height - @line-height-computed) / 2);
+  padding-bottom: ((@navbar-height - @line-height-computed) / 2);
+}
+
 .VA-CTA {
-  padding-top: 16px;
-  padding-bottom: 10px;
+  padding: 6px 0;
+  /*padding-top: 16px;*/
+  /*padding-bottom: 10px;*/
   /*border-top: 1px solid grey;*/
 }
 
-.VA-CTA .btn {
-  padding-left: 42px;
-  padding-right: 42px;
+
+
+.VA-CTA .btn.btn-block {
+  /*padding-left: 42px;*/
+  /*padding-right: 42px;*/
+  max-width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 

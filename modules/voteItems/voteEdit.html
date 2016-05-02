@@ -1,4 +1,36 @@
 <template name="voteEdit">
-  <i>voteEdit template</i>
+  {{#with editVoteData}}
+    <div class="well text-center VA-img-well VA-top-spacer" data-action="uploadImg">
+      {{#unless keyImage}}
+        <img src="/img/Picture-Icon-100x96-2x.png" width="50" height="48" />
+        <div class="clearfix"></div>
+        <h4 class="glyphicon glyphicon-plus-sign text-primary"></h4>
+        <div>Add campaign picture</div>
+      {{else}}
+        <img src="{{c.url keyImage crop='fill'}}" class="img-responsive" />
+      {{/unless}}
+    </div>
+    <input type="file" id="fileInput" name="keyImg" class="hidden-xs" accept="image/*" />
+    <h5 class="text-center">Title</h5>
+    <h2 class="text-center VA-edit-live" contenteditable="true" data-field="title">{{title}}</h2>
+    <div class="line"></div>
+    <h5>Description</h5>
+    {{!-- <p contenteditable="true" data-field="description">{{description}}</p> --}}
+    <textarea id="profileDescription" rows="4" class="form-control VA-edit-live" name="description" placeholder="Write a description" value="{{description}}" data-field="description"></textarea>
+    <div class="text-center">
+    {{!-- {{> dropdownSelect dropMenuData=dropMenuData}} --}}
+    </div>
+    <div class="clearfix"></div>
+
+    {{!-- {{#if editChoicesList}} --}}
+      <h5>Vote Choices</h5>
+      {{> voteChoicesList voteChoices=editChoicesList edit="edit"}}
+    {{!-- {{/if}} --}}
+
+  {{/with}}
+  <div class="VA-CTA text-center">
+    <button type="button" class="btn btn-block btn-default" data-nav="voteInfo">Save Draft</button>
+    <button type="button" class="btn btn-block btn-info VA-top-spacer" data-action="publishVote">Publish Vote</button>
+  </div>
 
 </template>
