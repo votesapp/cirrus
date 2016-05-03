@@ -49,6 +49,7 @@ if (Meteor.isClient) {
   Template.voteConfirm.helpers({
 
     ballotResults : function () {
+
       // Get the ballot results to be confirmed
       var voteId = Router.current().params._id;
 
@@ -125,8 +126,17 @@ if (Meteor.isClient) {
       var userBallot = Session.get("currentVoteBallot");
       // var ballotId = userBallot._id;
       // var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
-      var voteId = userBallot.voteId;
+      var voteId = Router.current().params._id;
       // var choicesSort = userBallot.choicesCurr;
+
+      var divs = document.getElementsByName("drag-div");
+      var ids = [];
+      for (var i = 0; i < divs.length; i++) {
+        ids[i] = {};
+        ids[i]._id = divs[i].id;
+      }
+
+      userBallot.choicesCurr = ids;
 
       // Update the status of the ballot
       // We can also update the voteResults.
