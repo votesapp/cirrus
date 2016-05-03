@@ -3,11 +3,13 @@
   {{#with ballotResults}}<h5>Your Sorted Choices</h5>{{/with}}
   {{> voteChoicesList voteChoices=ballotResults}}
 
-  <div class="col-xs-6">
-    <button class="btn btn-lg btn-default btn-block" data-action="redoVote">Redo</button>
-  </div>
-  <div class="col-xs-6">
-    <button class="btn btn-lg btn-success btn-block" data-action="confirmBallot">Confirm</button>
+  <div class="row">
+    <div class="col-xs-6">
+      <button class="btn btn-lg btn-default btn-block" data-action="redoVote">Redo</button>
+    </div>
+    <div class="col-xs-6">
+      <button class="btn btn-lg btn-success btn-block" data-action="confirmBallot">Confirm</button>
+    </div>
   </div>
 
 </template>

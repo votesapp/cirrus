@@ -2,6 +2,27 @@
 
 @import "lib/custom.bootstrap.import.less";
 
+// Our own variables
+
+// Key colors pallet
+@key-color-1: #aa11aa;
+@key-color-2: #11bbaa;
+@key-color-3: #aabb11;
+@key-color-4: #1111aa;
+@key-color-5: #aa1111;
+@key-color-6: #11bb11;
+@key-color-7: #cc8888;
+@key-color-8: #cccc88;
+@key-color-9: #88cccc;
+@key-color-10: #8888cc;
+@key-color-11: #88cc88;
+@key-color-12: #aabbaa;
+@key-color-13: #aabbaa;
+@key-color-14: #aabbaa;
+@key-color-15: #aabbaa;
+@key-color-16: #aabbaa;
+
+
 /*full heights for elements*/
 html, body, .full-height {
   height: 100%;
@@ -48,6 +69,9 @@ textarea {
   text-transform: uppercase;
 }
 
+form label {
+  text-transform: uppercase;
+}
 
 small {
   text-transform: none !important;
@@ -69,13 +93,31 @@ small {
   text-align: center;
 }
 
+// UI components
 ul.list-group .glyphicon.close {
   font-size: 15px;
   line-height: 18px;
 }
 
 ul.list-group .close {
-  padding: 0 2px 0 10px;
+  padding: 0 8px 0 10px;
+}
+
+.glyphicon.text-success {
+  color: @brand-success;
+}
+.glyphicon.text-info {
+  color: @brand-info;
+}
+.glyphicon.text-warning {
+  color: @brand-warning;
+}
+.glyphicon.text-danger {
+  color: @brand-danger;
+}
+
+.tab-content > .tab-pane {
+  padding-top: 8px;
 }
 
 .VA-top-spacer {
@@ -88,6 +130,30 @@ ul.list-group .close {
   left: 0;
   padding: 0 10px;
   z-index: 900;
+}
+
+// This inverts colors for nav-buttons
+.VA-nav-buttons.btn-group .btn {
+  background-color: @gray-lightest;
+  border-color: @gray-lighter;
+  &.btn-default {
+    color: lighten(@gray, 7%);
+  }
+  &.btn-primary {
+    color: darken(@brand-primary, 2%);
+  }
+  &.btn-success {
+    color: darken(@brand-success, 2%);
+  }
+  &.btn-info {
+    color: darken(@brand-info, 2%);
+  }
+  &.btn-warning {
+    color: darken(@brand-warning, 2%);
+  }
+  &.btn-danger {
+    color: darken(@brand-danger, 2%);
+  }
 }
 
 .VA-navbar-title {

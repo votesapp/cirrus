@@ -70,8 +70,136 @@ if (Meteor.isClient) {
       return choicesData;
     },
 
-    voteResults : function () {
-      // We are using the voteResults helpers for this instead...
+    nextAction : function () {
+      var actionItem;
+      // var ballotStatus;
+      var user = Meteor.userId();
+      var creator = this.createdBy;
+      var voteStatus = this.voteStatus;
+      var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
+      var ballotStatus = (userBallot) ? userBallot.ballotStatus : null ;
+
+      // We also have access to "this" which is the voteData
+
+
+      if (user !== creator) {
+
+
+        if (voteStatus === "published") {
+          // if an existing ballot or not
+
+          if (userBallot) {
+            // not creator, and published vote
+            // CONTINUE VOTE
+            if (ballotStatus ==="incomplete") {
+              actionItem = {
+                name: "Continue Vote",
+                action: "doVote",
+                style: "btn-info"
+              };
+            };
+          } else {
+            // not creator, published vote, no ballot
+            // TAKE VOTE
+            actionItem = {
+              name: "Take Vote",
+              action: "doVote",
+              style: "btn-info"
+            };
+          };
+
+        };  
+
+      } else {
+        // This is the creator of the vote
+
+        if (voteStatus === "draft") {
+          // EDIT VOTE
+          actionItem = {
+            name: "Edit Vote",
+            action: "editVote",
+            style: "btn-warning"
+          };
+
+        } else if (voteStatus === "published") {
+          // if existing ballot, or not
+          // CLOSE VOTE
+          if (userBallot) {
+
+            if (ballotStatus === "incomplete") {
+              // published vote
+              // CONTINUE VOTE
+              actionItem = {
+                name: "Continue Vote",
+                action: "doVote",
+                style: "btn-info"
+              };
+
+            } else {
+              // published vote
+              // CONTINUE VOTE
+              actionItem = {
+                name: "Close Vote",
+                action: "closeVote",
+                style: "btn-default"
+              };
+            };
+
+          } else {
+            // creator, published vote, no ballot
+            // TAKE VOTE
+            actionItem = {
+              name: "Take Vote",
+              action: "doVote",
+              style: "btn-info"
+            };
+          };
+
+        } else if (voteStatus === "closed") {
+          // ARCHIVE VOTE
+          actionItem = {
+            name: "Archive Vote",
+            action: "archiveVote",
+            style: "btn-default"
+          };
+
+        } else if (voteStatus === "archived") {
+          // UNARCHIVE VOTE
+          actionItem = {
+            name: "Unarchive Vote",
+            action: "closeVote",
+            style: "btn-default"
+          };
+
+        };
+
+
+      }; // end if(user !== creator)
+
+      return actionItem;
+
+    },
+
+    adminAction : function () {
+      var adminItem;
+      var user = Meteor.userId();
+      var creator = this.createdBy;
+      var voteStatus = this.voteStatus;
+      // var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
+      // var ballotStatus = (userBallot) ? userBallot.ballotStatus : null ;
+
+      if (user === creator) {
+
+        if (voteStatus === "published") {
+
+        } else if (voteStatus === "closed") {
+
+        } else if (voteStatus === "archived") {
+
+        };
+
+      };
+
     },
 
     dropMenuData : function () {
@@ -195,26 +323,12 @@ if (Meteor.isClient) {
 
   Template.voteInfo.events({
 
-    "click [data-action='saveDraft']" : function () {
+    "click [data-action='editVote']" : function () {
       // Right now this is a pseudo event and placeholder should we
       // need to change how votes are saved (instead of below)
       var voteId = Router.current().params._id;
-      Bert.alert("The vote was saved", "info");
-      Router.go("myVotes");
+      Router.go("voteEdit", {_id:voteId, edit:"edit"});
 
-    },
-
-    "click [data-action='publishVote']" : function () {
-      // Change the status of the vote to publish
-      var voteId = Router.current().params._id;
-      Meteor.call("updateVote", voteId, {voteStatus: "published", publishedOn: new Date()}, function (error, result) {
-        if (error) {
-          //throw error
-        } else {
-          Bert.alert("The vote was published!", "info");
-          Router.go("myVotes");
-        };
-      });
     },
 
     "click [data-action='closeVote']" : function () {
@@ -237,97 +351,6 @@ if (Meteor.isClient) {
       Meteor.call("updateVote", voteId, {voteStatus: "archived", archivedOn: new Date()});
       Bert.alert("The vote was archived!", "info");
       Router.go("myVotes");
-    },
-
-    "click [data-action='editVote']" : function () {
-      // Right now this is a pseudo event and placeholder should we
-      // need to change how votes are saved (instead of below)
-      var voteId = Router.current().params._id;
-      Router.go("voteEdit", {_id:voteId, edit:"edit"});
-
-    },
-
-    "click [data-action='deleteVote']" : function (event) {
-      event.preventDefault();
-
-      var recordId = Router.current().params._id;
-
-      // Delete the vote record
-      Meteor.call("deleteVote", recordId, function (error, result) {
-        if (error) {
-          //throw error
-        } else {
-          // Then delete all the vote options associated with the vote
-          // We are not doing this so choices will be able to be
-          // re-used in the future.
-          // Meteor.call("deleteChoices", recordId);
-
-          // Notify the user of the success of the delete
-          Bert.alert({
-            title: "Vote Deleted",
-            message: "The vote <b>" + recordId + "</b> was deleted.",
-            type: "danger"
-          });
-
-          // Redirect the user to other content after the vote is deleted.
-          // TODO: We can implement the "previous" function instead.
-          Router.go("votesList");
-        };
-      });
-
-
-    },
-
-    "blur [contenteditable=true]" : function (event) {
-      // This is a function to handle editing of content by the user.
-      // The user is allowed to edit the content in the DOM element
-      // using the `contenteditable` attribute. This bypasses the
-      // need for handling forms, allowing for real time updating and
-      // saving of data. However it does present UI/UX challenges
-      // in maintaining the state of the DOM whill giving power
-      // over the DOM to the browser.
-
-      // Get the data from the DOM of the element the user has edited.
-      var docId = Router.current().params._id;
-      var dataElement = event.currentTarget.dataset.field;
-
-      // Parse the content
-      // TODO: Develop more sophisticated parsing/stripping/etc.
-      var dataContent = $(event.currentTarget).text();
-
-      if (this[dataElement] != dataContent) {
-        // If there was a change to the content
-
-        console.log("there seems to be a change");
-
-        // Update the collection based on the collected data.
-        var updateObj = {};
-        updateObj[dataElement] = dataContent;
-        Meteor.call("updateVote", docId, updateObj, function (err, data){
-          if (err) {
-            console.log("Error: " + err);
-          };
-          var result = data;
-          console.log(result);
-        });
-        // var result = votesCollection.update(docId,{$set: updateObj});
-        // Do we need to clear the field to prevent duplication?
-        // It seems like "editable" elements are so controlled by
-        // browser that additional content posted to it is only
-        // added to the editable element...
-        // TODO: This can cause UI glitches as the DOM rerenders.
-        // Maybe we can suppress reactive rendering instead of blanking
-        // the element?
-
-        // WHATIF: Instead of blaking the content, we set it to the value
-        // that was used to update the collection. Maybe Meteor would
-        // detect no change, and not rerender the element?
-        event.currentTarget.innerHTML = "";
-
-      } else {
-        // TODO: Delete this statement and logic segment if not needed.
-        console.log("there apparently was no change")
-      };
     },
 
     "click [data-action='doVote']" : function (event) {

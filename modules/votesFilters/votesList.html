@@ -6,7 +6,7 @@
     {{#each votesList}}
     <li class="media" data-nav="{{pathFor route='voteInfo'}}">
       <div class="media-left">
-          <img class="media-object" src="/64x64_placeholder.svg" alt="...">
+          <img class="media-object" src="{{#if keyImage}}{{c.url keyImage width=64 height=64 crop="lfill"}}{{else}}/64x64_placeholder.svg{{/if}}" alt="...">
       </div>
       <div class="media-body">
         <h4 class="media-heading">{{title}}</h4>
