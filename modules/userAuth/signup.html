@@ -1,0 +1,34 @@
+<!-- userAuth/signup.html -->
+<template name="signup">
+
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-xs-10 col-xs-offset-1" id="signup">
+        <form id="signupForm" class="form-signin text-center">
+          <label for="signupEmail">Email Address</label>
+          <input id="signupEmail" name="email" type="email" class="form-control" placeholder="email@address.com" autofocus="true">
+
+          {{#if productionMode}}
+            <label for="accessCode">Access Code</label>
+            <input id="accessCode" name="code" type="text" class="form-control" placeholder="your code here">
+          {{/if}}
+
+          <label for="signupPass" class="">Enter a password</label>
+          <input type="password" name="password" id="signupPass" class="form-control" placeholder="password" required="true">
+
+          <label for="signupPassConf" class="">Confirm password</label>
+          <input type="password" name="passwordConfirm" id="signupPassConf" class="form-control" placeholder="password" required="true">
+
+          <div class="col-xs-8 col-xs-offset-2" style="margin-top:10px;">
+            <button form="signupForm" class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+            <div class="line"></div>
+            <button type="button" class="btn btn-info btn-block">Signup with Facebook</button>
+          </div>
+        </form>
+        <div class="col-xs-8 col-xs-offset-2" style="margin-top:15px;">
+          <small>Already have an account? <a href="login">Login here</a>.</small>
+        </div>
+      </div> <!-- End Signup Form -->
+    </div> <!-- End Row -->
+
+</template>
+<!-- /userAuth/signup.html -->

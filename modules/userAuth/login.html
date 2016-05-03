@@ -1,0 +1,26 @@
+<!-- userAuth/login.html -->
+<template name="login">
+
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-xs-10 col-xs-offset-1" id="login">
+        <form id="loginForm" class="form-signin text-center">
+          <label for="loginEmail">Email Address</label>
+          <input id="loginEmail" name="email" type="email" class="form-control" placeholder="email@address.com" autofocus="true">
+
+          <label for="loginPass" class="">Enter a password</label>
+          <input type="password" id="loginPass" class="form-control" placeholder="password" required="true">
+
+          <div class="col-xs-8 col-xs-offset-2" style="margin-top:10px;">
+            <button form="loginForm" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+            <div class="line"></div>
+            <button type="button" class="btn btn-info btn-block">Login with Facebook</button>
+          </div>
+        </form>
+        <div class="col-xs-8 col-xs-offset-2" style="margin-top:15px;">
+          <small>Don't have an account? <a href="signup">Sign up here</a>.</small>
+        </div>
+      </div> <!-- End Login Form -->
+    </div> <!-- End Row -->
+
+</template>
+<!-- /userAuth/login.html -->
