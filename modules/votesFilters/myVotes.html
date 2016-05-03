@@ -1,5 +1,8 @@
 <template name="myVotes">
   <h4>My Votes</h4>
+  <label class="input-changed">
+    Filter:<input type="text" />
+  </label>
   <ul class="media-list">
     {{#if myVotesList}}
     {{#each myVotesList}}
