@@ -1,27 +1,51 @@
 <!-- votesFilters/myVotes.html -->
 <template name="myVotes">
   <h4>My Votes</h4>
+
+  
   <label class="input-changed">
     Filter:<input type="text" />
   </label>
-  <ul class="media-list">
-    {{#if myVotesList}}
-    {{#each myVotesList}}
-    <li class="media" data-nav="{{pathFor route='voteInfo'}}">
-      <div class="media-left">
-          <img class="media-object" src="/64x64_placeholder.svg" alt="...">
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading">{{#if voteStatus}}<small class="text-muted">({{voteStatus}})&nbsp;</small>{{/if}}{{title}}</h4>
-        {{description}}
-      </div>
-    </li> {{!-- /.media --}}
-    {{/each}}
-    {{else}}
-    <p class="text-muted">You have no votes yet. <a class="btn btn-sm btn-success" href="{{pathFor route='voteCreate'}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}">Create one!</a></p>
-    
-    {{/if}}
+  {{!-- {{> dropdownSelect dropMenuData=selectMenu}} --}}
 
+  <!-- Nav tabs -->
+  <ul class="nav nav-pills" role="tablist">
+    <li role="presentation" class="active"><a href="#votes" aria-controls="votes" role="tab" data-toggle="tab">myVotes</a></li>
+    <li role="presentation"><a href="#ballots" aria-controls="ballots" role="tab" data-toggle="tab">myBallots</a></li>
   </ul>
+
 </template>
-<!-- /votesFilters/myVotes.html -->
+
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="votes">
+      <ul class="media-list">
+        {{#if myVotesList}}
+
+        {{#each myVotesList}}
+        <li class="media" data-nav="{{pathFor route='voteInfo'}}">
+          <div class="media-left">
+              <img class="media-object" src="{{#if keyImage}}{{c.url keyImage width=64 height=64 crop="lfill"}}{{else}}/64x64_placeholder.svg{{/if}}" alt="...">
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading">{{#if voteStatus}}<small class="text-muted">({{voteStatus}})&nbsp;</small>{{/if}}{{title}}</h4>
+            {{description}}
+          </div>
+        </li> {{!-- /.media --}}
+        {{/each}}
+        {{else}}
+        <p class="text-muted">You have no votes yet. <a class="btn btn-sm btn-success" href="{{pathFor route='voteCreate'}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}">Create one!</a></p>
+        
+        {{/if}}
+
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="ballots">
+      <h3><small>My Ballots</small></h3>
+
+    </div>
+  </div> <!-- End Tab Panes -->
+
+</template>
+

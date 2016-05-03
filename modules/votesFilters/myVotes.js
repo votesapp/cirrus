@@ -42,6 +42,24 @@ if (Meteor.isClient) {
 
     },
 
+    selectMenu : function () {
+      var dropMenu = {};
+      dropMenu.items = [
+        {name: "Save Draft", action: "saveDraft"},
+        {name: "Publish Vote", action: "publishVote"},
+        {seperator: true},
+        {name: "Delete Vote", action: "deleteVote"}
+      ];
+      dropMenu.config = {
+        align: "",
+        menuAlign: "dropdown-menu-right",
+        style: "btn-default pull-right"
+      };
+
+      return dropMenu;
+ 
+    },
+
     voteStatus: function () {
       // This has the data context of a document from the myVotesList helper
       if (this.voteStatus != "published") {

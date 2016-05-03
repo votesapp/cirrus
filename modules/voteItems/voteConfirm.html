@@ -9,12 +9,17 @@
 	 		{{> voteChoicesList voteChoices=ballotResults}}
 	  	</div> <!-- end #sortable -->
 
-	  <div class="container">
-	    <p class="  text-center" style="margin-top:20px">Drag the choices into your prefered order.</p>
-	  	<button style="margin-top:20px" class="btn btn-lg btn-primary btn-block" data-action="confirmBallot"> Publish my vote</button>
-	  	<!-- <button style="margin-top:20px" class="btn btn-lg btn-primary btn-block" type="submit"><span class="glyphicon glyphicon-bullhorn">
-	    	</span> Redo vote</button> -->
-	  </div> <!-- End .container -->
+		<div class="container">
+		    <p class="  text-center" style="margin-top:20px">Drag the choices into your prefered order.</p>
+			<div class="row">
+			    <div class="col-xs-6">
+			      <button class="btn btn-lg btn-default btn-block" data-action="redoVote">Redo</button>
+			    </div>
+			    <div class="col-xs-6">
+			      <button class="btn btn-lg btn-success btn-block" data-action="confirmBallot">Confirm</button>
+			    </div>
+			</div>
+		</div> <!-- End .container -->
 
   	</div> <!-- End .container .currentvoting -->
 

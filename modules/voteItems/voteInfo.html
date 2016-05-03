@@ -4,19 +4,20 @@
 
     {{#if keyImage}}
       <div class="row">
-        <div class="jumbotron">
+        {{!-- <div class="jumbotron"> --}}
           <img src="{{c.url keyImage}}" class="img-responsive" />
-        </div>
+        {{!-- </div> --}}
       </div>
     {{/if}}
 
     <h2 class="text-center">{{title}}</h2>
-    {{#if dropMenuData}}
     <div class="line"></div>
+    {{#with nextAction}}
     <div class="text-center VA-CTA">
-      {{> dropdownSelect dropMenuData=dropMenuData}}
+      {{!-- {{> dropdownSelect dropMenuData=dropMenuData}} --}}
+      <button class="btn btn-block {{style}}" data-action="{{action}}">{{name}}</button>
     </div>
-    {{/if}}
+    {{/with}}
     <h5>Description</h5>
     <p>{{description}}</p>
     {{!-- <p><blockquote>This is some other info on the vote</blockquote></p> --}}

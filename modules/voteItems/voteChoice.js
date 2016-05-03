@@ -29,8 +29,28 @@ if (Meteor.isClient) {
 
   }); // End helpers
 
+  Template.voteChoiceEdit.helpers({
 
-  Template.voteChoice.events({
+    choiceRecord : function () {
+      console.log("logging this from choiceRecord helper");
+      console.log(this);
+
+      // This will likely break when using modals. Get
+      // paramas from the session...
+      if (this._id) {
+        var recordId = this._id;
+      } else {
+        var recordId = Router.current().params._id;
+      };
+
+      return choicesCollection.findOne({_id:recordId});
+
+    }
+
+  }); // End helpers
+
+
+  Template.voteChoiceEdit.events({
 
     // if we set everything as editable in the template,
     // but then on template load, either remove all editable,
@@ -69,6 +89,13 @@ if (Meteor.isClient) {
         console.log("there apparently was no change")
       };
       // update object
+
+    },
+
+    "click [data-action='saveChoice']" : function (event) {
+
+      console.log("saving the choice");
+      history.go(-1);
 
     }
 
