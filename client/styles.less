@@ -1,6 +1,7 @@
 /* CSS declarations go here */
 
 @import "lib/custom.bootstrap.import.less";
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,greek,greek-ext,latin-ext);
 
 /*full heights for elements*/
 html, body, .full-height {
@@ -9,6 +10,7 @@ html, body, .full-height {
 
 body {
 	/*padding-top: 50px;*/
+  font-family: 'Open Sans', sans-serif;
 }
 
 /*Compensation for Bootstrap fixed-nav*/
@@ -131,7 +133,7 @@ ul.list-group .close {
 
 .thumbnail.VA-choice-thumb {
   position: relative;
-  height: ~"calc(50% - 17px)"; /* 1/2 height - the height of sibling controls */
+  height: calc(50% - 17px); /* 1/2 height - the height of sibling controls */
   margin-bottom: 17px;
   background-position: center;
   background-size: cover;

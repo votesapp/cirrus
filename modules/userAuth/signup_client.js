@@ -1,9 +1,8 @@
-// authUser_client.js
-// Client side javascript for Meteor app module
+// signup_client.js
+// Client side javascript for Meteor app module / handles signup
 
 if (Meteor.isClient) {
-
-	Template.userAuth.helpers({
+	Template.signup.helpers({
 		productionMode : function () {
 			if (Meteor.settings.public.deployEnv != "development") {
 				return true;
@@ -13,7 +12,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	Template.userAuth.events({
+	Template.signup.events({
 
 		// Let the user sign up for an account
 		"submit #signupForm" : function (event) {
@@ -143,25 +142,6 @@ if (Meteor.isClient) {
 			// End Accounts.createUser()
 
 
-		},
-
-		// Let the user log in to their registered account
-		"submit #loginForm" : function (event) {
-			event.preventDefault();
-			var email = event.target.email.value;
-			var password = event.target.password.value;
-
-			Meteor.loginWithPassword(email, password, function (error){
-				if (error) {
-					Bert.alert({
-					  title: "User Authentication:",
-					  message: error.reason,
-					  type: "warning"
-					});
-				} else {
-					Router.go("home");
-				};
-			}); // End Meteor.loginWithPassword()
 		}
 
 	});
