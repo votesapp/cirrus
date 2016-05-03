@@ -1,13 +1,22 @@
+<!-- voteItems/voteConfirm.html -->
 <template name="voteConfirm">
   <h3>Confirm your vote.</h3>
-  {{#with ballotResults}}<h5>Your Sorted Choices</h5>{{/with}}
-  {{> voteChoicesList voteChoices=ballotResults}}
+	<div class="container currentvoting" style="margin-top:60px;margin-bottom:50px">
+		
+			{{#with ballotResults}}<h5>SORT VOTE CHOICES</h5>{{/with}}
+		
+		<div id="sortable">
+	 		{{> voteChoicesList voteChoices=ballotResults}}
+	  	</div> <!-- end #sortable -->
 
-  <div class="col-xs-6">
-    <button class="btn btn-lg btn-default btn-block" data-action="redoVote">Redo</button>
-  </div>
-  <div class="col-xs-6">
-    <button class="btn btn-lg btn-success btn-block" data-action="confirmBallot">Confirm</button>
-  </div>
+	  <div class="container">
+	    <p class="  text-center" style="margin-top:20px">Drag the choices into your prefered order.</p>
+	  	<button style="margin-top:20px" class="btn btn-lg btn-primary btn-block" type="submit"> Publish my vote</button>
+	  	<!-- <button style="margin-top:20px" class="btn btn-lg btn-primary btn-block" type="submit"><span class="glyphicon glyphicon-bullhorn">
+	    	</span> Redo vote</button> -->
+	  </div> <!-- End .container -->
+
+  	</div> <!-- End .container .currentvoting -->
 
 </template>
+<!-- /voteItems/voteConfirm.html -->

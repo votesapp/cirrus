@@ -3,7 +3,7 @@
 if (Meteor.isServer) {
 
   Meteor.methods({
-    //empty
+
   });
   
 };

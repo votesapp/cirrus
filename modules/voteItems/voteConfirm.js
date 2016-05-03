@@ -35,10 +35,16 @@ if (Meteor.isClient) {
           Router.go("voteInfo",{_id:voteId});
         };
       };
-
     }; 
-
   });
+
+  Template.voteConfirm.rendered = function () {
+    // initialize draggable items / jQuery stuff
+    $(function () {
+      $( "#sortable" ).sortable();
+      $( "#sortable" ).disableSelection();
+    });
+  }
 
   Template.voteConfirm.helpers({
 
@@ -148,6 +154,6 @@ if (Meteor.isClient) {
 
   });
 
-
 };
+
 
