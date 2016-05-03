@@ -1,11 +1,13 @@
+<!-- bareApp.html -->
 <template name="bareApp">
-  <div class="container">
+    <div class="jumbotron signup">
+      <div class="container">
+        <img class="logo_small" src="/img/VotesApp-Logo-Small2x.png" />
+      </div>
+    </div>
 
-    <div class="row">
-      <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-        <h3 class="text-center">Votesapp</h3>
-        {{> yield}}
-      </div> {{!-- /.col --}}
-    </div> {{!-- /.row --}}
-  </div> {{!-- /.container --}}
+    <div class="container text-center" style="margin-top:70px;">
+      {{> yield}}
+    </div>
 </template>
+<!-- /bareApp.html -->
