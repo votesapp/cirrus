@@ -23,7 +23,8 @@ if (Meteor.isClient) {
 			var deploymentEnv = Meteor.settings.public.deployEnv;
 			console.log("Deployment Environment: " + deploymentEnv);
 
-			if (deploymentEnv == "development") {
+			// if (deploymentEnv == "development") {
+			if (true) {
 
 				if (password == passwordConfirm) {
 					console.log("The passwords match");
