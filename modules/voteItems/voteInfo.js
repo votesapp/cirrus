@@ -71,11 +71,11 @@ if (Meteor.isClient) {
     },
 
     nextAction : function () {
-      var actionItems;
-      var ballotStatus;
-      var voteStatus = this.voteStatus;
+      var actionItem;
+      // var ballotStatus;
       var user = Meteor.userId();
       var creator = this.createdBy;
+      var voteStatus = this.voteStatus;
       var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
       var ballotStatus = (userBallot) ? userBallot.ballotStatus : null ;
 
@@ -88,15 +88,109 @@ if (Meteor.isClient) {
         if (voteStatus === "published") {
           // if an existing ballot or not
 
+          if (userBallot) {
+            // not creator, and published vote
+            // CONTINUE VOTE
+            if (ballotStatus ==="incomplete") {
+              actionItem = {
+                name: "Continue Vote",
+                action: "doVote",
+                style: "btn-info"
+              };
+            };
+          } else {
+            // not creator, published vote, no ballot
+            // TAKE VOTE
+            actionItem = {
+              name: "Take Vote",
+              action: "doVote",
+              style: "btn-info"
+            };
+          };
+
         };  
 
       } else {
         // This is the creator of the vote
 
         if (voteStatus === "draft") {
+          // EDIT VOTE
+          actionItem = {
+            name: "Edit Vote",
+            action: "editVote",
+            style: "btn-warning"
+          };
 
         } else if (voteStatus === "published") {
           // if existing ballot, or not
+          // CLOSE VOTE
+          if (userBallot) {
+
+            if (ballotStatus === "incomplete") {
+              // published vote
+              // CONTINUE VOTE
+              actionItem = {
+                name: "Continue Vote",
+                action: "doVote",
+                style: "btn-info"
+              };
+
+            } else {
+              // published vote
+              // CONTINUE VOTE
+              actionItem = {
+                name: "Close Vote",
+                action: "closeVote",
+                style: "btn-default"
+              };
+            };
+
+          } else {
+            // creator, published vote, no ballot
+            // TAKE VOTE
+            actionItem = {
+              name: "Take Vote",
+              action: "doVote",
+              style: "btn-info"
+            };
+          };
+
+        } else if (voteStatus === "closed") {
+          // ARCHIVE VOTE
+          actionItem = {
+            name: "Archive Vote",
+            action: "archiveVote",
+            style: "btn-default"
+          };
+
+        } else if (voteStatus === "archived") {
+          // UNARCHIVE VOTE
+          actionItem = {
+            name: "Unarchive Vote",
+            action: "closeVote",
+            style: "btn-default"
+          };
+
+        };
+
+
+      }; // end if(user !== creator)
+
+      return actionItem;
+
+    },
+
+    adminAction : function () {
+      var adminItem;
+      var user = Meteor.userId();
+      var creator = this.createdBy;
+      var voteStatus = this.voteStatus;
+      // var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
+      // var ballotStatus = (userBallot) ? userBallot.ballotStatus : null ;
+
+      if (user === creator) {
+
+        if (voteStatus === "published") {
 
         } else if (voteStatus === "closed") {
 
@@ -104,8 +198,7 @@ if (Meteor.isClient) {
 
         };
 
-
-      }; // end if(user !== creator)
+      };
 
     },
 

@@ -6,13 +6,6 @@ if (Meteor.isClient) {
   Template.body.helpers({
     // Global helpers (is it really global?)
     // NOTE: These are not being utilized
-    GcurrentVote: function () {
-      return Session.get("currentVote");
-    },
-
-    GcurrentVoteOption: function () {
-      return Session.get("currentVoteOption");
-    }
 
   });
 
@@ -30,7 +23,18 @@ if (Meteor.isClient) {
     "click [data-action='logoutUser']": function (event) {
       event.preventDefault();
       Meteor.logout();
+    },
+
+    "click [data-action='previous']" : function (event) {
+      event.preventDefault();
+
+      // Simplest history implementation.
+      // TODO: We will develop a more sophisticated history
+      // to allow for more logical navigation in the app.
+      history.go(-1);
+
     }
+
   });
 };
 

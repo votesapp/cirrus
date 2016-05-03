@@ -14,10 +14,14 @@ if (Meteor.isClient) {
       // Careful on the data context here...
       var recordId = Router.current().params._id;
 
+      // Generate a random number
+      var x = Math.floor(Math.random() * 16 +1);
+
       var choiceData = {
         name: name,
         createdOn: new Date(),
-        createdBy: Meteor.userId()
+        createdBy: Meteor.userId(),
+        keyColor: x
       };
 
       // Add the choice to the collection

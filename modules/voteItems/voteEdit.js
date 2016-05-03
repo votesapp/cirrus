@@ -125,7 +125,7 @@ if (Meteor.isClient) {
           //throw error
         } else {
           Bert.alert("The vote was published!", "info");
-          Router.go("myVotes");
+          Router.go("voteList");
         };
       });
     },
