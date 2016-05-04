@@ -1,32 +1,53 @@
 <template name="voteChoice">
-  <h3>Choice Info</h3>
+  <h4>Choice Info</h4>
   <div class="VA-top-spacer-lg"></div>
 
   {{#with choiceRecord}}
-    <pre>&lt;img&gt; goes here</pre>
-    <h2>{{name}}</h2>
+    <div class="well VA-img-well boxcolor_{{keyColor}}"><br /><br /><br /></div>
+    <h3>{{name}}</h3>
     {{!-- <i>{{_id}}</i> --}}
 
     {{#if description}}
-    <h4>Description</h4>
+    <h5>Description</h5>
     <p>{{description}}</p>
     {{else}}
     <!-- We can put other content conditionally here... -->
     {{/if}}
-    
+
   {{/with}}
 
 </template>
 
 <template name="voteChoiceEdit">
-  <i>in voteChoiceEdit</i>
+
+  <div class="VA-top-spacer-lg"></div>
 
   {{#with choiceRecord}}
-    <pre>&lt;img&gt; goes here</pre>
-    <h5>Title</h5>
+    <div class="well VA-img-well boxcolor_{{keyColor}}"><br /><br /><br /></div>
+{{!--     <h5>Title</h5>
     <h2 contenteditable="true" data-field="name">{{name}}</h2>
+ --}}    
     {{!-- <i>{{_id}}</i> --}}
-    <h5>Description</h5>
+    <form id="editChoiceForm">
+      <div class="form-group">
+        <label for="editChoiceTitle" class="control-label">Title</label>
+        <input type="text" class="form-control" id="editChoiceTitle" placeholder="Enter a title" name="title" autofocus="true" value="{{name}}">
+      </div>
+      <div class="form-group">
+        <label for="editChoiceText" class="control-label">Description</label>
+        <textarea rows="3" class="form-control" id="editChoiceText" placeholder="Vote choice description..." name="description" value="{{description}}"></textarea>
+      </div>
+      <div class="form-group row">
+        <div class="col-xs-6">
+          <button type="button" class="btn btn-default btn-block" data-action="leaveChoice">Cancel</button>
+        </div>
+        <div class="col-xs-6">
+          <button type="submit" class="btn btn-success btn-block" value="Submit" name="submit">Save</button>
+        </div>
+      </div>
+    </form>
+
+{{!--     <h5>Description</h5>
     {{#if description}}
     <p contenteditable="true" data-field="description">{{description}}</p>
     {{else}}
@@ -35,6 +56,7 @@
     <div class="VA-CTA">
       <button type="button" class="btn btn-default btn-block" data-action="saveChoice">Save & Return</button>
     </div>
+ --}}
   {{/with}}
 
 </template>

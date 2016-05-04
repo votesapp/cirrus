@@ -6,12 +6,12 @@
 
   {{#each votePair}}
  {{!-- style="background-image: url('/242x200_placeholder.svg');"  --}}
-  <div id="{{choiceId}}" class="thumbnail VA-choice-thumb boxcolor_{{keyColor}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteChoice' _id=choiceId}}">
+  <div id="{{choiceId}}" class="thumbnail VA-choice-thumb boxcolor_{{keyColor}}" data-action="confirmSelection" data-item="{{choiceId}}">
     <h1 class="VA-thumb-title">{{choiceName}}&nbsp;</h1>
-    <div class="caption">
+    <div class="caption VA-nav-buttons">
       {{!-- <p>{{choiceDesc}}</p> --}}
       {{!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> --}}
-      <button type="button" class="btn btn-success pull-right" data-action="confirmSelection" data-item="{{choiceId}}">Select</button>
+      <button type="button" class="btn btn-default pull-right" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteChoice' _id=choiceId}}">Info</button>
     </div>
     <span class="glyphicon glyphicon-ok VA-choice-selector text-success" aria-hidden="true"></span>
   </div>

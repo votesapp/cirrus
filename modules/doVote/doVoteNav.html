@@ -12,7 +12,7 @@
       </button>
  --}}
       {{#with currentBallot}}
-      <a class="btn btn-default" href="{{pathFor route='voteInfo' _id=voteId}}">save &amp; exit</a>
+      <a class="btn btn-default" href="{{pathFor route='voteInfo' _id=voteId}}">exit</a>
       <a class="btn btn-default pull-right {{accel}}" href="{{pathFor route='voteConfirm' _id=voteId}}">skip</a>
       {{/with}}
     </div>

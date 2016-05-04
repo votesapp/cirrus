@@ -270,6 +270,8 @@ ul.list-group .close {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  border-radius: 7px;
+  border: none;
   line-height: ~"calc(50% - 24px)"; /* 1/2 height - the height of sibling controls */
   text-align: center;
 }
@@ -288,6 +290,20 @@ ul.list-group .close {
   left: 0;
   width: 100%;
   text-align: center;
+}
+
+.list-group-item .VA-list-color-block {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  margin: -8px 8px -9px -8px;
+  border-radius: 2px;
+}
+
+.VA-img-well {
+  box-shadow: none;
+  border-radius: 4px;
+  border: none;
 }
 
 .VA-choice-selector {
@@ -334,6 +350,14 @@ ul.list-group .close {
   background-repeat: no-repeat;
 }
 
+
+.media.VA-votes-list .media-left {
+  width: 64px;
+  height: 64px;
+  img {
+    background-color: darken(@gray-lightest, 4%);
+  }
+}
 
 
 

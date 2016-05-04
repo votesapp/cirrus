@@ -17,7 +17,7 @@
     <ul id="sortable" class="list-group">
       {{#each voteChoices}}
       {{!-- <a id="{{_id}}" class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" > --}}
-      <li class="list-group-item" name="sort-item" id="{{_id}}">
+      <li class="list-group-item" name="sort-item" id="{{_id}}"><div class="VA-list-color-block boxcolor_{{keyColor}}"></div>
         {{name}}
           <a class="glyphicon glyphicon-menu-hamburger close" href="{{pathFor route='voteChoiceEdit'}}"></a>
         </li>
@@ -32,7 +32,7 @@
       {{#if edit}}
 
         {{#each voteChoices}}
-        <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal">
+        <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal"><div class="VA-list-color-block boxcolor_{{keyColor}}"></div>
           {{name}}
           <button type="button" class="close" name="{{_id}}" data-action="deleteVoteChoice">&times;</button>
           <a class="glyphicon glyphicon-pencil close" href="{{pathFor route='voteChoiceEdit'}}"></a>
@@ -42,7 +42,7 @@
       {{else}}
 
         {{#each voteChoices}}
-        <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" >{{name}}</a>
+        <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" ><div class="VA-list-color-block boxcolor_{{keyColor}}"></div>{{name}}</a>
         {{/each}}
 
 

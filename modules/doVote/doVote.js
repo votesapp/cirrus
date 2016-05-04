@@ -329,107 +329,124 @@ if (Meteor.isClient) {
 
     "click [data-action='confirmSelection']" : function (event) {
       event.preventDefault();
+      var eTag = event.target.tagName;
+      if (eTag != "A" && eTag != "BUTTON" || event.target == event.currentTarget) {
+        // This means we accept the target that was clicked
+        // Process the user's vote ballot as indicated by use confirmation
+        // of choice selection
 
-      // Process the user's vote ballot as indicated by use confirmation
-      // of choice selection
+        // Get the selected vote option:
+        // We will now be getting this from the DOM
+        var theSelection = event.currentTarget.dataset.item;
+        // var theSelection = Session.get("selectedVoteChoice");
+        console.log("confirming the selection");
+        console.log(theSelection);
 
-      // Get the selected vote option:
-      // We will now be getting this from the DOM
-      var theSelection = event.currentTarget.dataset.item;
-      // var theSelection = Session.get("selectedVoteChoice");
-      console.log("confirming the selection");
-      console.log(theSelection);
+        // This is where we process the vote choice selection
 
-      // This is where we process the vote choice selection
+        // "ballotRecord" is used as the active ballot, and we will update
+        // the actual ballot record with this object.
+        var ballotRecord = Session.get("currentVoteBallot");
+        var ballotId = ballotRecord._id;
 
-      // "ballotRecord" is used as the active ballot, and we will update
-      // the actual ballot record with this object.
-      var ballotRecord = Session.get("currentVoteBallot");
-      var ballotId = ballotRecord._id;
+        // Get the current ballot step
+        var s = ballotRecord.step;
 
-      // Get the current ballot step
-      var s = ballotRecord.step;
+        // Get the choices id's from the user's ballot
+        var activeChoices = ballotRecord.choicesCurr.map(function(obj){
+          return obj._id
+        });
 
-      // Get the choices id's from the user's ballot
-      var activeChoices = ballotRecord.choicesCurr.map(function(obj){
-        return obj._id
-      });
-
-      console.log("getting active options");
-      console.log(activeChoices);
-
-      // We will derive the current state, and update the state of the ballot
-      // based on the current step, and unsorted options
-
-      var numChoices = ballotRecord.choicesCurr;
-      var filteredOptions = [];
-      var count = 0;
-
-      for (var i = numChoices.length - 1; i >= 0; i--) {
-        if (numChoices[i].sortStatus != "sorted") {
-          count++;
-          filteredOptions.push(numChoices[i]);
-        };
-      }; 
-
-      console.log("number of unsorted choices: " + count);
-
-
-      var indexOffset = numChoices.length - count;
-      console.log("the indexOffset: " + indexOffset);
-
-      // We only need to update the array if the user 
-      // selected an "out of order" choice. aElem is the lower choice
-      var aElem = s + indexOffset;
-      var theChoices = ballotRecord.choicesCurr;
-      if (activeChoices[aElem] === theSelection) {
-        // The user selected the "lower" ranked option, so we will swap the elements
-        var swapper = theChoices[aElem];
-        theChoices[aElem] = theChoices[aElem - 1];
-        theChoices[aElem - 1] = swapper;
-        console.log("We had to swap the items: ");
+        console.log("getting active options");
         console.log(activeChoices);
 
-      };
+        // We will derive the current state, and update the state of the ballot
+        // based on the current step, and unsorted options
 
-      // Update the iterative state of the ballot
-      var nextStep = s - 1;
+        var numChoices = ballotRecord.choicesCurr;
+        var filteredOptions = [];
+        var count = 0;
 
-      if (nextStep <= 0) {
-        // then we are at the end of the cycle
-        // here we will flag the last item...
-        ballotRecord.choicesCurr[indexOffset].sortStatus = "sorted";
-        if (count <= 2) {
-          // THere are less than enough items to compare.
-          // This is because after this confirmation of selection, there will be one less choice
-          // so that means one last choice
-          // Go to voteConfirm
-          // ballotRecord.choicesCurr[indexOffset - 1].sortStatus = "sorted";
-          Router.go("voteConfirm", {_id: ballotRecord.voteId});
+        for (var i = numChoices.length - 1; i >= 0; i--) {
+          if (numChoices[i].sortStatus != "sorted") {
+            count++;
+            filteredOptions.push(numChoices[i]);
+          };
+        }; 
+
+        console.log("number of unsorted choices: " + count);
+
+
+        var indexOffset = numChoices.length - count;
+        console.log("the indexOffset: " + indexOffset);
+
+        // We only need to update the array if the user 
+        // selected an "out of order" choice. aElem is the lower choice
+        var aElem = s + indexOffset;
+        var theChoices = ballotRecord.choicesCurr;
+        if (activeChoices[aElem] === theSelection) {
+          // The user selected the "lower" ranked option, so we will swap the elements
+          var swapper = theChoices[aElem];
+          theChoices[aElem] = theChoices[aElem - 1];
+          theChoices[aElem - 1] = swapper;
+          console.log("We had to swap the items: ");
+          console.log(activeChoices);
+
+        };
+
+        // Update the iterative state of the ballot
+        var nextStep = s - 1;
+
+        if (nextStep <= 0) {
+          // then we are at the end of the cycle
+          // here we will flag the last item...
+          ballotRecord.choicesCurr[indexOffset].sortStatus = "sorted";
+          if (count <= 2) {
+            // THere are less than enough items to compare.
+            // This is because after this confirmation of selection, there will be one less choice
+            // so that means one last choice
+            // Go to voteConfirm
+            // ballotRecord.choicesCurr[indexOffset - 1].sortStatus = "sorted";
+            Router.go("voteConfirm", {_id: ballotRecord.voteId});
+          } else {
+
+
+          };
+          console.log("active ballotRecord.choicesCurr: ");
+          console.log(ballotRecord.choicesCurr);
+
+          // Reset the iteration
+          // This is -2 because one less to increment, and one less to account for
+          // zero indexed array that options are stored in.
+          nextStep = count - 2;
+
+          // The count should never be less than 2 (zero based "1"), since the user must always compare
+          // 2 options, otherwise the single last option is placed as last with status "sorted"
+          if (nextStep < 1) {
+            ballotRecord.choicesCurr[indexOffset+1].sortStatus = "sorted";
+          };
+
+        };
+        
+        // Update the ballot state "step"
+        ballotRecord.step = nextStep;
+        console.log("this nextStep: " + nextStep);
+        Session.set("currentVoteBallot", ballotRecord);
+
+/* ****************** */
         } else {
-
-
-        };
-        console.log("active ballotRecord.choicesCurr: ");
-        console.log(ballotRecord.choicesCurr);
-
-        // Reset the iteration
-        // This is -2 because one less to increment, and one less to account for
-        // zero indexed array that options are stored in.
-        nextStep = count - 2;
-
-        // The count should never be less than 2 (zero based "1"), since the user must always compare
-        // 2 options, otherwise the single last option is placed as last with status "sorted"
-        if (nextStep < 1) {
-          ballotRecord.choicesCurr[indexOffset+1].sortStatus = "sorted";
+          // Otherwise we reject the click event
+          console.log("event.currentTarget is: ");
+          console.log(event.currentTarget);
+          console.log("event.target is: ");
+          console.log(event.target);
+          console.log("event.target.tagName is: ");
+          console.log(event.target.tagName);
         };
 
-      };
-      
-      // Update the ballot state "step"
-      ballotRecord.step = nextStep;
-      console.log("this nextStep: " + nextStep);
-      Session.set("currentVoteBallot", ballotRecord);
+
+      // };
+
 
       // Reset the selection UI
       // $(".VA-choice-thumb").removeClass( "selected" );
