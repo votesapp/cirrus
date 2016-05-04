@@ -8,9 +8,9 @@
           <input id="signupEmail" name="email" type="email" class="form-control" placeholder="email@address.com" autofocus="true">
 
           {{#if productionMode}}
-            <label for="accessCode">Access Code</label>
+{{!--             <label for="accessCode">Access Code</label>
             <input id="accessCode" name="code" type="text" class="form-control" placeholder="your code here">
-          {{/if}}
+ --}}          {{/if}}
 
           <label for="signupPass" class="">Enter a password</label>
           <input type="password" name="password" id="signupPass" class="form-control" placeholder="password" required="true">
@@ -18,11 +18,13 @@
           <label for="signupPassConf" class="">Confirm password</label>
           <input type="password" name="passwordConfirm" id="signupPassConf" class="form-control" placeholder="password" required="true">
 
-          <div class="col-xs-8 col-xs-offset-2" style="margin-top:10px;">
+          <div class="VA-CTA" style="margin-top:20px;">
             <button form="signupForm" class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
-            <div class="line"></div>
+{{!--             <div class="line"></div>
             <button type="button" class="btn btn-info btn-block">Signup with Facebook</button>
+ --}}            
           </div>
+
         </form>
         <div class="col-xs-8 col-xs-offset-2" style="margin-top:15px;">
           <small>Already have an account? <a href="login">Login here</a>.</small>

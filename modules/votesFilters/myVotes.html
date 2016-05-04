@@ -1,19 +1,15 @@
-<!-- votesFilters/myVotes.html -->
 <template name="myVotes">
   <h4>My Votes</h4>
 
-  
-  <label class="input-changed">
-    Filter:<input type="text" />
-  </label>
+
   {{!-- {{> dropdownSelect dropMenuData=selectMenu}} --}}
 
   <!-- Nav tabs -->
-  <ul class="nav nav-pills" role="tablist">
+{{!--   <ul class="nav nav-pills" role="tablist">
     <li role="presentation" class="active"><a href="#votes" aria-controls="votes" role="tab" data-toggle="tab">myVotes</a></li>
     <li role="presentation"><a href="#ballots" aria-controls="ballots" role="tab" data-toggle="tab">myBallots</a></li>
   </ul>
-
+ --}}
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="votes">
@@ -35,13 +31,12 @@
         <p class="text-muted">You have no votes yet. <a class="btn btn-sm btn-success" href="{{pathFor route='voteCreate'}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}">Create one!</a></p>
         
         {{/if}}
-
       </ul>
     </div>
-    <div role="tabpanel" class="tab-pane" id="ballots">
+{{!--     <div role="tabpanel" class="tab-pane" id="ballots">
       <h3><small>My Ballots</small></h3>
 
     </div>
-  </div> <!-- End Tab Panes -->
+ --}}  </div> <!-- End Tab Panes -->
 
 </template>

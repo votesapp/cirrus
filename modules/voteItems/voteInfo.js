@@ -123,7 +123,7 @@ if (Meteor.isClient) {
 
         } else if (voteStatus === "published") {
           // if existing ballot, or not
-          // CLOSE VOTE
+
           if (userBallot) {
 
             if (ballotStatus === "incomplete") {
@@ -137,12 +137,7 @@ if (Meteor.isClient) {
 
             } else {
               // published vote
-              // CONTINUE VOTE
-              actionItem = {
-                name: "Close Vote",
-                action: "closeVote",
-                style: "btn-default"
-              };
+              // CLOSE VOTE
             };
 
           } else {
@@ -157,19 +152,9 @@ if (Meteor.isClient) {
 
         } else if (voteStatus === "closed") {
           // ARCHIVE VOTE
-          actionItem = {
-            name: "Archive Vote",
-            action: "archiveVote",
-            style: "btn-default"
-          };
 
         } else if (voteStatus === "archived") {
           // UNARCHIVE VOTE
-          actionItem = {
-            name: "Unarchive Vote",
-            action: "closeVote",
-            style: "btn-default"
-          };
 
         };
 
@@ -191,14 +176,28 @@ if (Meteor.isClient) {
       if (user === creator) {
 
         if (voteStatus === "published") {
-
+          actionItem = {
+            name: "Close Vote",
+            action: "closeVote",
+            style: "btn-default"
+          };
         } else if (voteStatus === "closed") {
-
+          actionItem = {
+            name: "Archive Vote",
+            action: "archiveVote",
+            style: "btn-default"
+          };
         } else if (voteStatus === "archived") {
-
+          actionItem = {
+            name: "Unarchive Vote",
+            action: "closeVote",
+            style: "btn-default"
+          };
         };
 
       };
+
+      return actionItem;
 
     },
 

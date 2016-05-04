@@ -6,6 +6,7 @@ if (Meteor.isClient) {
     var self = this;
 
     self.autorun(function () {
+      self.subscribe("votesList");
       self.subscribe("votesChoices");
       self.subscribe("myBallots");
     });
@@ -35,10 +36,12 @@ if (Meteor.isClient) {
           Router.go("voteInfo",{_id:voteId});
         };
       };
+
     }; 
+
   });
 
-  Template.voteConfirm.rendered = function () {
+ Template.voteConfirm.rendered = function () {
     // initialize draggable items / jQuery stuff
     $(function () {
       $( "#sortable" ).sortable();
@@ -48,8 +51,13 @@ if (Meteor.isClient) {
 
   Template.voteConfirm.helpers({
 
-    ballotResults : function () {
+    voteData : function () {
+      var voteId = Router.current().params._id;
+      var voteData = votesCollection.findOne({_id: voteId});
+      return voteData;
+    },
 
+    ballotResults : function () {
       // Get the ballot results to be confirmed
       var voteId = Router.current().params._id;
 
@@ -111,10 +119,47 @@ if (Meteor.isClient) {
         if (error) {
           //throw error
         } else {
-          Session.set("currentVoteBallot", null);
+          // Session.set("currentVoteBallot", null);
           Router.go("doVote", {_id: voteId});
         };
       });
+
+    },
+
+    "click [data-action='saveBallot']" : function(event) {
+      // We will save the ballot data based on the DOM sort
+      var userBallot = Session.get("currentVoteBallot");
+      var ballotId = userBallot._id;
+      var voteId = Router.current().params._id;
+
+      var divs = document.getElementsByName("sort-item");
+      var ids = [];
+      for (var i = 0; i < divs.length; i++) {
+        ids[i] = {};
+        ids[i]._id = divs[i].id;
+        ids[i].sortStatus = "sorted";
+      };
+
+      console.log("the ids array: ");
+      console.log(ids);
+      userBallot.choicesCurr = ids;
+
+      Meteor.call("updateBallot", ballotId, userBallot, null, function (error, result) {
+        if (error) {
+          // throw an error
+        } else {
+          console.log("The current vote results");
+          console.log(result);
+
+          console.log("the vote id in ballot confirm event: ");
+          console.log(voteId);
+
+          Bert.alert("Ballot successfully saved", "info");
+          Router.go("voteInfo", {_id: voteId});
+          return result;
+        };
+      });
+
 
     },
 
@@ -126,17 +171,25 @@ if (Meteor.isClient) {
       var userBallot = Session.get("currentVoteBallot");
       // var ballotId = userBallot._id;
       // var voteId = ballotsCollection.findOne({_id:ballotId}).voteId;
+      // var voteId = userBallot.voteId;
+      // var choicesSort = userBallot.choicesCurr;
+
       var voteId = Router.current().params._id;
       // var choicesSort = userBallot.choicesCurr;
 
-      var divs = document.getElementsByName("drag-div");
+      // var ids = $("[name='sort-item']").map(function () {return this.id;});
+      var divs = document.getElementsByName("sort-item");
       var ids = [];
       for (var i = 0; i < divs.length; i++) {
         ids[i] = {};
         ids[i]._id = divs[i].id;
-      }
+        ids[i].sortStatus = "sorted";
+      };
 
+      console.log("the ids array: ");
+      console.log(ids);
       userBallot.choicesCurr = ids;
+
 
       // Update the status of the ballot
       // We can also update the voteResults.
@@ -153,6 +206,7 @@ if (Meteor.isClient) {
 
           console.log("the vote id in ballot confirm event: ");
           console.log(voteId);
+          Bert.alert("Congratulations! Your vote counts", "info");
 
           Router.go("voteInfo", {_id: voteId});
           return result;
@@ -164,6 +218,6 @@ if (Meteor.isClient) {
 
   });
 
-};
 
+};
 

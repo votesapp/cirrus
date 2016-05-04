@@ -1,9 +1,8 @@
-<!-- navButtons/navButtons.html -->
 <template name="navButtons">
   <div class="btn-group btn-group-justified VA-nav-buttons" role="group" aria-label="nav buttons">
 
-    <a class="btn btn-primary" data-nav="{{pathFor route='home'}}" role="button">Votes</a>
-    <a class="btn btn-primary" data-nav="{{pathFor route='myVotes'}}" role="button">My Votes</a>
+    <a class="btn btn-default" data-nav="{{pathFor route='home'}}" role="button">Votes</a>
+    <a class="btn btn-default" data-nav="{{pathFor route='myVotes'}}" role="button">My Votes</a>
 
 {{!--     {{#each navAction}}
     <a class="btn btn-primary" href="{{pathFor route=navRoute _id=stateId}}" role="button" >{{name}}</a>
@@ -12,4 +11,3 @@
     <a class="btn btn-success" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}" role="button">New +</a>
   </div> 
 </template>
-<!-- /navButtons/navButtons.html -->

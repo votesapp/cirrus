@@ -1,17 +1,16 @@
-<!-- voteItems/voteEdit.html -->
 <template name="voteEdit">
   {{#with editVoteData}}
     <div class="well text-center VA-img-well VA-top-spacer" data-action="uploadImg">
       {{#unless keyImage}}
         <img src="/img/Picture-Icon-100x96-2x.png" width="50" height="48" />
         <div class="clearfix"></div>
-        <h4 class="glyphicon glyphicon-plus-sign text-primary"></h4>
+        <h4 class="glyphicon glyphicon-plus-sign text-success"></h4>
         <div>Add campaign picture</div>
       {{else}}
         <img src="{{c.url keyImage crop='fill'}}" class="img-responsive" />
       {{/unless}}
     </div>
-    <input type="file" id="fileInput" name="keyImg" class="hidden-xs" accept="image/*" />
+    <input type="file" id="fileInput" name="keyImg" class="hidden-xs hidden-sm hidden-md hidden-lg" accept="image/*" />
     <h5 class="text-center">Title</h5>
     <h2 class="text-center VA-edit-live" contenteditable="true" data-field="title">{{title}}</h2>
     <div class="line"></div>
@@ -28,12 +27,16 @@
       {{> voteChoicesList voteChoices=editChoicesList edit="edit"}}
     {{!-- {{/if}} --}}
 
-  {{/with}}
   <div class="VA-CTA text-center">
     <button type="button" class="btn btn-block btn-default" data-action="saveDraft">Save Draft</button>
-    <button type="button" class="btn btn-block btn-info VA-top-spacer" data-action="publishVote">Publish Vote</button>
-    <button type="button" class="btn btn-block btn-danger VA-top-spacer" data-action="deleteVote">Delete Vote</button>
+    <button type="button" class="btn btn-block btn-info VA-top-spacer {{saveOption}}" data-action="publishVote">Publish Vote</button>
   </div>
+  <br />
+  <br />
+  <span class="VA-top-spacer text-muted" data-action="deleteVote">Admin:&nbsp;<strong><span class="label label-danger" role="button">Delete Vote&nbsp;<span class="glyphicon glyphicon-exclamation-sign"></span></span></strong></span>
+  <br />
+  <br />
+  <br />
+  {{/with}}
 
 </template>
-<!-- /voteItems/voteEdit.html -->

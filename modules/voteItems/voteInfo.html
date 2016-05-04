@@ -1,4 +1,3 @@
-<!-- voteItems/voteInfo.html -->
 <template name="voteInfo">
   {{#with voteData}}
 
@@ -36,6 +35,14 @@
         {{/if}}
       {{/with}}
 
+      {{#with adminAction}}
+        <br />
+        <span class="VA-top-spacer text-muted" data-action="{{action}}">Admin:&nbsp;<strong><span class="label label-default" role="button">{{name}}&nbsp;<span class="glyphicon glyphicon-exclamation-sign"></span></span></strong></span>
+        <br />
+        <br />
+        <br />
+      {{/with}}
+
   {{/with}}
 </template>
-<!-- /voteItems/voteInfo.html -->
+

@@ -192,7 +192,7 @@ if (Meteor.isClient) {
       if (error) {
         //throw error
       } else {
-        Bert.alert("The vote was saved", "info");
+        Bert.alert("The ballot was saved", "info");
       };
     });
   });

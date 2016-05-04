@@ -1,4 +1,3 @@
-<!-- voteItems/voteChoicesList.html -->
 <template name="voteChoicesList">
 
 
@@ -13,37 +12,45 @@
   </form>
   {{/if}}
 
-  
+  {{#if draggable}}
 
-    {{#if edit}}
-
+    <ul id="sortable" class="list-group">
       {{#each voteChoices}}
-      <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal">
+      {{!-- <a id="{{_id}}" class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" > --}}
+      <li class="list-group-item" name="sort-item" id="{{_id}}">
         {{name}}
-        <button type="button" class="close" name="{{_id}}" data-action="deleteVoteChoice">&times;</button>
-        <a class="glyphicon glyphicon-pencil close" href="{{pathFor route='voteChoiceEdit'}}"></a>
-      </a>
+          <a class="glyphicon glyphicon-menu-hamburger close" href="{{pathFor route='voteChoiceEdit'}}"></a>
+        </li>
+      {{!-- </a> --}}
       {{/each}}
+    </ul>
 
-    {{else}}
+  {{else}}
 
-      {{#each voteChoices}}
-      {{!-- User logged in, not own vote,  --}}
-        <div class="media" style="margin-top:20px" name="drag-div" id="{{_id}}">
-           <div class="media-left">
-                <img class="coloredbox small boxcolor_1">
-           </div>
-           <div class="media-body">
-              <h4 class="media-heading">{{ name }}</h4>
-           </div>
-           <div class="media-right">
-              <span class="glyphicon glyphicon-menu-hamburger"> {{!-- .grey whileClicked? --}}
-              </span>
-           </div>
-        </div>
-      {{/each}}
+    <ul class="list-group">
 
-    {{/if}}
+      {{#if edit}}
+
+        {{#each voteChoices}}
+        <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal">
+          {{name}}
+          <button type="button" class="close" name="{{_id}}" data-action="deleteVoteChoice">&times;</button>
+          <a class="glyphicon glyphicon-pencil close" href="{{pathFor route='voteChoiceEdit'}}"></a>
+        </a>
+        {{/each}}
+
+      {{else}}
+
+        {{#each voteChoices}}
+        <a class="list-group-item" href="{{pathFor route='voteChoice'}}" data-toggle="myModal" data-target="#mainModal" role="button" >{{name}}</a>
+        {{/each}}
+
+
+      {{/if}}
+
+    </ul>
+
+  {{/if}}
+
 
 </template>
-<!-- /voteItems/voteChoicesList.html -->

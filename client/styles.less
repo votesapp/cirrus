@@ -126,7 +126,7 @@ ul.list-group .close {
   margin-top: 12px;
 }
 
-.VA-nav-buttons {
+.VA-nav-buttons.btn-group {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -135,11 +135,12 @@ ul.list-group .close {
 }
 
 // This inverts colors for nav-buttons
-.VA-nav-buttons.btn-group .btn {
-  background-color: @gray-lightest;
+.VA-nav-buttons .btn {
+  font-weight: 400;
+  background-color: darken(@gray-lightest, 1%);
   border-color: @gray-lighter;
   &.btn-default {
-    color: lighten(@gray, 7%);
+    color: lighten(@gray, 3%);
   }
   &.btn-primary {
     color: darken(@brand-primary, 2%);
@@ -187,19 +188,27 @@ ul.list-group .close {
 
 /*Vote option styles. We can eventually replace with bootstrap4 cards*/
 .VA-vote-container {
-  padding-top: 42px !important;
+  padding-top: 52px !important;
   /*padding-bottom: 20px;*/
   background-color: #e3e3e3;
 }
 
 .VA-doVoteNav {
-  min-height: 36px !important;
+  min-height: 42px !important;
+  // padding-top: 6px;
+  // padding-bottom: 12px;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  .navbar-header {
+    text-align: left;
+  }
 
 }
 
 .thumbnail.VA-choice-thumb {
   position: relative;
-  height: calc(50% - 17px); /* 1/2 height - the height of sibling controls */
+  height: ~"calc(50% - 24px)"; /* 1/2 height - the height of sibling controls */
   margin-bottom: 17px;
   background-position: center;
   background-size: cover;
@@ -237,11 +246,26 @@ ul.list-group .close {
   z-index: 1050;
 
 }
- #VA-alert-box li {
+
+#VA-alert-box li {
   margin-top: 3px;
   margin-bottom: 3px;
- }
+}
 
+.VA-signup.jumbotron {
+  background: transparent;
+  img {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
+
+.VA-auth-bg {
+  /* bg img alignmend */
+  background-position: 20% -11%;
+  background-repeat: no-repeat;
+}
 
 
 
