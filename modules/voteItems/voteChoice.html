@@ -1,6 +1,7 @@
 <template name="voteChoice">
-  <h4>Choice Info</h4>
+  <h3>Choice Info</h3>
   <div class="VA-top-spacer-lg"></div>
+
   {{#with choiceRecord}}
     <pre>&lt;img&gt; goes here</pre>
     <h2>{{name}}</h2>
@@ -12,6 +13,7 @@
     {{else}}
     <!-- We can put other content conditionally here... -->
     {{/if}}
+    
   {{/with}}
 
 </template>

@@ -94,7 +94,7 @@ if (Meteor.isClient) {
             if (ballotStatus ==="incomplete") {
               actionItem = {
                 name: "Continue Vote",
-                action: "doVote",
+                action: "confirmVote",
                 style: "btn-info"
               };
             };
@@ -103,7 +103,7 @@ if (Meteor.isClient) {
             // TAKE VOTE
             actionItem = {
               name: "Take Vote",
-              action: "doVote",
+              action: "confirmVote",
               style: "btn-info"
             };
           };
@@ -131,7 +131,7 @@ if (Meteor.isClient) {
               // CONTINUE VOTE
               actionItem = {
                 name: "Continue Vote",
-                action: "doVote",
+                action: "confirmVote",
                 style: "btn-info"
               };
 
@@ -145,7 +145,7 @@ if (Meteor.isClient) {
             // TAKE VOTE
             actionItem = {
               name: "Take Vote",
-              action: "doVote",
+              action: "confirmVote",
               style: "btn-info"
             };
           };
@@ -176,32 +176,35 @@ if (Meteor.isClient) {
       if (user === creator) {
 
         if (voteStatus === "published") {
-          actionItem = {
+          adminItem = {
             name: "Close Vote",
             action: "closeVote",
             style: "btn-default"
           };
         } else if (voteStatus === "closed") {
-          actionItem = {
+          adminItem = {
             name: "Archive Vote",
             action: "archiveVote",
             style: "btn-default"
           };
         } else if (voteStatus === "archived") {
-          actionItem = {
+          adminItem = {
             name: "Unarchive Vote",
             action: "closeVote",
             style: "btn-default"
           };
         };
 
+      } else {
+        // User is not creator and can not do any admin stuff
+        adminItem = null;
       };
 
       return actionItem;
 
     },
 
-    dropMenuData : function () {
+    dropMenuDatax : function () {
       // Menu options for vote actions dropdown menu. We are defining next actions for votes 
       // using this menu.
       // We rely on router access filtering to handle and resolve any conflicts.
@@ -330,18 +333,29 @@ if (Meteor.isClient) {
 
     },
 
+    "click [data-action='confirmVote']" : function () {
+      // Right now this is a pseudo event and placeholder should we
+      // need to change how votes are saved (instead of below)
+      var voteId = Router.current().params._id;
+      Router.go("voteConfirm", {_id:voteId, edit:"edit"});
+
+    },
+
     "click [data-action='closeVote']" : function () {
       // Change the status of the vote to publish
       // TODO: We may need to check for ownership of the vote
       var voteId = Router.current().params._id;
-      Meteor.call("updateVote", voteId, {voteStatus: "closed", closedOn: new Date()}, function (error, result) {
-        if (error) {
-          //throw error
-        } else {
-          Bert.alert("The vote was closed!", "info");
-          Router.go("myVotes");
-        };
-      });
+      var creator = votesCollection.findOne({_id:voteId}).createdBy;
+      if (creator === Meteor.userId()) {
+        Meteor.call("updateVote", voteId, {voteStatus: "closed", closedOn: new Date()}, function (error, result) {
+          if (error) {
+            //throw error
+          } else {
+            Bert.alert("The vote was closed!", "info");
+            Router.go("myVotes");
+          };
+        });
+      };
     },
 
     "click [data-action='archiveVote']" : function () {

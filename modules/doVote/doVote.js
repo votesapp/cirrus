@@ -247,29 +247,36 @@ if (Meteor.isClient) {
         // Get the current state of the iteration
         var s = voterBallot.step;
 
+        var choiceA = choicesCollection.findOne({_id: choicesArray[s]});
+        var choiceB = choicesCollection.findOne({_id: choicesArray[s-1]});
+
         var votePair = [
           {
-            choiceId: choicesArray[s],
-            choiceName: choicesCollection.findOne(
-              {_id: choicesArray[s]},
-              {name:1, _id:0}
-            ).name,
-            choiceDesc: choicesCollection.findOne(
-              {_id: choicesArray[s]},
-              {name:1, _id:0}
-            ).description
+            choiceId: choiceA._id,
+            // choiceName: choicesCollection.findOne(
+            //   {_id: choicesArray[s]},
+            //   {name:1, _id:0}
+            // ).name,
+            choiceName: choiceA.name,
+            // choiceDesc: choicesCollection.findOne(
+            //   {_id: choicesArray[s]},
+            //   {name:1, _id:0}
+            // ).description
+            keyColor: choiceA.keyColor
             // optionDesc: optionsData[s].description
           },
           {
-            choiceId: choicesArray[s-1],
-            choiceName: choicesCollection.findOne(
-              {_id: choicesArray[s-1]},
-              {name:1, _id:0}
-            ).name,
-            choiceDesc: choicesCollection.findOne(
-              {_id: choicesArray[s]},
-              {name:1, _id:0}
-            ).description
+            choiceId: choiceB._id,
+            // choiceName: choicesCollection.findOne(
+            //   {_id: choicesArray[s-1]},
+            //   {name:1, _id:0}
+            // ).name,
+            choiceName: choiceB.name,
+            // choiceDesc: choicesCollection.findOne(
+            //   {_id: choicesArray[s]},
+            //   {name:1, _id:0}
+            // ).description
+            keyColor: choiceB.keyColor
           }
         ];
 

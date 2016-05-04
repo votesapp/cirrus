@@ -17,7 +17,77 @@ if (Meteor.isClient) {
     if (!ballotData) {
       // There is no ballot, the user will need to
       // create one from the voting process.
-      Router.go("doVote",{_id:voteId});
+      // Router.go("doVote",{_id:voteId});
+      /* *********************************** */
+      /* ******** Initialize Ballot ******** */
+      /* *********************************** */
+      console.log("This is a new ballot to initialize");
+
+      // Build the initilization object and add it to the ballotsCollection
+      // @params: 
+      //   voteId(_id) - the _id of the vote being voted on.
+      //   choicesInit(array) - an array of the initial choices shuffled state.
+      //   choicesCurr(array) - the current state of the sort by the user.
+      //   status[default=incomplete] - a field to track the status of the vote.
+      //   step(int) - A step counter to track state of the ballot
+
+      // Get an array of objects containing all of the vote choice _id's 
+      var choicesArray =  votesCollection.findOne({_id: voteId}).choices;
+      var choicesData = choicesCollection.find({_id: {$in: choicesArray}}).fetch();
+      
+      var voteChoices = choicesData.map(function(item){ 
+        var obj = {_id:item._id};
+        return obj;
+      });
+
+      console.log("voteId: " + voteId);
+      console.log("the vote choices");
+      console.log(voteChoices);
+
+      // We now put these options in a random order to remove bias.
+      // We are using the Fischer-Yates shuffle algorithm here.
+      var voteShuffle = voteChoices, i = 0, j = 0, temp = null;
+
+      for (i = voteShuffle.length - 1; i > 0; i -= 1) {
+        j = Math.floor(Math.random() * (i + 1))
+        temp = voteShuffle[i]
+        voteShuffle[i] = voteShuffle[j]
+        voteShuffle[j] = temp
+      };
+
+      console.log("shuffled choices: ");
+      console.log(voteShuffle);
+
+      // Initialize a step counter to track progress of the user through
+      // each iteration of the sort, effectively storing the state of the ballot.
+      // We subtract "1" to make it zero based.
+      var theStep = voteShuffle.length - 1;
+
+      // Initialize the ballot in the ballotsCollection
+      var ballotData = {
+        voteId : voteId,
+        choicesInit : voteShuffle,
+        choicesCurr : voteShuffle,
+        createdOn: new Date(),
+        createdBy: Meteor.userId(),
+        ballotStatus: "incomplete",
+        step: theStep
+      }
+      console.log("ballotData:");
+      console.log(ballotData);
+
+      Meteor.call("createBallot", ballotData, function (error, result) {
+        if (error) {
+          // throw error
+        } else {
+          console.log("Initialized new ballot");
+          console.log(result);
+
+          ballotData._id = result;
+          Session.set("currentVoteBallot", ballotData);
+        };
+
+      });
 
     } else {
 
@@ -28,7 +98,7 @@ if (Meteor.isClient) {
         if (ballotData.ballotStatus != "completed") {
           // The ballot is neither "incomplete" or
           // "completed", so initialize a new vote
-          Router.go("doVote",{_id:voteId});
+          // Router.go("doVote",{_id:voteId});
 
         } else {
           // The ballot status is "completed"

@@ -5,10 +5,10 @@
   {{/with}}
 
   {{#each votePair}}
-
-  <div id="{{choiceId}}" class="thumbnail VA-choice-thumb" style="background-image: url('/242x200_placeholder.svg');" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteChoice' _id=choiceId}}">
+ {{!-- style="background-image: url('/242x200_placeholder.svg');"  --}}
+  <div id="{{choiceId}}" class="thumbnail VA-choice-thumb boxcolor_{{keyColor}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteChoice' _id=choiceId}}">
+    <h1 class="VA-thumb-title">{{choiceName}}&nbsp;</h1>
     <div class="caption">
-      <h2>{{choiceName}}</h2>
       {{!-- <p>{{choiceDesc}}</p> --}}
       {{!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> --}}
       <button type="button" class="btn btn-success pull-right" data-action="confirmSelection" data-item="{{choiceId}}">Select</button>
