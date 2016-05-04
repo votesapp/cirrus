@@ -1,23 +1,24 @@
 <!-- votesFilters/myVotes.html -->
 <template name="myVotes">
-  <h4>My Votes</h4>
 
-  
-  <label class="input-changed">
-    Filter:<input type="text" />
-  </label>
+  <div class="VA-top-spacer"></div>
+  <!-- <h4>My Votes</h4> -->
+  <div class="input-group input-changed">
+    <input class="form-control" type="text" placeholder="Search:" aria-describedby="basic-addon1" />
+    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-search"></span></span>
+  </div>
   {{!-- {{> dropdownSelect dropMenuData=selectMenu}} --}}
 
   <!-- Nav tabs -->
-  <ul class="nav nav-pills" role="tablist">
+{{!--   <ul class="nav nav-pills" role="tablist">
     <li role="presentation" class="active"><a href="#votes" aria-controls="votes" role="tab" data-toggle="tab">myVotes</a></li>
     <li role="presentation"><a href="#ballots" aria-controls="ballots" role="tab" data-toggle="tab">myBallots</a></li>
   </ul>
-
+ --}}
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="votes">
-      <ul class="media-list">
+      <ul class="media-list VA-top-spacer">
         {{#if myVotesList}}
 
         {{#each myVotesList}}
@@ -32,16 +33,17 @@
         </li> {{!-- /.media --}}
         {{/each}}
         {{else}}
-        <p class="text-muted">You have no votes yet. <a class="btn btn-sm btn-success" href="{{pathFor route='voteCreate'}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}">Create one!</a></p>
+        <p class="text-muted">No results</p>
+        {{!-- <p class="text-muted">You have no votes yet. <a class="btn btn-sm btn-success" href="{{pathFor route='voteCreate'}}" data-toggle="myModal" data-target="#mainModal" data-template="{{pathFor route='voteCreate'}}">Create one!</a></p> --}}
         
         {{/if}}
 
       </ul>
     </div>
-    <div role="tabpanel" class="tab-pane" id="ballots">
+{{!--     <div role="tabpanel" class="tab-pane" id="ballots">
       <h3><small>My Ballots</small></h3>
 
     </div>
-  </div> <!-- End Tab Panes -->
+ --}}  </div> <!-- End Tab Panes -->
 
 </template>

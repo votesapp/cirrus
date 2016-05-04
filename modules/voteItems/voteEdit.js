@@ -2,15 +2,28 @@
 
 if (Meteor.isClient) {
   Meteor.subscribe("votesList");
-  Meteor.subscribe("voteOptions");
+  Meteor.subscribe("voteChoices");
 
   Template.voteEdit.helpers({
 
     editVoteData : function () {
       // to get the info for the vote
       var recordId = Router.current().params._id;
+      var voteData = votesCollection.findOne({ _id:recordId });
+      console.log("do we have vote data");
+      console.log(voteData);
+      // voteData.saveOption = "disabled";
+      if (voteData.choices) {
+        if (voteData.choices.length < 2) {
+          voteData.saveOption = "disabled";
+        } else {
+          voteData.saveOption = "";
+        };
+      } else {
+        voteData.saveOption = "disabled";
+      };
 
-      return votesCollection.findOne({ _id:recordId });
+      return voteData;
 
     },
 
@@ -25,7 +38,6 @@ if (Meteor.isClient) {
 
       return choicesData;
     }
-
 
   });
 
@@ -123,6 +135,8 @@ if (Meteor.isClient) {
       Meteor.call("updateVote", voteId, {voteStatus: "published", publishedOn: new Date()}, function (error, result) {
         if (error) {
           //throw error
+          console.log("we got an error publishing vote - voteEdit.js:126");
+          console.log(error);
         } else {
           Bert.alert("The vote was published!", "info");
           Router.go("voteList");

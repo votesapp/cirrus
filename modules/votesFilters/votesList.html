@@ -1,17 +1,22 @@
 <template name="votesList">
 
-  <h4>List of votes</h4>
-  <p>
-    <label class="input-changed">
-    Filter:&nbsp;<input type="text" />
-    </label>
-  </p>
-  <ul class="media-list">
+  <div class="VA-top-spacer"></div>
+  <!-- <h4>List of votes</h4> -->
+  <div class="input-group input-changed">
+    <input class="form-control" type="text" placeholder="Search:" aria-describedby="basic-addon1" />
+    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-search"></span></span>
+  </div>
+
+  <ul class="media-list VA-votes-list VA-top-spacer">
     
     {{#each votesList}}
-    <li class="media" data-nav="{{pathFor route='voteInfo'}}">
+    <li class="media VA-votes-list" data-nav="{{pathFor route='voteInfo'}}">
       <div class="media-left">
-          <img class="media-object" src="{{#if keyImage}}{{c.url keyImage width=64 height=64 crop="lfill"}}{{else}}/64x64_placeholder.svg{{/if}}" alt="...">
+        {{#if keyImage}}
+          <img class="media-object" src="{{c.url keyImage width=64 height=64 crop="lfill"}}" >
+        {{else}}
+          <img class="media-object" src="/img/votesapp_logo_sm.png" style="opacity:0.6;">
+        {{/if}}
       </div>
       <div class="media-body">
         <h4 class="media-heading">{{title}}</h4>

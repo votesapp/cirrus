@@ -52,6 +52,26 @@ if (Meteor.isClient) {
 
   Template.voteChoiceEdit.events({
 
+    "submit #editChoiceForm" : function (event) {
+      event.preventDefault();
+
+      var title = event.target.title.value;
+      var desc = event.target.description.value;
+      var choiceId = Router.current().params._id;
+
+      var dataObj = {name: title, description: desc};
+
+      Meteor.call("updateChoice", choiceId, dataObj, function (error, result) {
+        if (error) {
+          //throw an error
+          console.log("Error in updateChoice method call in voteChoice.js:submit");
+        } else {
+          Bert.alert("The choice was saved!", "info");
+          history.back();
+        };
+      });
+    },
+
     // if we set everything as editable in the template,
     // but then on template load, either remove all editable,
     // or leave them there based on route.current().data.editable
@@ -92,10 +112,10 @@ if (Meteor.isClient) {
 
     },
 
-    "click [data-action='saveChoice']" : function (event) {
+    "click [data-action='leaveChoice']" : function (event) {
 
-      console.log("saving the choice");
-      history.go(-1);
+      // console.log("saving the choice");
+      history.back();
 
     }
 

@@ -1,12 +1,14 @@
 <!-- bareApp.html -->
 <template name="bareApp">
-    <div class="jumbotron signup">
-      <div class="container">
-        <img class="logo_small" src="/img/VotesApp-Logo-Small2x.png" />
-      </div>
+  <div class="container text-center full-height VA-auth-bg" style="background-image:url('/img/Card-Background-Small2x.png">
+    <div class="jumbotron VA-signup">
+      <!-- <div class="container"> -->
+        <img class="logo_small img-responsive" src="/img/VotesApp-Logo-Small2x.png" />
+      <!-- </div> -->
     </div>
 
-    <div class="container text-center" style="margin-top:70px;">
+    <div class="VA-spacer-lg" style="margin-top:70px;"></div>
+
       {{> yield}}
     </div>
 </template>

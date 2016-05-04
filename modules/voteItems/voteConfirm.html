@@ -1,27 +1,28 @@
-<!-- voteItems/voteConfirm.html -->
 <template name="voteConfirm">
-  <h3>Confirm your vote.</h3>
-	<div class="container currentvoting" style="margin-top:60px;margin-bottom:50px">
-		
-			{{#with ballotResults}}<h5>SORT VOTE CHOICES</h5>{{/with}}
-		
-		<div id="sortable">
-	 		{{> voteChoicesList voteChoices=ballotResults}}
-	  	</div> <!-- end #sortable -->
+  {{!-- <h3>Confirm Vote</h3> --}}
+  {{#with voteData}}
+  <h3>{{title}}</h3>
+  <div class="line"></div>
+  {{/with}}
+  {{#with ballotResults}}<h5>Your Sorted Choices</h5>{{/with}}
+  {{> voteChoicesList voteChoices=ballotResults draggable=true}}
 
-		<div class="container">
-		    <p class="  text-center" style="margin-top:20px">Drag the choices into your prefered order.</p>
-			<div class="row">
-			    <div class="col-xs-6">
-			      <button class="btn btn-lg btn-default btn-block" data-action="redoVote">Redo</button>
-			    </div>
-			    <div class="col-xs-6">
-			      <button class="btn btn-lg btn-success btn-block" data-action="confirmBallot">Confirm</button>
-			    </div>
-			</div>
-		</div> <!-- End .container -->
+  <p class="text-muted text-center VA-top-spacer">Drag the choices into your prefered order.</p>
+  <div class="row">
+{{!--     <div class="col-xs-12">
+      <button class="btn btn-warning btn-block" data-action="redoVote">Redo Sort</button>
+    </div>
+ --}}
+    <div class="col-xs-12">
+      <button class="btn btn-success btn-block" data-action="confirmBallot">Confirm</button>
+    </div>
+    
+  </div>
 
-  	</div> <!-- End .container .currentvoting -->
-
+  <br />
+  <br />
+  <span class="VA-top-spacer text-muted" data-action="saveBallot">Optional:&nbsp;<strong><span class="label label-default" role="button">Save for later&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></span></strong></span>
+  <br />
+  <br />
+  <br />
 </template>
-<!-- /voteItems/voteConfirm.html -->
