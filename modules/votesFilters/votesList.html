@@ -1,7 +1,12 @@
 <template name="votesList">
 
   <h4>List of votes</h4>
-  <ul class="media-list">
+  <div class="input-group input-changed">
+    <input class="form-control" type="text" placeholder="Search:" aria-describedby="basic-addon1" />
+    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-search"></span></span>
+  </div>
+
+  <ul class="media-list VA-top-spacer">
     
     {{#each votesList}}
     <li class="media" data-nav="{{pathFor route='voteInfo'}}">
