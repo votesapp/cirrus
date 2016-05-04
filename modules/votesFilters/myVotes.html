@@ -24,7 +24,11 @@
         {{#each myVotesList}}
         <li class="media" data-nav="{{pathFor route='voteInfo'}}">
           <div class="media-left">
-              <img class="media-object" src="{{#if keyImage}}{{c.url keyImage width=64 height=64 crop="lfill"}}{{else}}/64x64_placeholder.svg{{/if}}" alt="...">
+            {{#if keyImage}}
+              <img class="media-object" src="{{c.url keyImage width=64 height=64 crop="lfill"}}" alt="...">
+            {{else}}
+              <img class="media-object" src="/img/votesapp_logo_sm.png" style="opacity:0.6;" alt="...">
+            {{/if}}
           </div>
           <div class="media-body">
             <h4 class="media-heading">{{#if voteStatus}}<small class="text-muted">({{voteStatus}})&nbsp;</small>{{/if}}{{title}}</h4>
