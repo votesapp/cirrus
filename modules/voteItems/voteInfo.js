@@ -170,6 +170,9 @@ if (Meteor.isClient) {
       var user = Meteor.userId();
       var creator = this.createdBy;
       var voteStatus = this.voteStatus;
+      console.log("logging creator/user");
+      console.log("user: " + user);
+      console.log("creator: " + creator);
       // var userBallot = ballotsCollection.findOne({voteId:this._id, createdBy:Meteor.userId()});
       // var ballotStatus = (userBallot) ? userBallot.ballotStatus : null ;
 
@@ -200,7 +203,7 @@ if (Meteor.isClient) {
         adminItem = null;
       };
 
-      return actionItem;
+      return adminItem;
 
     },
 
