@@ -125,6 +125,9 @@ ul.list-group .close {
 .VA-top-spacer {
   margin-top: 12px;
 }
+.VA-top-spacer-lg {
+  margin-top: 24px;
+}
 
 .VA-nav-buttons.btn-group {
   position: fixed;
@@ -160,12 +163,18 @@ ul.list-group .close {
 }
 
 .VA-navbar-title {
-  display: inline-block;
-  position: absolute;
+  display: block;
+  position: fixed;
   height: @navbar-height;
-  margin-left: (@grid-gutter-width / 2 * -1);
-  padding-top: ((@navbar-height - @line-height-computed) / 2);
+  width: 100%;
+  margin-left: ((@grid-gutter-width * -1) + 9);
+  padding-top: ((@navbar-height - @line-height-computed - 4) / 2);
   padding-bottom: ((@navbar-height - @line-height-computed) / 2);
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  // text-transform: uppercase;
+  color: @gray-light;
 }
 
 .VA-CTA {
