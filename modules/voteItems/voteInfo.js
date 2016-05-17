@@ -94,7 +94,7 @@ if (Meteor.isClient) {
             if (ballotStatus ==="incomplete") {
               actionItem = {
                 name: "Continue Vote",
-                action: "confirmVote",
+                action: "doVote",
                 style: "btn-info"
               };
             };
@@ -103,7 +103,7 @@ if (Meteor.isClient) {
             // TAKE VOTE
             actionItem = {
               name: "Take Vote",
-              action: "confirmVote",
+              action: "doVote",
               style: "btn-info"
             };
           };
@@ -131,7 +131,7 @@ if (Meteor.isClient) {
               // CONTINUE VOTE
               actionItem = {
                 name: "Continue Vote",
-                action: "confirmVote",
+                action: "doVote",
                 style: "btn-info"
               };
 
@@ -145,7 +145,7 @@ if (Meteor.isClient) {
             // TAKE VOTE
             actionItem = {
               name: "Take Vote",
-              action: "confirmVote",
+              action: "doVote",
               style: "btn-info"
             };
           };
